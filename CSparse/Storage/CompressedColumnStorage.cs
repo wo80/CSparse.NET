@@ -7,6 +7,7 @@
 
 namespace CSparse.Storage
 {
+    using CSparse.Properties;
     using System;
     using System.Collections.Generic;
     using System.Numerics;
@@ -91,6 +92,32 @@ namespace CSparse.Storage
             Array.Clear(Values, 0, Values.Length);
         }
 
+        #region Linear Algebra (Vector)
+
+        /// <summary>
+        /// Multiplies a (m-by-n) matrix by a vector, y = A*x + y. 
+        /// </summary>
+        /// <param name="x">Vector of length n (column count).</param>
+        /// <param name="y">Vector of length m (row count), containing the result.</param>
+        /// <remarks>
+        /// Input values of vector y will be accumulated.
+        /// </remarks>
+        public abstract void Multiply(T[] x, T[] y);
+
+        /// <summary>
+        /// Multiplies the transpose of a (m-by-n) matrix by a vector, y = A'*x + y. 
+        /// </summary>
+        /// <param name="x">Vector of length m (column count of A').</param>
+        /// <param name="y">Vector of length n (row count of A'), containing the result.</param>
+        /// <remarks>
+        /// Input values of vector y will be accumulated.
+        /// </remarks>
+        public abstract void TransposeMultiply(T[] x, T[] y);
+
+        #endregion
+
+        #region Linear Algebra (Matrix)
+
         /// <summary>
         /// Returns the transpose of this matrix.
         /// </summary>
@@ -135,6 +162,53 @@ namespace CSparse.Storage
                 }
             }
         }
+        
+        /// <summary>
+        /// Adds two matrices in CSC format, C = A + B, where A is current instance.
+        /// </summary>
+        public CompressedColumnStorage<T> Add(CompressedColumnStorage<T> other)
+        {
+            int m = this.nrows;
+            int n = this.ncols;
+
+            // check inputs
+            if (m != other.RowCount || n != other.ColumnCount)
+            {
+                throw new ArgumentException(Resources.MatrixDimensions);
+            }
+
+            var result = CompressedColumnStorage<T>.Create(m, n, this.NonZerosCount + other.NonZerosCount);
+
+            var one = Helper.OneOf<T>();
+
+            Add(one, one, other, result);
+
+            return result;
+        }
+        
+        /// <summary>
+        /// Adds two matrices, C = alpha*A + beta*B, where A is current instance.
+        /// </summary>
+        /// <param name="alpha">Scalar factor for A, current instance.</param>
+        /// <param name="beta">Scalar factor for B, other instance.</param>
+        /// <param name="other">The matrix added to this instance.</param>
+        /// <param name="result">Contains the sum.</param>
+        /// <remarks>
+        /// The (result) matrix has to be fully initialized and provide enough space for
+        /// the nonzero entries of the sum. An upper bound is the sum of the nonzeros count
+        /// of (this) and (other).
+        /// </remarks>
+        public abstract void Add(T alpha, T beta, CompressedColumnStorage<T> other,
+            CompressedColumnStorage<T> result);
+
+        /// <summary>
+        /// Sparse matrix multiplication, C = A*B
+        /// </summary>
+        /// <param name="other">column-compressed matrix</param>
+        /// <returns>C = A*B, null on error</returns>
+        public abstract CompressedColumnStorage<T> Multiply(CompressedColumnStorage<T> other);
+
+        #endregion
 
         /// <summary>
         /// Returns a clone of this matrix.

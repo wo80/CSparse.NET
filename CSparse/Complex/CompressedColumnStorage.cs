@@ -10,9 +10,11 @@ namespace CSparse.Complex
     using CSparse.Properties;
     using CSparse.Storage;
     using System;
+    using System.Diagnostics;
     using System.Numerics;
 
     /// <inheritdoc />
+    [DebuggerDisplay("SparseMatrix {RowCount}x{ColumnCount}-Double {NonZerosCount}-NonZero")]
     public class CompressedColumnStorage : CompressedColumnStorage<Complex>
     {
         /// <inheritdoc />
@@ -159,7 +161,7 @@ namespace CSparse.Complex
         /// <remarks>
         /// Input values of vector y will be accumulated.
         /// </remarks>
-        public void Multiply(Complex[] x, Complex[] y)
+        public override void Multiply(Complex[] x, Complex[] y)
         {
             var ax = this.Values;
             var ap = this.ColumnPointers;
@@ -225,7 +227,7 @@ namespace CSparse.Complex
         /// <remarks>
         /// Input values of vector y will be accumulated.
         /// </remarks>
-        public void TransposeMultiply(Complex[] x, Complex[] y)
+        public override void TransposeMultiply(Complex[] x, Complex[] y)
         {
             var ax = this.Values;
             var ap = this.ColumnPointers;
@@ -285,6 +287,8 @@ namespace CSparse.Complex
 
         #endregion
 
+        #region Linear Algebra (Matrix)
+
         /// <summary>
         /// Transpose this matrix (with complex conjugation) and store the result in given matrix.
         /// </summary>
@@ -322,27 +326,6 @@ namespace CSparse.Complex
         }
 
         /// <summary>
-        /// Adds two matrices in CSC format, C = A + B, where A is current instance.
-        /// </summary>
-        public CompressedColumnStorage Add(CompressedColumnStorage other)
-        {
-            int m = this.nrows;
-            int n = this.ncols;
-
-            // check inputs
-            if (m != other.RowCount || n != other.ColumnCount)
-            {
-                throw new ArgumentException(Resources.MatrixDimensions);
-            }
-
-            var result = new CompressedColumnStorage(m, n, this.NonZerosCount + other.NonZerosCount);
-
-            Add(1.0, 1.0, other, result);
-
-            return result;
-        }
-
-        /// <summary>
         /// Adds two matrices, C = alpha*A + beta*B, where A is current instance.
         /// </summary>
         /// <param name="alpha">Scalar factor for A, current instance.</param>
@@ -354,7 +337,7 @@ namespace CSparse.Complex
         /// the nonzero entries of the sum. An upper bound is the sum of the nonzeros count
         /// of (this) and (other).
         /// </remarks>
-        public void Add(Complex alpha, Complex beta, CompressedColumnStorage<Complex> other,
+        public override void Add(Complex alpha, Complex beta, CompressedColumnStorage<Complex> other,
             CompressedColumnStorage<Complex> result)
         {
             int p, j, nz = 0;
@@ -403,7 +386,7 @@ namespace CSparse.Complex
         /// </summary>
         /// <param name="other">column-compressed matrix</param>
         /// <returns>C = A*B, null on error</returns>
-        public CompressedColumnStorage<Complex> Multiply(CompressedColumnStorage<Complex> other)
+        public override CompressedColumnStorage<Complex> Multiply(CompressedColumnStorage<Complex> other)
         {
             int m = this.nrows;
             int n = other.ColumnCount;
@@ -496,6 +479,8 @@ namespace CSparse.Complex
 
             return true;
         }
+
+        #endregion
 
         public override bool Equals(ISparseMatrixStorage<Complex> other, double tolerance)
         {

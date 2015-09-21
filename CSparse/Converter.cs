@@ -139,38 +139,5 @@ namespace CSparse
 
             return storage;
         }
-
-        /// <summary>
-        /// Transpose operation.
-        /// </summary>
-        /// <remarks>
-        /// We use a separate transpose method here, because for complex storage, transpose would include
-        /// complex conjugation, which we don't want here!
-        /// </remarks>
-        internal static void Transpose<T>(int m, int n, int[] ap, int[] ai, T[] ax, int[] cp, int[] ci, T[] cx)
-            where T : struct, IEquatable<T>, IFormattable
-        {
-            int[] w = new int[m];
-
-            int i, j, p;
-
-            for (p = 0; p < ap[n]; p++)
-            {
-                w[ai[p]]++;
-            }
-
-            Helper.CumulativeSum(cp, w, m);
-
-            for (i = 0; i < n; i++)
-            {
-                for (p = ap[i]; p < ap[i + 1]; p++)
-                {
-                    j = w[ai[p]]++;
-
-                    ci[j] = i;
-                    cx[j] = ax[p];
-                }
-            }
-        }
     }
 }
