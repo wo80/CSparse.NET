@@ -70,6 +70,15 @@ namespace CSparse.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid matrix dimensions..
+        /// </summary>
+        internal static string InvalidDimensions {
+            get {
+                return ResourceManager.GetString("InvalidDimensions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid permutation vector..
         /// </summary>
         internal static string InvalidPermutation {

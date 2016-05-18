@@ -3,16 +3,15 @@ namespace CSparse.Tests.Complex.Factorization
 {
     using CSparse.Complex;
     using CSparse.Complex.Factorization;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
     using System;
     using System.Numerics;
 
-    [TestClass]
     public class SparseCholeskyTest
     {
         private const double EPS = 1.0e-6;
 
-        [TestMethod]
+        [Test]
         public void TestSolve()
         {
             // Load matrix from a file.
@@ -34,14 +33,27 @@ namespace CSparse.Tests.Complex.Factorization
             Assert.IsTrue(Vector.Norm(r) < EPS);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(Exception))]
+        [Test]
         public void TestConstructorThrowsOnNonSpd()
         {
             // Load matrix from a file.
             var A = ResourceLoader.Get<Complex>("hermitian-40.mat");
 
+            Assert.Throws<Exception>(() =>
+            {
+                var chol = new SparseCholesky(A, ColumnOrdering.MinimumDegreeAtPlusA);
+            });
+        }
+
+        [Test]
+        public void TestEmptyFactorize()
+        {
+            var A = MatrixHelper.Load(0, 0);
+
             var chol = new SparseCholesky(A, ColumnOrdering.MinimumDegreeAtPlusA);
+
+            Assert.NotNull(chol);
+            Assert.IsTrue(chol.NonZerosCount == 0);
         }
     }
 }

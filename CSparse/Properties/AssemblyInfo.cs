@@ -19,6 +19,8 @@ using System.Runtime.InteropServices;
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
+[assembly: InternalsVisibleTo("CSparse.Tests")]
+
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("e3a52982-871f-42bc-88a5-cf689318f466")]
 
@@ -33,4 +35,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("3.1.4.*")]
-[assembly: AssemblyFileVersion("3.1.4.0")]
+[assembly: AssemblyFileVersion("3.1.4.1")]

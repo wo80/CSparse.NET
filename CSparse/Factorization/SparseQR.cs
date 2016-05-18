@@ -271,7 +271,7 @@ namespace CSparse.Factorization
             var ap = A.ColumnPointers;
             var ai = A.RowIndices;
 
-            var result = new SymbolicColumnStorage(m, n, ap[n]);
+            var result = SymbolicColumnStorage.Create(A);
 
             var cp = result.ColumnPointers;
             var ci = result.RowIndices;

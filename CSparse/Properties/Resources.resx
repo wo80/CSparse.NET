@@ -120,6 +120,9 @@
   <data name="InvalidColumnOrdering" xml:space="preserve">
     <value>Invalid column ordering.</value>
   </data>
+  <data name="InvalidDimensions" xml:space="preserve">
+    <value>Invalid matrix dimensions.</value>
+  </data>
   <data name="InvalidPermutation" xml:space="preserve">
     <value>Invalid permutation vector.</value>
   </data>

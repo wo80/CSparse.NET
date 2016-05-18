@@ -2,13 +2,12 @@
 namespace CSparse.Tests.Ordering
 {
     using CSparse.Ordering;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
     using System;
 
-    [TestClass]
     public class TestDulmageMendelsohn
     {
-        [TestMethod]
+        [Test]
         public void TestGenerate1()
         {
             // Load matrix from a file.
@@ -22,7 +21,7 @@ namespace CSparse.Tests.Ordering
             Assert.IsTrue(dm.StructuralRank == n);
         }
 
-        [TestMethod]
+        [Test]
         public void TestGenerate2()
         {
             // Load matrix from a file.

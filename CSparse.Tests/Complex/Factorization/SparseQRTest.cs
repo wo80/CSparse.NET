@@ -3,16 +3,14 @@ namespace CSparse.Tests.Complex.Factorization
 {
     using CSparse.Complex;
     using CSparse.Complex.Factorization;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using System;
+    using NUnit.Framework;
     using System.Numerics;
 
-    [TestClass]
     public class SparseQRTest
     {
         private const double EPS = 1.0e-6;
 
-        [TestMethod]
+        [Test]
         public void TestSolve()
         {
             // Load matrix from a file.
@@ -35,7 +33,7 @@ namespace CSparse.Tests.Complex.Factorization
             Assert.IsTrue(Vector.Norm(r) < EPS);
         }
 
-        [TestMethod]
+        [Test]
         public void TestSolveOverdetermined()
         {
             // Load matrix from a file.
@@ -62,7 +60,7 @@ namespace CSparse.Tests.Complex.Factorization
             Assert.IsTrue(Vector.Norm(r) < EPS);
         }
 
-        [TestMethod]
+        [Test]
         public void TestSolveUnderdetermined()
         {
             // Load matrix from a file.
@@ -88,6 +86,19 @@ namespace CSparse.Tests.Complex.Factorization
             A.Multiply(-1.0, x, 1.0, r);
 
             Assert.IsTrue(Vector.Norm(r) < EPS);
+        }
+
+        [TestCase(0, 0)]
+        [TestCase(0, 5)]
+        [TestCase(5, 0)]
+        public void TestEmptyFactorize(int rows, int columns)
+        {
+            var A = MatrixHelper.Load(rows, columns);
+
+            var qr = new SparseQR(A, ColumnOrdering.MinimumDegreeAtA);
+
+            Assert.NotNull(qr);
+            Assert.IsTrue(qr.NonZerosCount == -rows);
         }
     }
 }

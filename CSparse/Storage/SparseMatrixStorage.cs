@@ -52,9 +52,9 @@ namespace CSparse.Storage
         /// </summary>
         protected SparseMatrixStorage(int rowCount, int columnCount)
         {
-            if (rowCount <= 0 || columnCount <= 0)
+            if (rowCount < 0 || columnCount < 0)
             {
-                throw new ArgumentOutOfRangeException(Resources.MatrixDimensionPositive);
+                throw new ArgumentOutOfRangeException(Resources.MatrixDimensionNonNegative);
             }
 
             this.nrows = rowCount;

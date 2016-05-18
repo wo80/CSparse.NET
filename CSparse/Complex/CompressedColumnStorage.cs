@@ -409,6 +409,11 @@ namespace CSparse.Complex
                 throw new ArgumentException(Resources.MatrixDimensions);
             }
 
+            if ((m > 0 && this.ColumnCount == 0) || (other.RowCount == 0 && n > 0))
+            {
+                throw new Exception(Resources.InvalidDimensions);
+            }
+
             var bp = other.ColumnPointers;
             var bi = other.RowIndices;
             var bx = other.Values;

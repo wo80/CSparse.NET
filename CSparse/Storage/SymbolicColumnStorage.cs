@@ -66,11 +66,8 @@ namespace CSparse.Storage
             this.rowCount = rowCount;
             this.columnCount = columnCount;
 
-            if (valueCount > 0)
-            {
-                this.ColumnPointers = new int[columnCount + 1];
-                this.RowIndices = new int[valueCount];
-            }
+            this.ColumnPointers = new int[columnCount + 1];
+            this.RowIndices = new int[valueCount];
         }
 
         /// <summary>

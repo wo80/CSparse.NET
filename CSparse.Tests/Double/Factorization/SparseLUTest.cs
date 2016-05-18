@@ -3,14 +3,13 @@ namespace CSparse.Tests.Double.Factorization
 {
     using CSparse.Double;
     using CSparse.Double.Factorization;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using NUnit.Framework;
 
-    [TestClass]
     public class SparseLUTest
     {
         private const double EPS = 1.0e-6;
 
-        [TestMethod]
+        [Test]
         public void TestSolve()
         {
             // Load matrix from a file.
@@ -33,7 +32,7 @@ namespace CSparse.Tests.Double.Factorization
             Assert.IsTrue(Vector.Norm(r) < EPS);
         }
 
-        [TestMethod]
+        [Test]
         public void TestSolveTranspose()
         {
             // Load matrix from a file.
@@ -56,6 +55,17 @@ namespace CSparse.Tests.Double.Factorization
             AT.Multiply(-1.0, x, 1.0, r);
 
             Assert.IsTrue(Vector.Norm(r) < EPS);
+        }
+
+        [Test]
+        public void TestEmptyFactorize()
+        {
+            var A = MatrixHelper.Load(0, 0);
+
+            var chol = new SparseCholesky(A, ColumnOrdering.MinimumDegreeAtPlusA);
+
+            Assert.NotNull(chol);
+            Assert.IsTrue(chol.NonZerosCount == 0);
         }
     }
 }
