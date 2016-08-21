@@ -95,7 +95,7 @@ namespace CSparse
         }
 
         /// <summary>
-        /// Convert a coordinate storage to compressed sparse column (CSC) format.
+        /// Convert a jagged array to compressed sparse column (CSC) format.
         /// </summary>
         /// <param name="array">jagged array storage.</param>
         /// <param name="cleanup">Remove and sum duplicate entries.</param>
@@ -117,48 +117,7 @@ namespace CSparse
                 }
             }
 
-            var values = storage.Values;
-            var rowind = storage.RowIndices;
-            var colind = storage.ColumnIndices;
-
-            int p, k, nz = storage.NonZerosCount;
-
-            var columnPointers = new int[ncols + 1];
-            var columnCounts = new int[ncols];
-
-            for (k = 0; k < nz; k++)
-            {
-                // Count columns
-                columnCounts[colind[k]]++;
-            }
-
-            // Get row pointers
-            int valueCount = Helper.CumulativeSum(columnPointers, columnCounts, ncols);
-
-            var result = CompressedColumnStorage<T>.Create(nrows, ncols);
-
-            var rowIndices = new int[valueCount];
-            var storageValues = new T[valueCount];
-
-            for (k = 0; k < nz; k++)
-            {
-                p = columnCounts[colind[k]]++;
-                rowIndices[p] = rowind[k];
-                storageValues[p] = values[k];
-            }
-
-            result.RowIndices = rowIndices;
-            result.ColumnPointers = columnPointers;
-            result.Values = storageValues;
-
-            result.SortIndices();
-
-            if (cleanup)
-            {
-                result.Cleanup();
-            }
-
-            return result;
+            return ToCompressedColumnStorage<T>(storage, cleanup);
         }
 
 
@@ -186,21 +145,17 @@ namespace CSparse
         }
 
         /// <summary>
-        /// Convert a 2D array (MxM) to coordinate storage.
+        /// Convert a 2D jagged array to coordinate storage.
         /// </summary>
         /// <param name="array">jagged array storage.</param>
         /// <returns>Coordinate storage.</returns>
+        /// <remarks>All rows of the array are assumed to be equal in length</remarks>
         public static CoordinateStorage<T> FromDenseArray<T>(T[][] array)
             where T : struct, IEquatable<T>, IFormattable
         {
             int rowCount = array.Length;
             int columnCount = array[0].Length;
-
-            if (rowCount != columnCount)
-            {
-                throw new InvalidOperationException("The matrix must be square");
-            }
-
+            
             var storage = new CoordinateStorage<T>(rowCount, columnCount, rowCount);
 
             for (int i = 0; i < rowCount; i++)
