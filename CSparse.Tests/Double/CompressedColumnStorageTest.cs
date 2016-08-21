@@ -66,7 +66,7 @@ namespace CSparse.Tests.Double
         }
 
         [Test]
-        public void TestJaggedArrayToCSC(int n)
+        public void TestJaggedArrayToCSC()
         {
             double[][] array = new double[3][];
             for (int i = 0; i < 3; i++)
