@@ -100,10 +100,9 @@ namespace CSparse
         /// <param name="array">jagged array storage.</param>
         /// <param name="cleanup">Remove and sum duplicate entries.</param>
         /// <returns>Compressed sparse column storage.</returns>
-        public static CompressedColumnStorage<T> ToCompressedColumnStorage<T>(T[][] array,
-            bool cleanup = true) where T : struct, IEquatable<T>, IFormattable
+        public static CompressedColumnStorage<T> ToCompressedColumnStorage<T>(T[][] array)
+            where T : struct, IEquatable<T>, IFormattable
         {
-
             int nrows = array.Length;
             int ncols = array[0].Length;
             
@@ -117,7 +116,7 @@ namespace CSparse
                 }
             }
 
-            return ToCompressedColumnStorage<T>(storage, cleanup);
+            return ToCompressedColumnStorage<T>(storage, false);
         }
 
 

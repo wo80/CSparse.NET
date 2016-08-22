@@ -45,6 +45,7 @@
     <Compile Include="Complex\Factorization\SparseCholeskyTest.cs" />
     <Compile Include="Complex\Helper.cs" />
     <Compile Include="Complex\MatrixHelper.cs" />
+    <Compile Include="ConverterTest.cs" />
     <Compile Include="Double\CompressedColumnStorageTest.cs" />
     <Compile Include="Double\Factorization\SparseLUTest.cs" />
     <Compile Include="Double\Factorization\SparseQRTest.cs" />
@@ -69,7 +70,9 @@
     <EmbeddedResource Include="Double\Data\symmetric-40-spd.mat" />
     <EmbeddedResource Include="Double\Data\symmetric-40.mat" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Complex\Data\general-20x40.mat" />
     <EmbeddedResource Include="Complex\Data\general-40x20.mat" />

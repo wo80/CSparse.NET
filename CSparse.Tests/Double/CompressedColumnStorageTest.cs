@@ -65,29 +65,6 @@ namespace CSparse.Tests.Double
             });
         }
 
-        [Test]
-        public void TestJaggedArrayToCSC()
-        {
-            double[][] array = new double[3][];
-            for (int i = 0; i < 3; i++)
-                array[i] = new double[3];
-
-            array[0][1] = 2.0; array[1][0] = 2.0;
-            array[0][2] = 4.0; array[2][0] = 4.0;
-            array[2][2] = 6.0;
-
-            var csc = CSparse.Converter.ToCompressedColumnStorage(array, false);
-            Assert.IsTrue(csc.IsSymmetric());
-
-            double[] x = new[] { 1.0, 2.0, 3.0 };
-            double[] y = new double[3];
-            csc.Multiply(x, y);
-
-            Assert.AreEqual(y[0], 16.0 ,1e-6);
-            Assert.AreEqual(y[1], 2.0 , 1e-6);
-            Assert.AreEqual(y[2], 22.0, 1e-6);
-        }
-
         [TestCase(0, 0)]
         [TestCase(0, 5)]
         [TestCase(5, 0)]
