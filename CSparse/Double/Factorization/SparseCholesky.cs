@@ -25,6 +25,7 @@ namespace CSparse.Double.Factorization
         SymbolicFactorization S;
         CompressedColumnStorage<double> L;
         int n;
+        public event System.ComponentModel.ProgressChangedEventHandler ProgressChanged;
 
         double[] temp; // workspace
 
@@ -257,12 +258,20 @@ namespace CSparse.Double.Factorization
             var li = L.RowIndices;
             var lx = L.Values;
 
+            var lastPercent = 0;
+            
             for (k = 0; k < n; k++)
             {
                 lp[k] = c[k] = colp[k];
             }
             for (k = 0; k < n; k++) // compute L(k,:) for L*L' = C
             {
+                if (100*k/n != lastPercent)
+                {
+                    if (ProgressChanged != null)
+                        ProgressChanged(this, new System.ComponentModel.ProgressChangedEventArgs(lastPercent = (100 * k) / n, userState: null)); //not sure what userState should be :)
+                }
+                
                 // Find nonzero pattern of L(k,:)
                 top = GraphHelper.EtreeReach(SymbolicColumnStorage.Create(C, false), k, parent, s, c);
                 x[k] = 0;                           // x (0:k) is now zero
