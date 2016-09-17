@@ -258,6 +258,8 @@ namespace CSparse.Double.Factorization
             var li = L.RowIndices;
             var lx = L.Values;
 
+            var lastPercent = 0;
+            
             for (k = 0; k < n; k++)
             {
                 lp[k] = c[k] = colp[k];
