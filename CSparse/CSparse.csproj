@@ -54,6 +54,7 @@
     <Compile Include="Factorization\SparseQR.cs" />
     <Compile Include="IO\MatrixMarketReader.cs" />
     <Compile Include="Factorization\ISparseFactorization.cs" />
+    <Compile Include="IProgress.cs" />
     <Compile Include="Ordering\AMD.cs" />
     <Compile Include="Ordering\DulmageMendelsohn.cs" />
     <Compile Include="Ordering\MaximumMatching.cs" />
