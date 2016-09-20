@@ -14,7 +14,7 @@ namespace CSparse.Double.Factorization
     using System;
 
     /// <summary>
-    /// Sparse Cholesky decomposition.
+    /// Sparse Cholesky decomposition (only upper triangular part is used).
     /// </summary>
     /// <remarks>
     /// See Chapter 4 (Cholesky factorization) in "Direct Methods for Sparse Linear Systems"
@@ -34,9 +34,10 @@ namespace CSparse.Double.Factorization
         /// Creates a sparse Cholesky factorization.
         /// </summary>
         /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
-        public static SparseCholesky Create(CompressedColumnStorage<double> A)
+        /// <param name="order">Ordering method to use (natural or A+A').</param>
+        public static SparseCholesky Create(CompressedColumnStorage<double> A, ColumnOrdering order)
         {
-            return Create(A, ColumnOrdering.Natural);
+            return Create(A, order, null);
         }
 
         /// <summary>
@@ -44,36 +45,15 @@ namespace CSparse.Double.Factorization
         /// </summary>
         /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
         /// <param name="order">Ordering method to use (natural or A+A').</param>
-        /// <remarks>
-        /// Only upper triangular part is used.
-        /// </remarks>
-        public static SparseCholesky Create(CompressedColumnStorage<double> A, ColumnOrdering order)
+        public static SparseCholesky Create(CompressedColumnStorage<double> A, ColumnOrdering order,
+            IProgress progress)
         {
-            int n = A.ColumnCount;
-
-            // Check input.
-            if (A.RowCount != n)
-            {
-                throw new ArgumentException(Resources.MatrixSquare, "A");
-            }
-
             if ((int)order > 1)
             {
                 throw new ArgumentException(Resources.InvalidColumnOrdering, "order");
             }
 
-            var C = new SparseCholesky(n);
-
-            // Compute permutation P = amd(A+A') or natural
-            var p = AMD.Generate(A, order);
-
-            // Ordering and symbolic analysis
-            C.SymbolicAnalysis(A, p);
-
-            // Numeric Cholesky factorization
-            C.Factorize(A);
-
-            return C;
+            return Create(A, AMD.Generate(A, order), progress);
         }
 
         /// <summary>
@@ -81,28 +61,26 @@ namespace CSparse.Double.Factorization
         /// </summary>
         /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
         /// <param name="p">Permutation.</param>
-        /// <remarks>
-        /// Only upper triangular part is used.
-        /// </remarks>
         public static SparseCholesky Create(CompressedColumnStorage<double> A, int[] p)
         {
+            return Create(A, p, null);
+        }
+
+        /// <summary>
+        /// Creates a sparse Cholesky factorization.
+        /// </summary>
+        /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
+        /// <param name="p">Permutation.</param>
+        public static SparseCholesky Create(CompressedColumnStorage<double> A, int[] p,
+            IProgress progress)
+        {
+            Check.NotNull(A, "A");
+            Check.NotNull(p, "p");
+
             int n = A.ColumnCount;
 
-            // Check input.
-            if (A.RowCount != n)
-            {
-                throw new ArgumentException(Resources.MatrixSquare, "A");
-            }
-
-            if (p == null)
-            {
-                throw new ArgumentNullException("p");
-            }
-
-            if (p.Length != n || !Permutation.IsValid(p))
-            {
-                throw new ArgumentException(Resources.InvalidPermutation, "p");
-            }
+            Check.SquareMatrix(A, "A");
+            Check.Permutation(p, n, "p");
 
             var C = new SparseCholesky(n);
 
@@ -110,7 +88,7 @@ namespace CSparse.Double.Factorization
             C.SymbolicAnalysis(A, p);
 
             // Numeric Cholesky factorization
-            C.Factorize(A);
+            C.Factorize(A, progress);
 
             return C;
         }
@@ -251,7 +229,7 @@ namespace CSparse.Double.Factorization
         /// Compute the Numeric Cholesky factorization, L = chol (A, [pinv parent cp]).
         /// </summary>
         /// <returns>Numeric Cholesky factorization</returns>
-        private void Factorize(CompressedColumnStorage<double> A)
+        private void Factorize(CompressedColumnStorage<double> A, IProgress progress)
         {
             double d, lki;
             int top, i, p, k, cci;
@@ -284,8 +262,23 @@ namespace CSparse.Double.Factorization
             {
                 lp[k] = c[k] = colp[k];
             }
+
+            double current = 0.0;
+            double step = n / 100.0;
+
             for (k = 0; k < n; k++) // compute L(k,:) for L*L' = C
             {
+                // Progress reporting.
+                if (k >= current)
+                {
+                    current += step;
+
+                    if (progress != null)
+                    {
+                        progress.Report(k / (double)n);
+                    }
+                }
+
                 // Find nonzero pattern of L(k,:)
                 top = GraphHelper.EtreeReach(SymbolicColumnStorage.Create(C, false), k, parent, s, c);
                 x[k] = 0;                           // x (0:k) is now zero

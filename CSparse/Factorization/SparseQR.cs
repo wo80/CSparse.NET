@@ -50,7 +50,7 @@ namespace CSparse.Factorization
         /// <summary>
         /// Sparse QR factorization [V,beta,pinv,R] = qr(A)
         /// </summary>
-        protected void Factorize(CompressedColumnStorage<T> A)
+        protected void Factorize(CompressedColumnStorage<T> A, IProgress progress)
         {
             T zero = Helper.ZeroOf<T>();
 
@@ -96,9 +96,23 @@ namespace CSparse.Factorization
                 w[i] = -1; // clear w, to mark nodes
             }
 
+            double current = 0.0;
+            double step = n / 100.0;
+
             rnz = 0; vnz = 0;
             for (int k = 0; k < n; k++) // compute V and R
             {
+                // Progress reporting.
+                if (k >= current)
+                {
+                    current += step;
+
+                    if (progress != null)
+                    {
+                        progress.Report(k / (double)n);
+                    }
+                }
+
                 rp[k] = rnz;      // R(:,k) starts here
                 vp[k] = p1 = vnz; // V(:,k) starts here
                 w[k] = k;         // add V(k,k) to pattern of V

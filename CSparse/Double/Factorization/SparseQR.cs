@@ -26,10 +26,23 @@ namespace CSparse.Double.Factorization
         /// <summary>
         /// Creates a sparse QR factorization.
         /// </summary>
-        /// <param name="order">Ordering method to use.</param>
-        /// <param name="A">Column-compressed matrix.</param>
+        /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
+        /// <param name="order">Ordering method to use (natural or A+A').</param>
         public static SparseQR Create(CompressedColumnStorage<double> A, ColumnOrdering order)
         {
+            return Create(A, order, null);
+        }
+
+        /// <summary>
+        /// Creates a sparse QR factorization.
+        /// </summary>
+        /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
+        /// <param name="order">Ordering method to use (natural or A+A').</param>
+        public static SparseQR Create(CompressedColumnStorage<double> A, ColumnOrdering order,
+            IProgress progress)
+        {
+            Check.NotNull(A, "A");
+
             int m = A.RowCount;
             int n = A.ColumnCount;
 
@@ -43,7 +56,7 @@ namespace CSparse.Double.Factorization
                 C.SymbolicAnalysis(A, p, order == ColumnOrdering.Natural);
 
                 // Numeric QR factorization
-                C.Factorize(A);
+                C.Factorize(A, progress);
             }
             else
             {
@@ -56,7 +69,7 @@ namespace CSparse.Double.Factorization
                 C.SymbolicAnalysis(AT, p, order == ColumnOrdering.Natural);
 
                 // Numeric QR factorization of A'
-                C.Factorize(AT);
+                C.Factorize(AT, progress);
             }
 
             return C;

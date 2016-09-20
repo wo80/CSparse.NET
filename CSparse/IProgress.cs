@@ -13,6 +13,6 @@ namespace CSparse
         /// Reports a progress update.
         /// </summary>
         /// <param name="value">The value of the updated progress (from 0.0 to 1.0).</param>
-        void Progress(double value);
+        void Report(double value);
     }
 }

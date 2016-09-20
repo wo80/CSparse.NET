@@ -36,6 +36,7 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Check.cs" />
     <Compile Include="ColumnOrdering.cs" />
     <Compile Include="Complex\CompressedColumnStorage.cs" />
     <Compile Include="Complex\Factorization\SparseCholesky.cs" />

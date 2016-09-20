@@ -34,83 +34,66 @@ namespace CSparse.Double.Factorization
         /// <summary>
         /// Creates a LU factorization.
         /// </summary>
-        /// <param name="A">Column-compressed matrix.</param>
-        public static SparseLU Create(CompressedColumnStorage<double> A)
+        /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
+        /// <param name="order">Ordering method to use (natural or A+A').</param>
+        /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
+        public static SparseLU Create(CompressedColumnStorage<double> A, ColumnOrdering order,
+            double tol)
         {
-            return Create(A, ColumnOrdering.Natural, 1.0);
+            return Create(A, order, tol, null);
         }
-        
+
         /// <summary>
         /// Creates a LU factorization.
         /// </summary>
-        /// <param name="A">Column-compressed matrix.</param>
-        /// <param name="order">Ordering method to use.</param>
+        /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
+        /// <param name="order">Ordering method to use (natural or A+A').</param>
         /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
-        public static SparseLU Create(CompressedColumnStorage<double> A, ColumnOrdering order, double tol)
+        public static SparseLU Create(CompressedColumnStorage<double> A, ColumnOrdering order,
+            double tol, IProgress progress)
         {
+            return Create(A, AMD.Generate(A, order), tol, progress);
+        }
+
+        /// <summary>
+        /// Creates a LU factorization.
+        /// </summary>
+        /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
+        /// <param name="p">Permutation.</param>
+        /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
+        public static SparseLU Create(CompressedColumnStorage<double> A, int[] p, double tol)
+        {
+            return Create(A, p, tol, null);
+        }
+
+        /// <summary>
+        /// Creates a LU factorization.
+        /// </summary>
+        /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
+        /// <param name="p">Permutation.</param>
+        /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
+        public static SparseLU Create(CompressedColumnStorage<double> A, int[] p, double tol,
+            IProgress progress)
+        {
+            Check.NotNull(A, "A");
+            Check.NotNull(p, "p");
+
             int n = A.ColumnCount;
 
-            // Check input.
-            if (A.RowCount != n)
-            {
-                throw new ArgumentException(Resources.MatrixSquare, "A");
-            }
-
-            if (double.IsNaN(tol))
-            {
-                throw new ArgumentException(Resources.ValueNotNaN, "tol");
-            }
+            Check.SquareMatrix(A, "A");
+            Check.Permutation(p, n, "p");
+            Check.NotNaN(tol, "tol");
 
             // Ensure tol is in range.
             tol = Math.Min(Math.Max(tol, 0.0), 1.0);
 
             var C = new SparseLU(n);
 
-            // Compute permutation P = amd(A+A') or natural
-            var p = AMD.Generate(A, order);
-
             // Ordering and symbolic analysis
             C.SymbolicAnalysis(A, p);
 
-            // Numeric LU factorization
-            C.Factorize(A, tol);
-
-            return C;
-        }
-
-        /// <summary>
-        /// Creates a LU factorization.
-        /// </summary>
-        /// <param name="A">Column-compressed matrix.</param>
-        /// <param name="p">Permutation.</param>
-        /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
-        public static SparseLU Create(CompressedColumnStorage<double> A, int[] p, double tol)
-        {
-            int n = A.ColumnCount;
-
-            // Check input.
-            if (A.RowCount != n)
-            {
-                throw new ArgumentException(Resources.MatrixSquare, "A");
-            }
-
-            if (p == null)
-            {
-                throw new ArgumentNullException("p");
-            }
-
-            if (p.Length != n || !Permutation.IsValid(p))
-            {
-                throw new ArgumentException(Resources.InvalidPermutation, "p");
-            }
-
-            var C = new SparseLU(n);
-
-            // Ordering and symbolic analysis
-            C.SymbolicAnalysis(A, p);
-
-            // Numeric LU factorization
-            C.Factorize(A, tol);
+            // Numeric Cholesky factorization
+            C.Factorize(A, tol, progress);
 
             return C;
         }
@@ -178,7 +161,7 @@ namespace CSparse.Double.Factorization
         /// <summary>
         /// [L,U,pinv] = lu(A, [q lnz unz]). lnz and unz can be guess.
         /// </summary>
-        private void Factorize(CompressedColumnStorage<double> A, double tol)
+        private void Factorize(CompressedColumnStorage<double> A, double tol, IProgress progress)
         {
             int[] q = S.q;
 
@@ -211,9 +194,23 @@ namespace CSparse.Double.Factorization
             int[] up = U.ColumnPointers;
             double[] lx, ux;
 
+            double current = 0.0;
+            double step = n / 100.0;
+
             // Now compute L(:,k) and U(:,k)
             for (int k = 0; k < n; k++)
             {
+                // Progress reporting.
+                if (k >= current)
+                {
+                    current += step;
+
+                    if (progress != null)
+                    {
+                        progress.Report(k / (double)n);
+                    }
+                }
+
                 // Triangular solve
                 lp[k] = lnz; // L(:,k) starts here
                 up[k] = unz; // U(:,k) starts here
