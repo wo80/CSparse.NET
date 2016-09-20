@@ -97,8 +97,7 @@ namespace CSparse
         /// <summary>
         /// Convert a jagged array to compressed sparse column (CSC) format.
         /// </summary>
-        /// <param name="array">jagged array storage.</param>
-        /// <param name="cleanup">Remove and sum duplicate entries.</param>
+        /// <param name="array">Jagged array storage.</param>
         /// <returns>Compressed sparse column storage.</returns>
         public static CompressedColumnStorage<T> ToCompressedColumnStorage<T>(T[][] array)
             where T : struct, IEquatable<T>, IFormattable

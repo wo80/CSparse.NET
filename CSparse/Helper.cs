@@ -76,19 +76,6 @@ namespace CSparse
             throw new NotSupportedException();
         }
 
-        /// <summary>
-        /// Copy source array to target.
-        /// </summary>
-        public static void Copy<T>(T[] source, T[] target)
-        {
-            int length = source.Length;
-
-            for (int i = 0; i < length; i++)
-            {
-                target[i] = source[i];
-            }
-        }
-
         #endregion
     }
 }

@@ -13,19 +13,9 @@ namespace CSparse.Storage
     /// Sparse matrix storage interface.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface ISparseMatrixStorage<T> : IEquatable<ISparseMatrixStorage<T>>
+    public interface ISparseMatrixStorage<T> : ILinearOperator<T>, IEquatable<ISparseMatrixStorage<T>>
         where T : struct, IEquatable<T>, IFormattable
     {
-        /// <summary>
-        /// Gets the number of rows.
-        /// </summary>
-        int RowCount { get; }
-
-        /// <summary>
-        /// Gets the number of columns.
-        /// </summary>
-        int ColumnCount { get; }
-        
         /// <summary>
         /// Gets the number of non-zero entries.
         /// </summary>
@@ -88,15 +78,5 @@ namespace CSparse.Storage
         /// more like EnumerateNonZeroIndexed (but stored zero's aren't skipped).
         /// </remarks>
         IEnumerable<Tuple<int, int, T>> EnumerateIndexed();
-
-        /// <summary>
-        /// Computes the matrix-vector product y = alpha * A * x + beta * y.
-        /// </summary>
-        void Multiply(T alpha, T[] x, T beta, T[] y);
-
-        /// <summary>
-        /// Computes the matrix-vector product y = alpha * A^t * x + beta * y.
-        /// </summary>
-        void TransposeMultiply(T alpha, T[] x, T beta, T[] y);
     }
 }
