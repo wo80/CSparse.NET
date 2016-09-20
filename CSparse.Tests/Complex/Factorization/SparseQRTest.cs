@@ -23,7 +23,7 @@ namespace CSparse.Tests.Complex.Factorization
             var b = Helper.Multiply(A, x);
             var r = Vector.Clone(b);
 
-            var qr = new SparseQR(A, ColumnOrdering.MinimumDegreeAtA);
+            var qr = SparseQR.Create(A, ColumnOrdering.MinimumDegreeAtA);
 
             qr.Solve(b, x);
 
@@ -49,7 +49,7 @@ namespace CSparse.Tests.Complex.Factorization
             var b = Helper.Multiply(A, x);
             var r = Vector.Clone(b);
 
-            var qr = new SparseQR(A, ColumnOrdering.MinimumDegreeAtA);
+            var qr = SparseQR.Create(A, ColumnOrdering.MinimumDegreeAtA);
 
             // Compute min norm(Ax - b).
             qr.Solve(b, x);
@@ -76,7 +76,7 @@ namespace CSparse.Tests.Complex.Factorization
             var b = Helper.Multiply(A, x);
             var r = Vector.Clone(b);
 
-            var qr = new SparseQR(A, ColumnOrdering.MinimumDegreeAtA);
+            var qr = SparseQR.Create(A, ColumnOrdering.MinimumDegreeAtA);
 
             // Assuming A has full rank m, we have N(A) = n - m degrees of freedom.
             // Compute solution x with min norm(Ax - b).
@@ -95,7 +95,7 @@ namespace CSparse.Tests.Complex.Factorization
         {
             var A = MatrixHelper.Load(rows, columns);
 
-            var qr = new SparseQR(A, ColumnOrdering.MinimumDegreeAtA);
+            var qr = SparseQR.Create(A, ColumnOrdering.MinimumDegreeAtA);
 
             Assert.NotNull(qr);
             Assert.IsTrue(qr.NonZerosCount == -rows);

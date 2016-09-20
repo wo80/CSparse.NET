@@ -21,7 +21,7 @@ namespace CSparse.Tests.Double.Factorization
             var b = Helper.Multiply(A, x);
             var r = Vector.Clone(b);
 
-            var chol = new SparseCholesky(A, ColumnOrdering.MinimumDegreeAtPlusA);
+            var chol = SparseCholesky.Create(A, ColumnOrdering.MinimumDegreeAtPlusA);
 
             // Solve Ax = b.
             chol.Solve(b, x);
@@ -40,7 +40,7 @@ namespace CSparse.Tests.Double.Factorization
 
             Assert.Throws<Exception>(() =>
             {
-                var chol = new SparseCholesky(A, ColumnOrdering.MinimumDegreeAtPlusA);
+                var chol = SparseCholesky.Create(A, ColumnOrdering.MinimumDegreeAtPlusA);
             });
         }
 
@@ -49,7 +49,7 @@ namespace CSparse.Tests.Double.Factorization
         {
             var A = MatrixHelper.Load(0, 0);
 
-            var chol = new SparseCholesky(A, ColumnOrdering.MinimumDegreeAtPlusA);
+            var chol = SparseCholesky.Create(A, ColumnOrdering.MinimumDegreeAtPlusA);
 
             Assert.NotNull(chol);
             Assert.IsTrue(chol.NonZerosCount == 0);

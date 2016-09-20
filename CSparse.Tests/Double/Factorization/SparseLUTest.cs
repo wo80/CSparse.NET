@@ -21,7 +21,7 @@ namespace CSparse.Tests.Double.Factorization
             var r = Vector.Clone(b);
 
             // Create LU factorization.
-            var lu = new SparseLU(A, ColumnOrdering.MinimumDegreeAtPlusA, 1.0);
+            var lu = SparseLU.Create(A, ColumnOrdering.MinimumDegreeAtPlusA, 1.0);
 
             // Solve Ax = b.
             lu.Solve(b, x);
@@ -46,7 +46,7 @@ namespace CSparse.Tests.Double.Factorization
             var r = Vector.Clone(b);
 
             // Create LU factorization.
-            var lu = new SparseLU(A, ColumnOrdering.MinimumDegreeAtPlusA, 1.0);
+            var lu = SparseLU.Create(A, ColumnOrdering.MinimumDegreeAtPlusA, 1.0);
 
             // Solve A'x = b.
             lu.SolveTranspose(b, x);
@@ -62,10 +62,10 @@ namespace CSparse.Tests.Double.Factorization
         {
             var A = MatrixHelper.Load(0, 0);
 
-            var chol = new SparseCholesky(A, ColumnOrdering.MinimumDegreeAtPlusA);
+            var lu = SparseLU.Create(A, ColumnOrdering.MinimumDegreeAtPlusA, 1.0);
 
-            Assert.NotNull(chol);
-            Assert.IsTrue(chol.NonZerosCount == 0);
+            Assert.NotNull(lu);
+            Assert.IsTrue(lu.NonZerosCount == 0);
         }
     }
 }
