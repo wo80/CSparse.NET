@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="ColumnOrdering.cs">
-// Copyright (c) 2012-2015, Christian Woltering
+// Copyright (c) 2012-2016, Christian Woltering
 // </copyright>
 // -----------------------------------------------------------------------
 

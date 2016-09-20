@@ -1,13 +1,14 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="SparseQR.cs">
-// Copyright (c) 2006-2014, Timothy A. Davis
-// Copyright (c) 2012-2015, Christian Woltering
+// Copyright (c) 2006-2016, Timothy A. Davis
+// Copyright (c) 2012-2016, Christian Woltering
 // </copyright>
 // -----------------------------------------------------------------------
 
 namespace CSparse.Double.Factorization
 {
     using CSparse.Factorization;
+    using CSparse.Ordering;
     using CSparse.Storage;
     using System;
 
@@ -20,35 +21,53 @@ namespace CSparse.Double.Factorization
     /// </remarks>
     public class SparseQR : SparseQR<double>
     {
+        #region Static methods
+
         /// <summary>
         /// Creates a sparse QR factorization.
         /// </summary>
         /// <param name="order">Ordering method to use.</param>
         /// <param name="A">Column-compressed matrix.</param>
-        public SparseQR(CompressedColumnStorage<double> A, ColumnOrdering order)
+        public static SparseQR Create(CompressedColumnStorage<double> A, ColumnOrdering order)
         {
-            this.m = A.RowCount;
-            this.n = A.ColumnCount;
+            int m = A.RowCount;
+            int n = A.ColumnCount;
 
-            if (this.m >= this.n)
+            var C = new SparseQR(m, n);
+
+            if (m >= n)
             {
+                var p = AMD.Generate(A, order);
+
                 // Ordering and symbolic analysis
-                SymbolicAnalysis(order, A);
+                C.SymbolicAnalysis(A, p, order == ColumnOrdering.Natural);
 
                 // Numeric QR factorization
-                Factorize(A);
+                C.Factorize(A);
             }
             else
             {
                 // Ax=b is underdetermined
                 var AT = A.Transpose();
 
+                var p = AMD.Generate(AT, order);
+
                 // Ordering and symbolic analysis
-                SymbolicAnalysis(order, AT);
+                C.SymbolicAnalysis(AT, p, order == ColumnOrdering.Natural);
 
                 // Numeric QR factorization of A'
-                Factorize(AT);
+                C.Factorize(AT);
             }
+
+            return C;
+        }
+
+        #endregion
+
+        private SparseQR(int rows, int columns)
+        {
+            this.m = rows;
+            this.n = columns;
         }
 
         /// <summary>

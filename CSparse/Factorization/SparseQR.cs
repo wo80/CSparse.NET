@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="SparseQR.cs">
-// Copyright (c) 2006-2014, Timothy A. Davis
-// Copyright (c) 2012-2015, Christian Woltering
+// Copyright (c) 2006-2016, Timothy A. Davis
+// Copyright (c) 2012-2016, Christian Woltering
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -156,7 +156,9 @@ namespace CSparse.Factorization
         /// <summary>
         /// Symbolic ordering and analysis for QR.
         /// </summary>
-        protected void SymbolicAnalysis(ColumnOrdering order, CompressedColumnStorage<T> A)
+        /// <param name="A">Matrix to factorize.</param>
+        /// <param name="p">Permutation.</param>
+        protected void SymbolicAnalysis(CompressedColumnStorage<T> A, int[] p, bool natural)
         {
             int m = A.RowCount;
             int n = A.ColumnCount;
@@ -164,9 +166,9 @@ namespace CSparse.Factorization
             var sym = this.S = new SymbolicFactorization();
 
             // Fill-reducing ordering
-            sym.q = AMD.Generate(A, order);
+            sym.q = p;
 
-            var C = order > 0 ? Permute(A, null, sym.q) : SymbolicColumnStorage.Create(A);
+            var C = natural ? SymbolicColumnStorage.Create(A) : Permute(A, null, sym.q);
 
             // etree of C'*C, where C=A(:,q)
             sym.parent = GraphHelper.EliminationTree(m, n, C.ColumnPointers, C.RowIndices, true);

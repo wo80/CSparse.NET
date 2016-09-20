@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="SparseCholesky.cs">
-// Copyright (c) 2006-2014, Timothy A. Davis
-// Copyright (c) 2012-2015, Christian Woltering
+// Copyright (c) 2006-2016, Timothy A. Davis
+// Copyright (c) 2012-2016, Christian Woltering
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -28,6 +28,17 @@ namespace CSparse.Double.Factorization
 
         double[] temp; // workspace
 
+        #region Static methods
+
+        /// <summary>
+        /// Creates a sparse Cholesky factorization.
+        /// </summary>
+        /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
+        public static SparseCholesky Create(CompressedColumnStorage<double> A)
+        {
+            return Create(A, ColumnOrdering.Natural);
+        }
+
         /// <summary>
         /// Creates a sparse Cholesky factorization.
         /// </summary>
@@ -36,9 +47,9 @@ namespace CSparse.Double.Factorization
         /// <remarks>
         /// Only upper triangular part is used.
         /// </remarks>
-        public SparseCholesky(CompressedColumnStorage<double> A, ColumnOrdering order)
+        public static SparseCholesky Create(CompressedColumnStorage<double> A, ColumnOrdering order)
         {
-            this.n = A.ColumnCount;
+            int n = A.ColumnCount;
 
             // Check input.
             if (A.RowCount != n)
@@ -51,16 +62,18 @@ namespace CSparse.Double.Factorization
                 throw new ArgumentException(Resources.InvalidColumnOrdering, "order");
             }
 
-            this.temp = new double[n];
+            var C = new SparseCholesky(n);
 
             // Compute permutation P = amd(A+A') or natural
             var p = AMD.Generate(A, order);
 
             // Ordering and symbolic analysis
-            SymbolicAnalysis(A, p);
+            C.SymbolicAnalysis(A, p);
 
             // Numeric Cholesky factorization
-            Factorize(A);
+            C.Factorize(A);
+
+            return C;
         }
 
         /// <summary>
@@ -71,9 +84,9 @@ namespace CSparse.Double.Factorization
         /// <remarks>
         /// Only upper triangular part is used.
         /// </remarks>
-        public SparseCholesky(CompressedColumnStorage<double> A, int[] p)
+        public static SparseCholesky Create(CompressedColumnStorage<double> A, int[] p)
         {
-            this.n = A.ColumnCount;
+            int n = A.ColumnCount;
 
             // Check input.
             if (A.RowCount != n)
@@ -91,13 +104,23 @@ namespace CSparse.Double.Factorization
                 throw new ArgumentException(Resources.InvalidPermutation, "p");
             }
 
-            this.temp = new double[n];
+            var C = new SparseCholesky(n);
 
             // Ordering and symbolic analysis
-            SymbolicAnalysis(A, p);
+            C.SymbolicAnalysis(A, p);
 
             // Numeric Cholesky factorization
-            Factorize(A);
+            C.Factorize(A);
+
+            return C;
+        }
+
+        #endregion
+
+        private SparseCholesky(int n)
+        {
+            this.n = n;
+            this.temp = new double[n];
         }
 
         /// <summary>

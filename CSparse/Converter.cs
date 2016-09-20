@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="Converter.cs">
-// Copyright (c) 2012-2015, Christian Woltering
+// Copyright (c) 2012-2016, Christian Woltering
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -95,32 +95,6 @@ namespace CSparse
         }
 
         /// <summary>
-        /// Convert a jagged array to compressed sparse column (CSC) format.
-        /// </summary>
-        /// <param name="array">jagged array storage.</param>
-        /// <param name="cleanup">Remove and sum duplicate entries.</param>
-        /// <returns>Compressed sparse column storage.</returns>
-        public static CompressedColumnStorage<T> ToCompressedColumnStorage<T>(T[][] array)
-            where T : struct, IEquatable<T>, IFormattable
-        {
-            int nrows = array.Length;
-            int ncols = array[0].Length;
-            
-            var storage = new CoordinateStorage<T>(nrows, ncols, nrows);
-
-            for (int i = 0; i < nrows; i++)
-            {
-                for (int j = 0; j < ncols; j++)
-                {
-                    storage.At(i, j, array[i][j]);
-                }
-            }
-
-            return ToCompressedColumnStorage<T>(storage, false);
-        }
-
-
-        /// <summary>
         /// Convert a column major array to coordinate storage.
         /// </summary>
         /// <param name="array">Column major array storage.</param>
@@ -137,31 +111,6 @@ namespace CSparse
                 for (int j = 0; j < columnCount; j++)
                 {
                     storage.At(i, j, array[i + j * rowCount]);
-                }
-            }
-
-            return storage;
-        }
-
-        /// <summary>
-        /// Convert a 2D jagged array to coordinate storage.
-        /// </summary>
-        /// <param name="array">jagged array storage.</param>
-        /// <returns>Coordinate storage.</returns>
-        /// <remarks>All rows of the array are assumed to be equal in length</remarks>
-        public static CoordinateStorage<T> FromDenseArray<T>(T[][] array)
-            where T : struct, IEquatable<T>, IFormattable
-        {
-            int rowCount = array.Length;
-            int columnCount = array[0].Length;
-            
-            var storage = new CoordinateStorage<T>(rowCount, columnCount, rowCount);
-
-            for (int i = 0; i < rowCount; i++)
-            {
-                for (int j = 0; j < columnCount; j++)
-                {
-                    storage.At(i, j, array[i][j]);
                 }
             }
 

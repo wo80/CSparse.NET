@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="SparseLU.cs">
-// Copyright (c) 2006-2014, Timothy A. Davis
-// Copyright (c) 2012-2015, Christian Woltering
+// Copyright (c) 2006-2016, Timothy A. Davis
+// Copyright (c) 2012-2016, Christian Woltering
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -28,16 +28,27 @@ namespace CSparse.Double.Factorization
         int n;
 
         double[] temp; // workspace
+        
+        #region Static methods
 
+        /// <summary>
+        /// Creates a LU factorization.
+        /// </summary>
+        /// <param name="A">Column-compressed matrix.</param>
+        public static SparseLU Create(CompressedColumnStorage<double> A)
+        {
+            return Create(A, ColumnOrdering.Natural, 1.0);
+        }
+        
         /// <summary>
         /// Creates a LU factorization.
         /// </summary>
         /// <param name="A">Column-compressed matrix.</param>
         /// <param name="order">Ordering method to use.</param>
         /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
-        public SparseLU(CompressedColumnStorage<double> A, ColumnOrdering order, double tol)
+        public static SparseLU Create(CompressedColumnStorage<double> A, ColumnOrdering order, double tol)
         {
-            this.n = A.ColumnCount;
+            int n = A.ColumnCount;
 
             // Check input.
             if (A.RowCount != n)
@@ -50,16 +61,66 @@ namespace CSparse.Double.Factorization
                 throw new ArgumentException(Resources.ValueNotNaN, "tol");
             }
 
-            temp = new double[n];
-
             // Ensure tol is in range.
             tol = Math.Min(Math.Max(tol, 0.0), 1.0);
 
+            var C = new SparseLU(n);
+
+            // Compute permutation P = amd(A+A') or natural
+            var p = AMD.Generate(A, order);
+
             // Ordering and symbolic analysis
-            SymbolicAnalysis(order, A);
+            C.SymbolicAnalysis(A, p);
 
             // Numeric LU factorization
-            Factorize(A, tol);
+            C.Factorize(A, tol);
+
+            return C;
+        }
+
+        /// <summary>
+        /// Creates a LU factorization.
+        /// </summary>
+        /// <param name="A">Column-compressed matrix.</param>
+        /// <param name="p">Permutation.</param>
+        /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
+        public static SparseLU Create(CompressedColumnStorage<double> A, int[] p, double tol)
+        {
+            int n = A.ColumnCount;
+
+            // Check input.
+            if (A.RowCount != n)
+            {
+                throw new ArgumentException(Resources.MatrixSquare, "A");
+            }
+
+            if (p == null)
+            {
+                throw new ArgumentNullException("p");
+            }
+
+            if (p.Length != n || !Permutation.IsValid(p))
+            {
+                throw new ArgumentException(Resources.InvalidPermutation, "p");
+            }
+
+            var C = new SparseLU(n);
+
+            // Ordering and symbolic analysis
+            C.SymbolicAnalysis(A, p);
+
+            // Numeric LU factorization
+            C.Factorize(A, tol);
+
+            return C;
+        }
+
+        #endregion
+
+        private SparseLU(int n)
+        {
+            this.n = n;
+            this.temp = new double[n];
         }
 
         /// <summary>
@@ -234,14 +295,14 @@ namespace CSparse.Double.Factorization
         /// <summary>
         /// Symbolic ordering and analysis for LU.
         /// </summary>
-        /// <param name="order"></param>
         /// <param name="A"></param>
-        private void SymbolicAnalysis(ColumnOrdering order, CompressedColumnStorage<double> A)
+        /// <param name="p">Permutation.</param>
+        private void SymbolicAnalysis(CompressedColumnStorage<double> A, int[] p)
         {
             var sym = this.S = new SymbolicFactorization();
 
             // Fill-reducing ordering
-            sym.q = AMD.Generate(A, order);
+            sym.q = p;
             
             // Guess nnz(L) and nnz(U)
             sym.unz = sym.lnz = 4 * (A.ColumnPointers[n]) + n;

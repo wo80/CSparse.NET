@@ -1,7 +1,7 @@
 ﻿// -----------------------------------------------------------------------
 // <copyright file="Helper.cs">
-// Copyright (c) 2006-2014, Timothy A. Davis
-// Copyright (c) 2012-2015, Christian Woltering
+// Copyright (c) 2006-2016, Timothy A. Davis
+// Copyright (c) 2012-2016, Christian Woltering
 // </copyright>
 // -----------------------------------------------------------------------
 
@@ -74,6 +74,19 @@ namespace CSparse
             }
 
             throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Copy source array to target.
+        /// </summary>
+        public static void Copy<T>(T[] source, T[] target)
+        {
+            int length = source.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                target[i] = source[i];
+            }
         }
 
         #endregion
