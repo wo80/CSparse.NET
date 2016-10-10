@@ -144,21 +144,7 @@ namespace CSparse.Storage
         /// <returns>
         /// A hash code for the current <see cref="T:System.Object"/>.
         /// </returns>
-        public override int GetHashCode()
-        {
-            var hashNum = Math.Min(nrows * ncols, 25);
-            int i, j, hash = 17;
-            unchecked
-            {
-                for (int k = 0; k < hashNum; k++)
-                {
-                    i = k % ncols;
-                    j = (k - i) / nrows;
-                    hash = hash * 31 + At(j, i).GetHashCode();
-                }
-            }
-            return hash;
-        }
+        public abstract override int GetHashCode();
 
         #endregion
     }
