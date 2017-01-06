@@ -12,7 +12,7 @@ namespace CSparse.Tests.Storage
         [TestCase(5, 0)]
         public void TestConstructor(int rows, int columns)
         {
-            var A = new SymbolicColumnStorage(rows, columns, 0);
+            var A = new SymbolicColumnStorage(rows, columns, 0, true);
 
             Assert.IsNotNull(A);
         }
@@ -22,7 +22,7 @@ namespace CSparse.Tests.Storage
         [TestCase(5, 0)]
         public void TestEmptyTranspose(int rows, int columns)
         {
-            var A = new SymbolicColumnStorage(rows, columns, 0);
+            var A = new SymbolicColumnStorage(rows, columns, 0, true);
             var B = A.Transpose();
 
             Assert.IsNotNull(B);
@@ -33,8 +33,8 @@ namespace CSparse.Tests.Storage
         [TestCase(5, 0)]
         public void TestEmptyAdd(int rows, int columns)
         {
-            var A = new SymbolicColumnStorage(rows, columns, 0);
-            var B = new SymbolicColumnStorage(rows, columns, 0);
+            var A = new SymbolicColumnStorage(rows, columns, 0, true);
+            var B = new SymbolicColumnStorage(rows, columns, 0, true);
 
             var C = A.Add(B);
 

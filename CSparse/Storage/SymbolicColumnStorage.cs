@@ -55,7 +55,7 @@ namespace CSparse.Storage
             get { return ColumnPointers[columnCount]; }
         }
 
-        public SymbolicColumnStorage(int rowCount, int columnCount, int valueCount)
+        public SymbolicColumnStorage(int rowCount, int columnCount, int valueCount, bool allocate)
         {
             // Explicitly allow m or n = 0 (may occur in Dulmage-Mendelsohn decomposition).
             if (rowCount < 0 || columnCount < 0)
@@ -66,8 +66,11 @@ namespace CSparse.Storage
             this.rowCount = rowCount;
             this.columnCount = columnCount;
 
-            this.ColumnPointers = new int[columnCount + 1];
-            this.RowIndices = new int[valueCount];
+            if (allocate)
+            {
+                this.ColumnPointers = new int[columnCount + 1];
+                this.RowIndices = new int[valueCount];
+            }
         }
 
         /// <summary>
@@ -148,7 +151,7 @@ namespace CSparse.Storage
             int n = this.ColumnCount;
             int nnz = this.NonZerosCount;
 
-            var result = new SymbolicColumnStorage(m, n, nnz);
+            var result = new SymbolicColumnStorage(m, n, nnz, true);
 
             Buffer.BlockCopy(this.ColumnPointers, 0, result.ColumnPointers, 0, (n + 1) * Constants.SizeOfInt);
             Buffer.BlockCopy(this.RowIndices, 0, result.RowIndices, 0, nnz * Constants.SizeOfInt);
@@ -169,7 +172,7 @@ namespace CSparse.Storage
             int m = this.RowCount;
             int n = this.ColumnCount;
 
-            var result = new SymbolicColumnStorage(n, m, 0);
+            var result = new SymbolicColumnStorage(n, m, 0, false);
 
             var ci = new int[m + 1];
             var cj = new int[RowIndices.Length];
@@ -246,7 +249,7 @@ namespace CSparse.Storage
             // Remove extra space
             Array.Resize(ref ci, nz);
 
-            var result = new SymbolicColumnStorage(m, n, 0);
+            var result = new SymbolicColumnStorage(m, n, 0, false);
 
             result.ColumnPointers = cp;
             result.RowIndices = ci;
@@ -277,7 +280,7 @@ namespace CSparse.Storage
             var bp = other.ColumnPointers;
             var bi = other.RowIndices;
 
-            var result = new SymbolicColumnStorage(m, n, 0);
+            var result = new SymbolicColumnStorage(m, n, 0, false);
 
             var cp = new int[n + 1];
             var ci = new int[2 * Math.Max(anz, bnz)];
@@ -416,16 +419,16 @@ namespace CSparse.Storage
             return nz;
         }
 
-        internal static SymbolicColumnStorage Create<T>(CompressedColumnStorage<T> mat, bool clone = true)
+        internal static SymbolicColumnStorage Create<T>(CompressedColumnStorage<T> mat, bool allocate = true)
              where T : struct, IEquatable<T>, IFormattable
         {
             int m = mat.RowCount;
             int n = mat.ColumnCount;
             int nnz = mat.NonZerosCount;
 
-            var result = new SymbolicColumnStorage(m, n, clone ? nnz : 0);
+            var result = new SymbolicColumnStorage(m, n, nnz, allocate);
 
-            if (clone)
+            if (allocate)
             {
                 Buffer.BlockCopy(mat.ColumnPointers, 0, result.ColumnPointers, 0, (n + 1) * Constants.SizeOfInt);
                 Buffer.BlockCopy(mat.RowIndices, 0, result.RowIndices, 0, nnz * Constants.SizeOfInt);
