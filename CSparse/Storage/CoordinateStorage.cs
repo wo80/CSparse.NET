@@ -146,6 +146,30 @@ namespace CSparse.Storage
             nz += 1;
         }
 
+        public CoordinateStorage<T> Transpose(bool alloc = false)
+        {
+            var result = new CoordinateStorage<T>(ncols, nrows, nzmax, alloc);
+
+            result.nz = nz;
+            result.nzmax = nzmax;
+
+            // Transposing is just a matter of switching row and column indices.
+            if (alloc)
+            {
+                Array.Copy(rowind, result.colind, nz);
+                Array.Copy(colind, result.rowind, nz);
+                Array.Copy(values, result.values, nz);
+            }
+            else
+            {
+                result.rowind = colind;
+                result.colind = rowind;
+                result.values = values;
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// Resize the storage arrays of the sparse matrix.
         /// </summary>

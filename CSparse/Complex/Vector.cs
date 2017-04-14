@@ -88,6 +88,19 @@ namespace CSparse.Complex
         }
 
         /// <summary>
+        /// Computes the pointwise product of two vectors.
+        /// </summary>
+        public static void PointwiseMultiply(Complex[] x, Complex[] y, Complex[] z)
+        {
+            int length = x.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                z[i] = x[i] * y[i];
+            }
+        }
+
+        /// <summary>
         /// Computes the norm of a vector.
         /// </summary>
         public static double Norm(Complex[] x)

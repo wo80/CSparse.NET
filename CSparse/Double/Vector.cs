@@ -87,6 +87,19 @@ namespace CSparse.Double
         }
 
         /// <summary>
+        /// Computes the pointwise product of two vectors.
+        /// </summary>
+        public static void PointwiseMultiply(double[] x, double[] y, double[] z)
+        {
+            int length = x.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                z[i] = x[i] * y[i];
+            }
+        }
+
+        /// <summary>
         /// Computes the norm of a vector, sqrt( x' * x ).
         /// </summary>
         public static double Norm(double[] x)

@@ -43,14 +43,14 @@ namespace CSparse
         /// <returns>The value of <c>1.0</c> for type T.</returns>
         public static T OneOf<T>()
         {
-            if (typeof(T) == typeof(System.Numerics.Complex))
-            {
-                return (T)(object)System.Numerics.Complex.One;
-            }
-
             if (typeof(T) == typeof(double))
             {
                 return (T)(object)1.0d;
+            }
+
+            if (typeof(T) == typeof(System.Numerics.Complex))
+            {
+                return (T)(object)System.Numerics.Complex.One;
             }
 
             throw new NotSupportedException();
@@ -63,14 +63,14 @@ namespace CSparse
         /// <returns>The value of <c>0.0</c> for type T.</returns>
         public static T ZeroOf<T>()
         {
-            if (typeof(T) == typeof(System.Numerics.Complex))
-            {
-                return (T)(object)System.Numerics.Complex.Zero;
-            }
-
             if (typeof(T) == typeof(double))
             {
                 return (T)(object)0.0d;
+            }
+
+            if (typeof(T) == typeof(System.Numerics.Complex))
+            {
+                return (T)(object)System.Numerics.Complex.Zero;
             }
 
             throw new NotSupportedException();
