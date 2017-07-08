@@ -37,7 +37,7 @@ namespace CSparse.Storage
         /// <summary>
         /// Gets the number of non-zero entries.
         /// </summary>
-        public override int NonZerosCount
+        public int NonZerosCount
         {
             get { return ColumnPointers[columnCount]; }
         }

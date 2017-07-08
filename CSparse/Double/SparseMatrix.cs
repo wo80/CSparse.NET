@@ -95,57 +95,29 @@ namespace CSparse.Double
             return nz;
         }
 
-        /// <summary>
-        /// Computes the norm of a sparse matrix.
-        /// </summary>
-        /// <param name="which">The norm to compute.</param>
-        /// <returns>The requested norm of the matrix.</returns>
+        /// <inheritdoc />
+        [Obsolete("Use specialized methods instead (L1Norm() etc.).")]
         public override double Norm(int which)
         {
-            int nz = this.NonZerosCount;
+            return NormInternal(which);
+        }
 
-            double sum, norm = 0.0;
+        /// <inheritdoc />
+        public override double L1Norm()
+        {
+            return NormInternal(1);
+        }
 
-            if (which == 1)
-            {
-                for (int j = 0; j < columnCount; j++)
-                {
-                    sum = 0.0;
-                    for (int i = ColumnPointers[j]; i < ColumnPointers[j + 1]; i++)
-                    {
-                        sum += Math.Abs(Values[i]);
-                    }
-                    norm = Math.Max(norm, sum);
-                }
-            }
-            else if (which == 2)
-            {
-                sum = 0.0;
-                for (int i = 0; i < nz; i++)
-                {
-                    sum = Math.Abs(Values[i]);
-                    norm += sum * sum;
-                }
-                norm = Math.Sqrt(norm);
+        /// <inheritdoc />
+        public override double InfinityNorm()
+        {
+            return NormInternal(0);
+        }
 
-            }
-            else
-            {
-                var work = new double[rowCount];
-                for (int j = 0; j < columnCount; j++)
-                {
-                    for (int i = ColumnPointers[j]; i < ColumnPointers[j + 1]; i++)
-                    {
-                        work[RowIndices[i]] += Math.Abs(Values[i]);
-                    }
-                }
-                for (int j = 0; j < rowCount; j++)
-                {
-                    norm = Math.Max(norm, work[j]);
-                }
-            }
-
-            return norm;
+        /// <inheritdoc />
+        public override double FrobeniusNorm()
+        {
+            return NormInternal(2);
         }
 
         #endregion
@@ -459,6 +431,59 @@ namespace CSparse.Double
         }
 
         #region Internal methods
+
+        /// <summary>
+        /// Computes the norm of a sparse matrix.
+        /// </summary>
+        /// <param name="which">The norm to compute.</param>
+        /// <returns>The requested norm of the matrix.</returns>
+        internal double NormInternal(int which)
+        {
+            int nz = this.NonZerosCount;
+
+            double sum, norm = 0.0;
+
+            if (which == 1)
+            {
+                for (int j = 0; j < columnCount; j++)
+                {
+                    sum = 0.0;
+                    for (int i = ColumnPointers[j]; i < ColumnPointers[j + 1]; i++)
+                    {
+                        sum += Math.Abs(Values[i]);
+                    }
+                    norm = Math.Max(norm, sum);
+                }
+            }
+            else if (which == 2)
+            {
+                sum = 0.0;
+                for (int i = 0; i < nz; i++)
+                {
+                    sum = Math.Abs(Values[i]);
+                    norm += sum * sum;
+                }
+                norm = Math.Sqrt(norm);
+
+            }
+            else
+            {
+                var work = new double[rowCount];
+                for (int j = 0; j < columnCount; j++)
+                {
+                    for (int i = ColumnPointers[j]; i < ColumnPointers[j + 1]; i++)
+                    {
+                        work[RowIndices[i]] += Math.Abs(Values[i]);
+                    }
+                }
+                for (int j = 0; j < rowCount; j++)
+                {
+                    norm = Math.Max(norm, work[j]);
+                }
+            }
+
+            return norm;
+        }
 
         internal override void Cleanup()
         {

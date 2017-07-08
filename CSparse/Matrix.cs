@@ -41,12 +41,6 @@ namespace CSparse
             get { return columnCount; }
         }
 
-        /// <inheritdoc />
-        public abstract int NonZerosCount
-        {
-            get;
-        }
-
         /// <summary>
         /// Initializes a new instance of the Matrix class.
         /// </summary>
@@ -68,7 +62,26 @@ namespace CSparse
         public abstract void Clear();
 
         /// <inheritdoc />
+        [Obsolete("Use specialized methods instead (L1Norm() etc.).")]
         public abstract double Norm(int which);
+
+        /// <summary>
+        /// Calculates the induced L1 norm of this matrix.
+        /// </summary>
+        /// <returns>The maximum absolute column sum of the matrix.</returns>
+        public abstract double L1Norm();
+
+        /// <summary>
+        /// Calculates the induced infinity norm of this matrix.
+        /// </summary>
+        /// <returns>The maximum absolute row sum of the matrix.</returns>
+        public abstract double InfinityNorm();
+
+        /// <summary>
+        /// Calculates the entry-wise Frobenius norm of this matrix.
+        /// </summary>
+        /// <returns>The square root of the sum of the squared values.</returns>
+        public abstract double FrobeniusNorm();
 
         /// <inheritdoc />
         public abstract int Keep(Func<int, int, T, double, bool> func, double tolerance);
