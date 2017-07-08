@@ -26,19 +26,19 @@ namespace CSparse
         /// </summary>
         protected static readonly T One = Helper.OneOf<T>();
 
-        protected readonly int nrows;
-        protected readonly int ncols;
+        protected readonly int rowCount;
+        protected readonly int columnCount;
 
         /// <inheritdoc />
         public int RowCount
         {
-            get { return nrows; }
+            get { return rowCount; }
         }
 
         /// <inheritdoc />
         public int ColumnCount
         {
-            get { return ncols; }
+            get { return columnCount; }
         }
 
         /// <inheritdoc />
@@ -57,8 +57,8 @@ namespace CSparse
                 throw new ArgumentOutOfRangeException(Resources.MatrixDimensionNonNegative);
             }
 
-            this.nrows = rowCount;
-            this.ncols = columnCount;
+            this.rowCount = rowCount;
+            this.columnCount = columnCount;
         }
 
         /// <inheritdoc />
@@ -137,7 +137,21 @@ namespace CSparse
         /// <returns>
         /// A hash code for the current <see cref="T:System.Object"/>.
         /// </returns>
-        public abstract override int GetHashCode();
+        public override int GetHashCode()
+        {
+            var hashNum = Math.Min(RowCount * ColumnCount, 25);
+            int hash = 17;
+            unchecked
+            {
+                for (var i = 0; i < hashNum; i++)
+                {
+                    var col = i % ColumnCount;
+                    var row = (i - col) / RowCount;
+                    hash = hash * 31 + At(row, col).GetHashCode();
+                }
+            }
+            return hash;
+        }
 
         #endregion
     }

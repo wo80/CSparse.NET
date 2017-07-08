@@ -39,7 +39,7 @@ namespace CSparse.Storage
         /// </summary>
         public override int NonZerosCount
         {
-            get { return ColumnPointers[ncols]; }
+            get { return ColumnPointers[columnCount]; }
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace CSparse.Storage
         /// </summary>
         public virtual CompressedColumnStorage<T> Transpose()
         {
-            var result = CompressedColumnStorage<T>.Create(ncols, nrows, this.NonZerosCount);
+            var result = CompressedColumnStorage<T>.Create(columnCount, rowCount, this.NonZerosCount);
             this.Transpose(result);
             return result;
         }
@@ -139,18 +139,18 @@ namespace CSparse.Storage
             var cp = result.ColumnPointers;
             var ci = result.RowIndices;
 
-            int[] w = new int[nrows];
+            int[] w = new int[rowCount];
 
-            for (p = 0; p < ColumnPointers[ncols]; p++)
+            for (p = 0; p < ColumnPointers[columnCount]; p++)
             {
                 // Row counts.
                 w[RowIndices[p]]++;
             }
 
             // Row pointers.
-            Helper.CumulativeSum(cp, w, nrows);
+            Helper.CumulativeSum(cp, w, rowCount);
 
-            for (i = 0; i < ncols; i++)
+            for (i = 0; i < columnCount; i++)
             {
                 for (p = ColumnPointers[i]; p < ColumnPointers[i + 1]; p++)
                 {
@@ -168,8 +168,8 @@ namespace CSparse.Storage
         /// </summary>
         public CompressedColumnStorage<T> Add(CompressedColumnStorage<T> other)
         {
-            int m = this.nrows;
-            int n = this.ncols;
+            int m = this.rowCount;
+            int n = this.columnCount;
 
             // check inputs
             if (m != other.RowCount || n != other.ColumnCount)
@@ -388,7 +388,7 @@ namespace CSparse.Storage
             int k;
 
             // Determine pointers for output matix. 
-            for (int i = 0; i < ncols; i++)
+            for (int i = 0; i < columnCount; i++)
             {
                 k = perm[i];
                 bi[k + 1] = ai[i + 1] - ai[i];
@@ -396,13 +396,13 @@ namespace CSparse.Storage
 
             // Get pointers from lengths
             bi[0] = 0;
-            for (int i = 0; i < ncols; i++)
+            for (int i = 0; i < columnCount; i++)
             {
                 bi[i + 1] = bi[i + 1] + bi[i];
             }
 
             // Copying
-            for (int i = 0; i < ncols; i++)
+            for (int i = 0; i < columnCount; i++)
             {
                 // Old row = i, new row = perm(i), k = new pointer
                 k = bi[perm[i]];
@@ -441,7 +441,7 @@ namespace CSparse.Storage
         protected void PermuteRows(T[] ax, int[] ai, int[] aj, T[] bx, int[] bi, int[] bj,
             int[] perm, bool copy = false)
         {
-            int i, nnz = ai[ncols];
+            int i, nnz = ai[columnCount];
 
             for (i = 0; i < nnz; i++)
             {
@@ -451,7 +451,7 @@ namespace CSparse.Storage
             if (copy)
             {
                 Array.Copy(ax, bx, nnz);
-                Array.Copy(ai, bi, ncols);
+                Array.Copy(ai, bi, columnCount);
             }
         }
 
@@ -502,7 +502,7 @@ namespace CSparse.Storage
         {
             if (size <= 0)
             {
-                size = this.ColumnPointers[ncols];
+                size = this.ColumnPointers[columnCount];
             }
 
             // TODO: check available memory
@@ -519,7 +519,7 @@ namespace CSparse.Storage
             int from, size, to, p, q, idx;
             T val;
 
-            for (int i = 0; i < ncols; i++)
+            for (int i = 0; i < columnCount; i++)
             {
                 from = ColumnPointers[i];
                 to = ColumnPointers[i + 1] - 1;
@@ -573,7 +573,7 @@ namespace CSparse.Storage
             int i, p, k = 0;
             unchecked
             {
-                for (i = 0; i < ncols; i++)
+                for (i = 0; i < columnCount; i++)
                 {
                     for (p = ColumnPointers[i]; p < ColumnPointers[i + 1]; p++)
                     {
