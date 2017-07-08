@@ -93,25 +93,23 @@ namespace CSparse.Storage
             }
         }
 
-        /*
-        public void SetStorage(int[] rowIndices, int[] columnIndices, T[] values)
-        {
-            this.nzmax = values.Length;
-            this.nz = values.Length;
-
-            this.rowind = rowIndices;
-            this.colind = columnIndices;
-            this.values = values;
-        }
-        //*/
-
         /// <summary>
-        /// Adds an entry. Memory and dimension of the matrix are increased if necessary.
+        /// Adds an entry to the storage.
         /// </summary>
         /// <param name="i">Row index of new entry</param>
         /// <param name="j">Column index of new entry</param>
         /// <param name="value">Numerical value of new entry</param>
-        /// <returns>True if successful, false otherwise</returns>
+        /// <remarks>
+        /// Duplicate entries will be added up, i.e. calling
+        /// <code>
+        /// storage.At(0, 0, 1.0);
+        /// storage.At(0, 0, 2.0);
+        /// </code>
+        /// will result in an entry with value 3.0 at index (0, 0) of the
+        /// resulting matrix.
+        /// 
+        /// Memory will be increased as necessary.
+        /// </remarks>
         public void At(int i, int j, T value)
         {
             if (i < 0 || j < 0)
@@ -146,6 +144,11 @@ namespace CSparse.Storage
             nz += 1;
         }
 
+        /// <summary>
+        /// Returns the transposed coordinate storage.
+        /// </summary>
+        /// <param name="alloc">If true, clone storage arrays, otherwise just swap the references and re-use the arrays.</param>
+        /// <returns>The transposed storage.</returns>
         public CoordinateStorage<T> Transpose(bool alloc = false)
         {
             var result = new CoordinateStorage<T>(ncols, nrows, nzmax, alloc);
