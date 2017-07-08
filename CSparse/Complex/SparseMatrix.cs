@@ -36,7 +36,7 @@ namespace CSparse.Complex
         /// </summary>
         /// <param name="tolerance">Drop tolerance (default is 0.0)</param>
         /// <returns>The new number of nonzero entries.</returns>
-        public override int DropZeros(double tolerance = 0.0)
+        public int DropZeros(double tolerance = 0.0)
         {
             Func<int, int, Complex, double, bool> func;
 
@@ -487,7 +487,7 @@ namespace CSparse.Complex
 
         #endregion
 
-        public override bool Equals(ISparseMatrixStorage<Complex> other, double tolerance)
+        public override bool Equals(Matrix<Complex> other, double tolerance)
         {
             var o = other as SparseMatrix;
 

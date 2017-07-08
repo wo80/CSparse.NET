@@ -73,8 +73,7 @@
     <Compile Include="Storage\CompressedColumnStorage.cs" />
     <Compile Include="Converter.cs" />
     <Compile Include="Storage\CoordinateStorage.cs" />
-    <Compile Include="Storage\ISparseMatrixStorage.cs" />
-    <Compile Include="Storage\SparseMatrixStorage.cs" />
+    <Compile Include="Matrix.cs" />
     <Compile Include="Storage\SymbolicColumnStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Factorization\SymbolicFactorization.cs" />
