@@ -30,12 +30,8 @@ namespace CSparse.Double
 
         #region Public functions
 
-        /// <summary>
-        /// Removes numerically zero entries from a matrix.
-        /// </summary>
-        /// <param name="tolerance">Drop tolerance (default is 0.0)</param>
-        /// <returns>The new number of nonzero entries.</returns>
-        public int DropZeros(double tolerance = 0.0)
+        /// <inheritdoc />
+        public override int DropZeros(double tolerance = 0.0)
         {
             Func<int, int, double, double, bool> func;
 
@@ -57,12 +53,7 @@ namespace CSparse.Double
             return Keep(func, tolerance);
         }
 
-        /// <summary>
-        /// Drops entries from a sparse matrix.
-        /// </summary>
-        /// <param name="func">Drop element a_{i,j} if func(i, j, aij, tol) is false.</param>
-        /// <param name="tolerance">Optional parameter to func.</param>
-        /// <returns>New number of entries in A.</returns>
+        /// <inheritdoc />
         public override int Keep(Func<int, int, double, double, bool> func, double tolerance)
         {
             int i, j, nz = 0;
@@ -464,7 +455,6 @@ namespace CSparse.Double
                     norm += sum * sum;
                 }
                 norm = Math.Sqrt(norm);
-
             }
             else
             {

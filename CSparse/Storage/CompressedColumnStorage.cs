@@ -211,6 +211,32 @@ namespace CSparse.Storage
         #endregion
 
         /// <summary>
+        /// Filter matrix values.
+        /// </summary>
+        /// <param name="func">Filter function returning true if value should be kept,
+        /// false if value should be discarded.</param>
+        /// <param name="tolerance">Tolerance parameter.</param>
+        /// <returns>New number of non-zeros.</returns>
+        /// <remarks>
+        /// Filter function arguments:
+        /// 
+        /// 1 = Row index i
+        /// 2 = Column index j
+        /// 3 = Value of entry (i,j)
+        /// 4 = Tolerance (optional parameter)
+        /// 
+        /// Element a_{i,j} is dropped, if func(i, j, aij, tol) returns false.
+        /// </remarks>
+        public abstract int Keep(Func<int, int, T, double, bool> func, double tolerance);
+        
+        /// <summary>
+        /// Removes numerically zero entries from a matrix.
+        /// </summary>
+        /// <param name="tolerance">Drop tolerance (default is 0.0)</param>
+        /// <returns>The new number of nonzero entries.</returns>
+        public abstract int DropZeros(double tolerance = 0.0);
+
+        /// <summary>
         /// Returns a clone of this matrix.
         /// </summary>
         /// <param name="values">If true (default), the values are copied.</param>

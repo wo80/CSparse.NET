@@ -84,9 +84,6 @@ namespace CSparse
         public abstract double FrobeniusNorm();
 
         /// <inheritdoc />
-        public abstract int Keep(Func<int, int, T, double, bool> func, double tolerance);
-
-        /// <inheritdoc />
         public abstract IEnumerable<Tuple<int, int, T>> EnumerateIndexed();
 
         /// <summary>
