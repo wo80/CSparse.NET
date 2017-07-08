@@ -17,7 +17,7 @@ namespace CSparse.Tests.Double
             return x;
         }
 
-        public static double[] Multiply(ISparseMatrixStorage<double> A, double[] x)
+        public static double[] Multiply(Matrix<double> A, double[] x)
         {
             var b = new double[A.RowCount];
 

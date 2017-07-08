@@ -87,9 +87,9 @@ namespace CSparse.Tests.Double
             var A = MatrixHelper.Load(rows, columns);
             var B = MatrixHelper.Load(rows, columns);
 
-            var l0 = A.Norm(0);
-            var l1 = A.Norm(1);
-            var l2 = A.Norm(2);
+            var l0 = A.InfinityNorm();
+            var l1 = A.L1Norm();
+            var l2 = A.FrobeniusNorm();
 
             Assert.IsTrue(l0 == 0.0);
             Assert.IsTrue(l1 == 0.0);

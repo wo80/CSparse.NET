@@ -18,7 +18,7 @@ namespace CSparse.Tests.Complex
             return x;
         }
 
-        public static Complex[] Multiply(ISparseMatrixStorage<Complex> A, Complex[] x)
+        public static Complex[] Multiply(Matrix<Complex> A, Complex[] x)
         {
             var b = new Complex[A.RowCount];
 
