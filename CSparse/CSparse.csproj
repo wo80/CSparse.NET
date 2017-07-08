@@ -39,6 +39,7 @@
     <Compile Include="Check.cs" />
     <Compile Include="ColumnOrdering.cs" />
     <Compile Include="Complex\CompressedColumnStorage.cs" />
+    <Compile Include="Complex\SparseMatrix.cs" />
     <Compile Include="Complex\Factorization\SparseCholesky.cs" />
     <Compile Include="Complex\Factorization\SparseLU.cs" />
     <Compile Include="Complex\Factorization\SparseQR.cs" />
@@ -46,6 +47,7 @@
     <Compile Include="Complex\Vector.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Double\CompressedColumnStorage.cs" />
+    <Compile Include="Double\SparseMatrix.cs" />
     <Compile Include="Double\Factorization\SparseCholesky.cs" />
     <Compile Include="Double\Factorization\SparseLDL.cs" />
     <Compile Include="Double\Factorization\SparseLU.cs" />

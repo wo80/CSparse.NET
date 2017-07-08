@@ -463,13 +463,13 @@ namespace CSparse.Storage
         {
             if (typeof(T) == typeof(double))
             {
-                return new CSparse.Double.CompressedColumnStorage(rowCount, columnCount)
+                return new CSparse.Double.SparseMatrix(rowCount, columnCount)
                     as CompressedColumnStorage<T>;
             }
 
             if (typeof(T) == typeof(Complex))
             {
-                return new CSparse.Complex.CompressedColumnStorage(rowCount, columnCount)
+                return new CSparse.Complex.SparseMatrix(rowCount, columnCount)
                     as CompressedColumnStorage<T>;
             }
 
@@ -480,13 +480,13 @@ namespace CSparse.Storage
         {
             if (typeof(T) == typeof(double))
             {
-                return new CSparse.Double.CompressedColumnStorage(rowCount, columnCount, valueCount)
+                return new CSparse.Double.SparseMatrix(rowCount, columnCount, valueCount)
                     as CompressedColumnStorage<T>;
             }
 
             if (typeof(T) == typeof(Complex))
             {
-                return new CSparse.Complex.CompressedColumnStorage(rowCount, columnCount, valueCount)
+                return new CSparse.Complex.SparseMatrix(rowCount, columnCount, valueCount)
                     as CompressedColumnStorage<T>;
             }
 
