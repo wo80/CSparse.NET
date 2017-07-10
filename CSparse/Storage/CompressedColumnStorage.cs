@@ -16,6 +16,7 @@ namespace CSparse.Storage
     /// Compressed sparse column storage.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Serializable]
     public abstract class CompressedColumnStorage<T> : Matrix<T>
         where T : struct, IEquatable<T>, IFormattable
     {

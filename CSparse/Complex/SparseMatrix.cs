@@ -15,6 +15,7 @@ namespace CSparse.Complex
 
     /// <inheritdoc />
     [DebuggerDisplay("SparseMatrix {RowCount}x{ColumnCount}-Double {NonZerosCount}-NonZero")]
+    [Serializable]
     public class SparseMatrix : CompressedColumnStorage<Complex>
     {
         /// <inheritdoc />

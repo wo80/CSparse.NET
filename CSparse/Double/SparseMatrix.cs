@@ -14,6 +14,7 @@ namespace CSparse.Double
 
     /// <inheritdoc />
     [DebuggerDisplay("SparseMatrix {RowCount}x{ColumnCount}-Double {NonZerosCount}-NonZero")]
+    [Serializable]
     public class SparseMatrix : CompressedColumnStorage<double>
     {
         /// <inheritdoc />

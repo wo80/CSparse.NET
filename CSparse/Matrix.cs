@@ -13,6 +13,7 @@ namespace CSparse
     /// <summary>
     /// Abstract base class for matrix implementations.
     /// </summary>
+    [Serializable]
     public abstract class Matrix<T> : ILinearOperator<T>
         where T : struct, IEquatable<T>, IFormattable
     {
