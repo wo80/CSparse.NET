@@ -93,6 +93,72 @@ namespace CSparse.Storage
             Array.Clear(Values, 0, Values.Length);
         }
 
+        /// <inheritdoc />
+        public override T[] Row(int rowIndex)
+        {
+            var target = new T[ColumnCount];
+
+            Row(rowIndex, target);
+
+            return target;
+        }
+
+        /// <inheritdoc />
+        public override void Row(int rowIndex, T[] target)
+        {
+            if (target.Length != ColumnCount)
+            {
+                throw new Exception();
+            }
+
+            int i, n = ColumnCount;
+
+            var ap = ColumnPointers;
+            var ai = RowIndices;
+            var ax = Values;
+
+            for (int k = 0; k < n; k++)
+            {
+                // Check if columns contain row index.
+                i = Array.BinarySearch(ai, ap[k], ap[k + 1] - ap[k], rowIndex);
+
+                if (i >= 0)
+                {
+                    target[k] = ax[i];
+                }
+            }
+        }
+
+        /// <inheritdoc />
+        public override T[] Column(int columnIndex)
+        {
+            var target = new T[RowCount];
+
+            Column(columnIndex, target);
+
+            return target;
+        }
+
+        /// <inheritdoc />
+        public override void Column(int columnIndex, T[] target)
+        {
+            if (target.Length != RowCount)
+            {
+                throw new Exception();
+            }
+
+            var ap = ColumnPointers;
+            var ai = RowIndices;
+            var ax = Values;
+
+            int colEnd = ap[columnIndex + 1];
+
+            for (int k = ap[columnIndex]; k < colEnd; k++)
+            {
+                target[ai[k]] = ax[k];
+            }
+        }
+
         #region Linear Algebra (Vector)
 
         /// <summary>

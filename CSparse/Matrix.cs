@@ -67,6 +67,34 @@ namespace CSparse
         public abstract double Norm(int which);
 
         /// <summary>
+        /// Extract row from matrix.
+        /// </summary>
+        /// <param name="rowIndex">The column index to extract.</param>
+        /// <param name="target">Dense array.</param>
+        public abstract T[] Row(int rowIndex);
+
+        /// <summary>
+        /// Extract row from matrix.
+        /// </summary>
+        /// <param name="rowIndex">The column index to extract.</param>
+        /// <param name="target">Dense array.</param>
+        public abstract void Row(int rowIndex, T[] target);
+
+        /// <summary>
+        /// Extract column from matrix.
+        /// </summary>
+        /// <param name="columnIndex">The column index to extract.</param>
+        /// <param name="target">Dense array.</param>
+        public abstract T[] Column(int columnIndex);
+
+        /// <summary>
+        /// Extract column from matrix.
+        /// </summary>
+        /// <param name="columnIndex">The column index to extract.</param>
+        /// <param name="target">Dense array.</param>
+        public abstract void Column(int columnIndex, T[] target);
+
+        /// <summary>
         /// Calculates the induced L1 norm of this matrix.
         /// </summary>
         /// <returns>The maximum absolute column sum of the matrix.</returns>
