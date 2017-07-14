@@ -284,7 +284,7 @@ namespace CSparse.Storage
                 var end = ap[i + 1];
                 for (var j = ap[i]; j < end; j++)
                 {
-                    yield return new Tuple<int, int, T>(i, ai[j], ax[j]);
+                    yield return new Tuple<int, int, T>(ai[j], i, ax[j]);
                 }
             }
         }
