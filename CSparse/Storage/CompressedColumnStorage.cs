@@ -258,7 +258,6 @@ namespace CSparse.Storage
         /// </summary>
         /// <param name="func">Filter function returning true if value should be kept,
         /// false if value should be discarded.</param>
-        /// <param name="tolerance">Tolerance parameter.</param>
         /// <returns>New number of non-zeros.</returns>
         /// <remarks>
         /// Filter function arguments:
@@ -266,11 +265,10 @@ namespace CSparse.Storage
         /// 1 = Row index i
         /// 2 = Column index j
         /// 3 = Value of entry (i,j)
-        /// 4 = Tolerance (optional parameter)
         /// 
-        /// Element a_{i,j} is dropped, if func(i, j, aij, tol) returns false.
+        /// Element a_{i,j} is dropped, if func(i, j, aij) returns false.
         /// </remarks>
-        public abstract int Keep(Func<int, int, T, double, bool> func, double tolerance);
+        public abstract int Keep(Func<int, int, T, bool> func);
         
         /// <summary>
         /// Removes numerically zero entries from a matrix.

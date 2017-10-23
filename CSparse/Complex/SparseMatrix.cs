@@ -35,28 +35,28 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override int DropZeros(double tolerance = 0.0)
         {
-            Func<int, int, Complex, double, bool> func;
+            Func<int, int, Complex, bool> func;
 
             if (tolerance <= 0.0)
             {
-                func = (i, j, aij, other) =>
+                func = (i, j, aij) =>
                 {
                     return (aij != 0.0);
                 };
             }
             else
             {
-                func = (i, j, aij, tol) =>
+                func = (i, j, aij) =>
                 {
-                    return (aij.Magnitude > tol);
+                    return (aij.Magnitude > tolerance);
                 };
             }
 
-            return Keep(func, tolerance);
+            return Keep(func);
         }
 
         /// <inheritdoc />
-        public override int Keep(Func<int, int, Complex, double, bool> func, double tolerance)
+        public override int Keep(Func<int, int, Complex, bool> func)
         {
             int i, j, nz = 0;
 
@@ -69,7 +69,7 @@ namespace CSparse.Complex
 
                 for (; i < ColumnPointers[j + 1]; i++)
                 {
-                    if (func(RowIndices[i], j, Values[i], tolerance))
+                    if (func(RowIndices[i], j, Values[i]))
                     {
                         // Keep A(i,j).
                         Values[nz] = Values[i];
@@ -118,18 +118,21 @@ namespace CSparse.Complex
         #region Linear Algebra (Vector)
 
         /// <summary>
-        /// Multiplies a (m-by-n) matrix by a vector, y = A*x + y. 
+        /// Multiplies a (m-by-n) matrix by a vector, y = A*x. 
         /// </summary>
         /// <param name="x">Vector of length n (column count).</param>
         /// <param name="y">Vector of length m (row count), containing the result.</param>
-        /// <remarks>
-        /// Input values of vector y will be accumulated.
-        /// </remarks>
         public override void Multiply(Complex[] x, Complex[] y)
         {
             var ax = this.Values;
             var ap = this.ColumnPointers;
             var ai = this.RowIndices;
+            
+            // Clear y.
+            for (int i = 0; i < rowCount; i++)
+            {
+                y[i] = 0.0;
+            }
 
             int end;
 
@@ -184,13 +187,10 @@ namespace CSparse.Complex
         }
 
         /// <summary>
-        /// Multiplies the transpose of a (m-by-n) matrix by a vector, y = A'*x + y. 
+        /// Multiplies the transpose of a (m-by-n) matrix by a vector, y = A'*x. 
         /// </summary>
         /// <param name="x">Vector of length m (column count of A').</param>
         /// <param name="y">Vector of length n (row count of A'), containing the result.</param>
-        /// <remarks>
-        /// Input values of vector y will be accumulated.
-        /// </remarks>
         public override void TransposeMultiply(Complex[] x, Complex[] y)
         {
             var ax = this.Values;
@@ -210,7 +210,7 @@ namespace CSparse.Complex
                 }
 
                 // Store result in y(i) 
-                y[i] += yi;
+                y[i] = yi;
             }
         }
 
