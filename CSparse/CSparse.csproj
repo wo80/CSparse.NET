@@ -54,10 +54,11 @@
     <Compile Include="Double\Factorization\SparseQR.cs" />
     <Compile Include="Double\SolverHelper.cs" />
     <Compile Include="Double\Vector.cs" />
+    <Compile Include="Factorization\ISolver.cs" />
+    <Compile Include="Factorization\ISparseFactorization.cs" />
     <Compile Include="Factorization\SparseQR.cs" />
     <Compile Include="ILinearOperator.cs" />
     <Compile Include="IO\MatrixMarketReader.cs" />
-    <Compile Include="Factorization\ISparseFactorization.cs" />
     <Compile Include="IProgress.cs" />
     <Compile Include="Ordering\AMD.cs" />
     <Compile Include="Ordering\DulmageMendelsohn.cs" />

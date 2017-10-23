@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("CSparse.NET")]
-[assembly: AssemblyCopyright("Copyright © Christian Woltering 2012-2016")]
+[assembly: AssemblyCopyright("Copyright © Christian Woltering 2012-2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

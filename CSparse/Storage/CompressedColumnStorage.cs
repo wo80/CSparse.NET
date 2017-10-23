@@ -159,30 +159,6 @@ namespace CSparse.Storage
             }
         }
 
-        #region Linear Algebra (Vector)
-
-        /// <summary>
-        /// Multiplies a (m-by-n) matrix by a vector, y = A*x + y. 
-        /// </summary>
-        /// <param name="x">Vector of length n (column count).</param>
-        /// <param name="y">Vector of length m (row count), containing the result.</param>
-        /// <remarks>
-        /// Input values of vector y will be accumulated.
-        /// </remarks>
-        public abstract void Multiply(T[] x, T[] y);
-
-        /// <summary>
-        /// Multiplies the transpose of a (m-by-n) matrix by a vector, y = A'*x + y. 
-        /// </summary>
-        /// <param name="x">Vector of length m (column count of A').</param>
-        /// <param name="y">Vector of length n (row count of A'), containing the result.</param>
-        /// <remarks>
-        /// Input values of vector y will be accumulated.
-        /// </remarks>
-        public abstract void TransposeMultiply(T[] x, T[] y);
-
-        #endregion
-
         #region Linear Algebra (Matrix)
 
         /// <summary>

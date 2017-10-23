@@ -115,14 +115,16 @@ namespace CSparse
         /// <inheritdoc />
         public abstract IEnumerable<Tuple<int, int, T>> EnumerateIndexed();
 
-        /// <summary>
-        /// Computes the product y = alpha * A * x + beta * y.
-        /// </summary>
+        /// <inheritdoc />
+        public abstract void Multiply(T[] x, T[] y);
+
+        /// <inheritdoc />
         public abstract void Multiply(T alpha, T[] x, T beta, T[] y);
 
-        /// <summary>
-        /// Computes the product y = alpha * A^t * x + beta * y.
-        /// </summary>
+        /// <inheritdoc />
+        public abstract void TransposeMultiply(T[] x, T[] y);
+
+        /// <inheritdoc />
         public abstract void TransposeMultiply(T alpha, T[] x, T beta, T[] y);
 
         #region Storage equality
