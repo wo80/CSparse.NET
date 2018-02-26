@@ -304,7 +304,7 @@ namespace CSparse.Storage
             var ap = this.ColumnPointers;
             var ai = this.RowIndices;
 
-            var result = CompressedColumnStorage<T>.Create(m, n, values ? nnz : 0);
+            var result = Create(m, n, values ? nnz : 0);
 
             if (values)
             {
@@ -404,17 +404,9 @@ namespace CSparse.Storage
             var ap = this.ColumnPointers;
             var ai = this.RowIndices;
 
-            // TODO: is cloning needed?
-            var bx = (T[])ax.Clone();
-            var bp = (int[])ap.Clone();
-            var bi = (int[])ai.Clone();
-
-            PermuteColumns(ax, ap, ai, bx, bp, bi, perm);
-
-            this.Values = bx;
-            this.ColumnPointers = bp;
-            this.RowIndices = bi;
-
+            // TODO: is cloning needed? NO            
+            PermuteColumns(ax, ap, ai, Values, ColumnPointers, RowIndices, perm);
+          
             SortIndices();
         }
 
