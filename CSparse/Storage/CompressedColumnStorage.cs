@@ -66,6 +66,20 @@ namespace CSparse.Storage
                 this.Values = new T[valueCount];
             }
         }
+        /// <summary>
+        /// Initializes a new instance of the CompressedColumnStorage class. Based on other CCS arrays
+        /// </summary>
+        public CompressedColumnStorage(int rowCount, int columnCount, T[] Values, int[] RowIndices, int[] ColumnPointers)
+            : base(rowCount, columnCount)
+        {
+            if (Values.Length != RowIndices.Length)
+            {
+                throw new InvalidOperationException("RowIndices.Length must equal Values.Length");
+            }
+            this.ColumnPointers = ColumnPointers;
+            this.RowIndices = RowIndices;
+            this.Values = Values;            
+        }
 
         /// <summary>
         /// Return the matrix value at position (row, column).
@@ -205,7 +219,7 @@ namespace CSparse.Storage
                 }
             }
         }
-        
+
         /// <summary>
         /// Adds two matrices in CSC format, C = A + B, where A is current instance.
         /// </summary>
@@ -228,7 +242,7 @@ namespace CSparse.Storage
 
             return result;
         }
-        
+
         /// <summary>
         /// Adds two matrices, C = alpha*A + beta*B, where A is current instance.
         /// </summary>
@@ -269,7 +283,7 @@ namespace CSparse.Storage
         /// Element a_{i,j} is dropped, if func(i, j, aij) returns false.
         /// </remarks>
         public abstract int Keep(Func<int, int, T, bool> func);
-        
+
         /// <summary>
         /// Removes numerically zero entries from a matrix.
         /// </summary>
@@ -559,7 +573,7 @@ namespace CSparse.Storage
 
             throw new NotSupportedException();
         }
-        
+
         /// <summary>
         /// Change the max # of entries sparse matrix
         /// </summary>

@@ -22,7 +22,10 @@ namespace CSparse.Double
             : base(rowCount, columnCount)
         {
         }
-
+        public SparseMatrix(int rowCount, int columnCount, double[] Values, int[] RowIndices, int[] ColumnPointers)
+            : base(rowCount, columnCount, Values, RowIndices, ColumnPointers)
+        {
+        }
         /// <inheritdoc />
         public SparseMatrix(int rowCount, int columnCount, int valueCount)
             : base(rowCount, columnCount, valueCount)
@@ -113,7 +116,7 @@ namespace CSparse.Double
         }
 
         #endregion
-        
+
         #region Linear Algebra (Vector)
 
         /// <summary>
@@ -320,7 +323,7 @@ namespace CSparse.Double
 
             int anz = this.NonZerosCount;
             int bnz = other.NonZerosCount;
-            
+
             int p, j, nz = 0;
             int[] cp, ci;
             double[] cx;
