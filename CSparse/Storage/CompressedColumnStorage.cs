@@ -304,18 +304,19 @@ namespace CSparse.Storage
         /// <param name="values">If true (default), the values are copied.</param>
         public CompressedColumnStorage<T> Clone(bool values = true)
         {
-            int m = this.RowCount;
-            int n = this.ColumnCount;
+            int rows = this.RowCount;
+            int columns = this.ColumnCount;
+
             int nnz = this.NonZerosCount;
 
             var ap = this.ColumnPointers;
             var ai = this.RowIndices;
 
-            var result = Create(m, n, values ? nnz : 0);
+            var result = Create(rows, columns, values ? nnz : 0);
 
             if (values)
             {
-                Buffer.BlockCopy(ap, 0, result.ColumnPointers, 0, (m + 1) * Constants.SizeOfInt);
+                Buffer.BlockCopy(ap, 0, result.ColumnPointers, 0, (columns + 1) * Constants.SizeOfInt);
                 Buffer.BlockCopy(ai, 0, result.RowIndices, 0, nnz * Constants.SizeOfInt);
 
                 Array.Copy(this.Values, 0, result.Values, 0, nnz);
@@ -324,7 +325,7 @@ namespace CSparse.Storage
             {
                 result.RowIndices = new int[nnz];
 
-                Buffer.BlockCopy(ap, 0, result.ColumnPointers, 0, (m + 1) * Constants.SizeOfInt);
+                Buffer.BlockCopy(ap, 0, result.ColumnPointers, 0, (columns + 1) * Constants.SizeOfInt);
                 Buffer.BlockCopy(ai, 0, result.RowIndices, 0, nnz * Constants.SizeOfInt);
             }
 
