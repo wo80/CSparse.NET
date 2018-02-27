@@ -66,6 +66,20 @@ namespace CSparse.Storage
                 this.Values = new T[valueCount];
             }
         }
+        /// <summary>
+        /// Initializes a new instance of the CompressedColumnStorage class. Based on other CCS arrays
+        /// </summary>
+        public CompressedColumnStorage(int rowCount, int columnCount, T[] Values, int[] RowIndices, int[] ColumnPointers)
+            : base(rowCount, columnCount)
+        {
+            if (Values.Length != RowIndices.Length)
+            {
+                throw new InvalidOperationException("RowIndices.Length must equal Values.Length");
+            }
+            this.ColumnPointers = ColumnPointers;
+            this.RowIndices = RowIndices;
+            this.Values = Values;
+        }
 
         /// <summary>
         /// Return the matrix value at position (row, column).
@@ -205,7 +219,7 @@ namespace CSparse.Storage
                 }
             }
         }
-        
+
         /// <summary>
         /// Adds two matrices in CSC format, C = A + B, where A is current instance.
         /// </summary>
@@ -228,7 +242,7 @@ namespace CSparse.Storage
 
             return result;
         }
-        
+
         /// <summary>
         /// Adds two matrices, C = alpha*A + beta*B, where A is current instance.
         /// </summary>
@@ -269,7 +283,7 @@ namespace CSparse.Storage
         /// Element a_{i,j} is dropped, if func(i, j, aij) returns false.
         /// </remarks>
         public abstract int Keep(Func<int, int, T, bool> func);
-        
+
         /// <summary>
         /// Removes numerically zero entries from a matrix.
         /// </summary>
@@ -290,7 +304,7 @@ namespace CSparse.Storage
             var ap = this.ColumnPointers;
             var ai = this.RowIndices;
 
-            var result = CompressedColumnStorage<T>.Create(m, n, values ? nnz : 0);
+            var result = Create(m, n, values ? nnz : 0);
 
             if (values)
             {
@@ -370,12 +384,8 @@ namespace CSparse.Storage
         /// <param name="perm">Permutation matrix P.</param>
         public void PermuteRows(int[] perm)
         {
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
-
             // TODO: invert perm?
-            PermuteRows(ax, ap, ai, ax, ap, ai, perm);
+            PermuteRows(Values, ColumnPointers, RowIndices, Values, ColumnPointers, RowIndices, perm);
 
             SortIndices();
         }
@@ -384,25 +394,19 @@ namespace CSparse.Storage
         /// Permute the columns of the matrix.
         /// </summary>
         /// <param name="perm">Permutation matrix P.</param>
-        public void PermuteColumns(int[] perm)
+        public CompressedColumnStorage<T> PermuteColumns(int[] perm)
         {
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
+            var result = Create(RowCount, columnCount, Values.Length);
 
-            // TODO: is cloning needed?
-            var bx = (T[])ax.Clone();
-            var bp = (int[])ap.Clone();
-            var bi = (int[])ai.Clone();
-
-            PermuteColumns(ax, ap, ai, bx, bp, bi, perm);
-
-            this.Values = bx;
-            this.ColumnPointers = bp;
-            this.RowIndices = bi;
-
-            SortIndices();
+            var bx = result.Values;
+            var bp = result.ColumnPointers;
+            var bi = result.RowIndices;
+            
+            PermuteColumns(Values, ColumnPointers, RowIndices, bx, bp, bi, perm);
+            result.SortIndices();
+            return result;
         }
+         
 
         /// <summary>
         /// Returns the positions of the diagonal elements of a sparse matrix.
@@ -465,7 +469,7 @@ namespace CSparse.Storage
             bi[0] = 0;
             for (int i = 0; i < columnCount; i++)
             {
-                bi[i + 1] = bi[i + 1] + bi[i];
+                bi[i + 1] += bi[i];
             }
 
             // Copying
@@ -558,8 +562,8 @@ namespace CSparse.Storage
             }
 
             throw new NotSupportedException();
-        }
-        
+        }        
+
         /// <summary>
         /// Change the max # of entries sparse matrix
         /// </summary>
