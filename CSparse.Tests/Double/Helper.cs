@@ -1,8 +1,6 @@
 ﻿
 namespace CSparse.Tests.Double
 {
-    using CSparse.Storage;
-
     static class Helper
     {
         public static double[] CreateTestVector(int n)
@@ -17,7 +15,7 @@ namespace CSparse.Tests.Double
             return x;
         }
 
-        public static double[] Multiply(Matrix<double> A, double[] x)
+        public static double[] Multiply(ILinearOperator<double> A, double[] x)
         {
             var b = new double[A.RowCount];
 

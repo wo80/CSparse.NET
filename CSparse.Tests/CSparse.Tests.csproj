@@ -46,7 +46,10 @@
     <Compile Include="Complex\Helper.cs" />
     <Compile Include="Complex\MatrixHelper.cs" />
     <Compile Include="ConverterTest.cs" />
+    <Compile Include="DenseTestData.cs" />
+    <Compile Include="SparseTestData.cs" />
     <Compile Include="Double\CompressedColumnStorageTest.cs" />
+    <Compile Include="Double\DenseTestDataReader.cs" />
     <Compile Include="Double\Factorization\SparseLUTest.cs" />
     <Compile Include="Double\Factorization\SparseQRTest.cs" />
     <Compile Include="Double\Factorization\SparseCholeskyTest.cs" />
@@ -82,6 +85,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Double\Data\test-data-dense-2x2.txt" />
+    <EmbeddedResource Include="Double\Data\test-data-dense-2x3.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -47,7 +47,7 @@ namespace CSparse.Tests.Double.Factorization
         [Test]
         public void TestEmptyFactorize()
         {
-            var A = MatrixHelper.Load(0, 0);
+            var A = new SparseMatrix(0, 0, 0);
 
             var chol = SparseCholesky.Create(A, ColumnOrdering.MinimumDegreeAtPlusA);
 

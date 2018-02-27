@@ -2,17 +2,26 @@
 namespace CSparse.Tests.Double
 {
     using CSparse.Double;
+    using CSparse.Storage;
     using NUnit.Framework;
     using System;
 
     public class CompressedColumnStorageTest
     {
+        [OneTimeSetUp]
+        public void Initialize()
+        {
+            GlobalSettings.DefaultFloatingPointTolerance = 1e-8;
+        }
+
+        #region Test empty matrix
+
         [TestCase(0, 0)]
         [TestCase(0, 5)]
         [TestCase(5, 0)]
         public void TestConstructor(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
+            var A = new SparseMatrix(rows, columns, 0);
 
             Assert.IsNotNull(A);
         }
@@ -22,7 +31,7 @@ namespace CSparse.Tests.Double
         [TestCase(5, 0)]
         public void TestEmptyTranspose(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
+            var A = new SparseMatrix(rows, columns, 0);
             var B = A.Transpose();
 
             Assert.IsNotNull(B);
@@ -33,8 +42,8 @@ namespace CSparse.Tests.Double
         [TestCase(5, 0)]
         public void TestEmptyAdd(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
-            var B = MatrixHelper.Load(rows, columns);
+            var A = new SparseMatrix(rows, columns, 0);
+            var B = new SparseMatrix(rows, columns, 0);
 
             var C = A.Add(B);
 
@@ -45,8 +54,8 @@ namespace CSparse.Tests.Double
         [TestCase(0, 5)]
         public void TestEmptyMultiply(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
-            var B = MatrixHelper.Load(columns, rows);
+            var A = new SparseMatrix(rows, columns, 0);
+            var B = new SparseMatrix(columns, rows, 0);
 
             var C = A.Multiply(B);
 
@@ -56,8 +65,8 @@ namespace CSparse.Tests.Double
         [TestCase(5, 0)]
         public void TestEmptyMultiplyInvalid(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
-            var B = MatrixHelper.Load(columns, rows);
+            var A = new SparseMatrix(rows, columns, 0);
+            var B = new SparseMatrix(columns, rows, 0);
 
             Assert.Throws<Exception>(() =>
             {
@@ -70,7 +79,7 @@ namespace CSparse.Tests.Double
         [TestCase(5, 0)]
         public void TestEmptyVectorMultiply(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
+            var A = new SparseMatrix(rows, columns, 0);
             var x = Vector.Create(columns, 1.0);
             var y = Vector.Create(rows, 0.0);
 
@@ -84,8 +93,8 @@ namespace CSparse.Tests.Double
         [TestCase(5, 0)]
         public void TestEmptyNorm(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
-            var B = MatrixHelper.Load(rows, columns);
+            var A = new SparseMatrix(rows, columns, 0);
+            var B = new SparseMatrix(rows, columns, 0);
 
             var l0 = A.InfinityNorm();
             var l1 = A.L1Norm();
@@ -94,6 +103,185 @@ namespace CSparse.Tests.Double
             Assert.IsTrue(l0 == 0.0);
             Assert.IsTrue(l1 == 0.0);
             Assert.IsTrue(l2 == 0.0);
+        }
+
+        #endregion
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestGetRow(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+
+            for (int i = 0; i < rows; i++)
+            {
+                var y = A.Row(i);
+
+                for (int j = 0; j < columns; j++)
+                {
+                    Assert.AreEqual(A.At(i, j), y[j]);
+                }
+            }
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestGetColumn(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+
+            for (int j = 0; j < columns; j++)
+            {
+                var y = A.Column(j);
+
+                for (int i = 0; i < rows; i++)
+                {
+                    Assert.AreEqual(A.At(i, j), y[i]);
+                }
+            }
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestMatrixVectorMultiply(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+            var x = data.x;
+
+            var actual = Vector.Create(A.RowCount, 0.0);
+
+            A.Multiply(x, actual);
+
+            CollectionAssert.AreEqual(data.Ax, actual);
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestMatrixVectorTransposeMultiply(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+            var y = data.y;
+
+            var actual = Vector.Create(A.ColumnCount, 0.0);
+
+            A.TransposeMultiply(y, actual);
+
+            CollectionAssert.AreEqual(data.ATy, actual);
+
+            Vector.Clear(actual);
+
+            var AT = data.AT;
+
+            AT.Multiply(y, actual);
+
+            CollectionAssert.AreEqual(data.ATy, actual);
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestMatrixTranspose(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+            var B = data.B;
+
+            var actualA = A.Transpose();
+            var actualB = B.Transpose();
+
+            CollectionAssert.AreEqual(data.AT.Values, actualA.Values);
+            CollectionAssert.AreEqual(data.BT.Values, actualB.Values);
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestMatrixSum(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+            var B = data.B;
+
+            var actual = A.Add(B);
+
+            CollectionAssert.AreEqual(data.ApB.Values, actual.Values);
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestMatrixMultiply(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+            var B = data.B;
+
+            var AT = data.AT;
+            var BT = data.BT;
+
+            var actual = AT.Multiply(B);
+
+            CollectionAssert.AreEqual(data.ATmB.Values, actual.Values);
+
+            actual = A.Multiply(BT);
+
+            CollectionAssert.AreEqual(data.AmBT.Values, actual.Values);
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestMatrixPermuteColumns(int rows, int columns)
+        {
+            var p = Permutation.Create(columns, -1);
+
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+            var Ap = A.PermuteColumns(p);
+
+            var actualColumn = new double[rows];
+            var expectedColumn = new double[rows];
+            
+            for (int i = 0; i < columns; i++)
+            {
+                A.Column(p[i], expectedColumn);
+                Ap.Column(i, actualColumn);
+
+                CollectionAssert.AreEqual(expectedColumn, actualColumn);
+            }
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestMatrixPermuteRows(int rows, int columns)
+        {
+            var p = Permutation.Create(rows, -1);
+
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+            var Ap = A.Clone();
+
+            var actualRow = new double[columns];
+            var expectedRow = new double[columns];
+
+            Ap.PermuteRows(p);
+
+            for (int i = 0; i < rows; i++)
+            {
+                A.Row(p[i], expectedRow);
+                Ap.Row(i, actualRow);
+
+                CollectionAssert.AreEqual(expectedRow, actualRow);
+            }
         }
     }
 }
