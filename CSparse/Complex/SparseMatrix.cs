@@ -30,6 +30,12 @@ namespace CSparse.Complex
         {
         }
 
+        /// <inheritdoc />
+        public SparseMatrix(int rowCount, int columnCount, Complex[] values, int[] rowIndices, int[] columnPointers)
+            : base(rowCount, columnCount, values, rowIndices, columnPointers)
+        {
+        }
+
         #region Public functions
 
         /// <inheritdoc />

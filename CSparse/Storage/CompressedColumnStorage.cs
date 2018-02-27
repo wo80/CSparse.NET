@@ -66,19 +66,26 @@ namespace CSparse.Storage
                 this.Values = new T[valueCount];
             }
         }
+
         /// <summary>
         /// Initializes a new instance of the CompressedColumnStorage class. Based on other CCS arrays
         /// </summary>
-        public CompressedColumnStorage(int rowCount, int columnCount, T[] Values, int[] RowIndices, int[] ColumnPointers)
+        public CompressedColumnStorage(int rowCount, int columnCount, T[] values, int[] rowIndices, int[] columnPointers)
             : base(rowCount, columnCount)
         {
-            if (Values.Length != RowIndices.Length)
+            if (columnPointers.Length != columnCount + 1)
             {
-                throw new InvalidOperationException("RowIndices.Length must equal Values.Length");
+                throw new ArgumentException("columnPointers.Length must equal (columnCount + 1)");
             }
-            this.ColumnPointers = ColumnPointers;
-            this.RowIndices = RowIndices;
-            this.Values = Values;
+
+            if (values.Length != rowIndices.Length)
+            {
+                throw new ArgumentException("rowIndices.Length must equal values.Length");
+            }
+
+            this.ColumnPointers = columnPointers;
+            this.RowIndices = rowIndices;
+            this.Values = values;
         }
 
         /// <summary>

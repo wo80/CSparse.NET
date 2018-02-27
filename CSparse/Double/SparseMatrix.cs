@@ -22,13 +22,16 @@ namespace CSparse.Double
             : base(rowCount, columnCount)
         {
         }
-        public SparseMatrix(int rowCount, int columnCount, double[] Values, int[] RowIndices, int[] ColumnPointers)
-            : base(rowCount, columnCount, Values, RowIndices, ColumnPointers)
-        {
-        }
+
         /// <inheritdoc />
         public SparseMatrix(int rowCount, int columnCount, int valueCount)
             : base(rowCount, columnCount, valueCount)
+        {
+        }
+
+        /// <inheritdoc />
+        public SparseMatrix(int rowCount, int columnCount, double[] values, int[] rowIndices, int[] columnPointers)
+            : base(rowCount, columnCount, values, rowIndices, columnPointers)
         {
         }
 
