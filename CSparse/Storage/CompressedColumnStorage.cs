@@ -78,7 +78,7 @@ namespace CSparse.Storage
             }
             this.ColumnPointers = ColumnPointers;
             this.RowIndices = RowIndices;
-            this.Values = Values;            
+            this.Values = Values;
         }
 
         /// <summary>
@@ -400,15 +400,17 @@ namespace CSparse.Storage
         /// <param name="perm">Permutation matrix P.</param>
         public void PermuteColumns(int[] perm)
         {
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
-
+            var bx = new T[Values.Length];
+            var bp = new int[ColumnPointers.Length];
+            var bi = new int[RowIndices.Length];
             // TODO: is cloning needed? NO            
-            PermuteColumns(ax, ap, ai, Values, ColumnPointers, RowIndices, perm);
-          
+            PermuteColumns(Values, ColumnPointers, RowIndices, bx, bp, bi, perm);
+            Values = bx;
+            ColumnPointers = bp;
+            RowIndices = bi;
             SortIndices();
         }
+        
 
         /// <summary>
         /// Returns the positions of the diagonal elements of a sparse matrix.
@@ -471,7 +473,7 @@ namespace CSparse.Storage
             bi[0] = 0;
             for (int i = 0; i < columnCount; i++)
             {
-                bi[i + 1] = bi[i + 1] + bi[i];
+                bi[i + 1] += bi[i];
             }
 
             // Copying
