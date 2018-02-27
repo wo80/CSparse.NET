@@ -384,12 +384,8 @@ namespace CSparse.Storage
         /// <param name="perm">Permutation matrix P.</param>
         public void PermuteRows(int[] perm)
         {
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
-
             // TODO: invert perm?
-            PermuteRows(ax, ap, ai, ax, ap, ai, perm);
+            PermuteRows(Values, ColumnPointers, RowIndices, Values, ColumnPointers, RowIndices, perm);
 
             SortIndices();
         }
@@ -398,19 +394,19 @@ namespace CSparse.Storage
         /// Permute the columns of the matrix.
         /// </summary>
         /// <param name="perm">Permutation matrix P.</param>
-        public void PermuteColumns(int[] perm)
+        public CompressedColumnStorage<T> PermuteColumns(int[] perm)
         {
-            var bx = new T[Values.Length];
-            var bp = new int[ColumnPointers.Length];
-            var bi = new int[RowIndices.Length];
-            // TODO: is cloning needed? NO            
+            var result = Create(RowCount, columnCount, Values.Length);
+
+            var bx = result.Values;
+            var bp = result.ColumnPointers;
+            var bi = result.RowIndices;
+            
             PermuteColumns(Values, ColumnPointers, RowIndices, bx, bp, bi, perm);
-            Values = bx;
-            ColumnPointers = bp;
-            RowIndices = bi;
-            SortIndices();
+            result.SortIndices();
+            return result;
         }
-        
+         
 
         /// <summary>
         /// Returns the positions of the diagonal elements of a sparse matrix.
@@ -566,7 +562,7 @@ namespace CSparse.Storage
             }
 
             throw new NotSupportedException();
-        }
+        }        
 
         /// <summary>
         /// Change the max # of entries sparse matrix
