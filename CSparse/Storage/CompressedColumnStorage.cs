@@ -403,6 +403,32 @@ namespace CSparse.Storage
         }
 
         /// <summary>
+        /// Permute the rows of the matrix.
+        /// </summary>
+        /// <param name="perm">Permutation matrix P.</param>
+        /// <param name="target">The target storage (must be fully initialized to match the source storage).</param>
+        public void PermuteRows(int[] perm, CompressedColumnStorage<T> target)
+        {
+            var bx = target.Values;
+            var bp = target.ColumnPointers;
+            var bi = target.RowIndices;
+            
+            if (target.rowCount != rowCount || target.columnCount != columnCount)
+            {
+                throw new ArgumentException(Resources.InvalidDimensions, "target");
+            }
+
+            if (perm.Length != columnCount)
+            {
+                throw new ArgumentException("Invalid permutation length.", "perm");
+            }
+
+            PermuteRows(Values, ColumnPointers, RowIndices, bx, bp, bi, perm);
+
+            target.SortIndices();
+        }
+
+        /// <summary>
         /// Permute the columns of the matrix.
         /// </summary>
         /// <param name="perm">Permutation matrix P.</param>
@@ -412,6 +438,11 @@ namespace CSparse.Storage
             var bx = target.Values;
             var bp = target.ColumnPointers;
             var bi = target.RowIndices;
+
+            if (ReferenceEquals(this, target))
+            {
+                throw new ArgumentException("Cannot use this instance as target.", "target");
+            }
 
             if (target.rowCount != rowCount || target.columnCount != columnCount)
             {
