@@ -88,12 +88,7 @@ namespace CSparse.Storage
             this.Values = values;
         }
 
-        /// <summary>
-        /// Return the matrix value at position (row, column).
-        /// </summary>
-        /// <param name="row">The row index.</param>
-        /// <param name="column">The column index.</param>
-        /// <returns>Matrix value</returns>
+        /// <inheritdoc />
         public override T At(int row, int column)
         {
             int index = ColumnPointers[column];
@@ -102,12 +97,7 @@ namespace CSparse.Storage
             return pos >= 0 ? Values[pos] : Zero;
         }
 
-        /// <summary>
-        /// Clears all values form the matrix.
-        /// </summary>
-        /// <remarks>
-        /// The method does not release memory.
-        /// </remarks>
+        /// <inheritdoc />
         public override void Clear()
         {
             Array.Clear(ColumnPointers, 0, ColumnPointers.Length);

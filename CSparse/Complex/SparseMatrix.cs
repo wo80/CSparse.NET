@@ -18,19 +18,25 @@ namespace CSparse.Complex
     [Serializable]
     public class SparseMatrix : CompressedColumnStorage<Complex>
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the SparseMatrix class.
+        /// </summary>
         public SparseMatrix(int rowCount, int columnCount)
             : base(rowCount, columnCount)
         {
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the SparseMatrix class.
+        /// </summary>
         public SparseMatrix(int rowCount, int columnCount, int valueCount)
             : base(rowCount, columnCount, valueCount)
         {
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the SparseMatrix class.
+        /// </summary>
         public SparseMatrix(int rowCount, int columnCount, Complex[] values, int[] rowIndices, int[] columnPointers)
             : base(rowCount, columnCount, values, rowIndices, columnPointers)
         {

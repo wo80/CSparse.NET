@@ -56,13 +56,27 @@ namespace CSparse
             this.columnCount = columnCount;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Return the matrix value at position (row, column).
+        /// </summary>
+        /// <param name="row">The row index.</param>
+        /// <param name="column">The column index.</param>
+        /// <returns>Matrix value</returns>
         public abstract T At(int row, int column);
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Clears all values form the matrix.
+        /// </summary>
+        /// <remarks>
+        /// The method does not release memory.
+        /// </remarks>
         public abstract void Clear();
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Returns the requested matrix norm.
+        /// </summary>
+        /// <param name="which">The norm to compute (0 = infinity-norm, 1 = L1-norm, 2 = Frobenius norm).</param>
+        /// <returns>The matrix norm.</returns>
         [Obsolete("Use specialized methods instead (L1Norm() etc.).")]
         public abstract double Norm(int which);
 
@@ -112,7 +126,10 @@ namespace CSparse
         /// <returns>The square root of the sum of the squared values.</returns>
         public abstract double FrobeniusNorm();
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Enumerates all values of the matrix.
+        /// </summary>
+        /// <returns>Enumeration of tuples (i, j, a[i, j]).</returns>
         public abstract IEnumerable<Tuple<int, int, T>> EnumerateIndexed();
 
         /// <inheritdoc />
