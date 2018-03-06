@@ -390,22 +390,6 @@ namespace CSparse.Storage
         /// Permute the rows of the matrix.
         /// </summary>
         /// <param name="perm">Permutation matrix P.</param>
-        public void PermuteRows(int[] perm)
-        {
-            if (perm.Length != rowCount)
-            {
-                throw new ArgumentException("Invalid permutation length.", "perm");
-            }
-
-            PermuteRows(Values, ColumnPointers, RowIndices, Values, ColumnPointers, RowIndices, perm);
-
-            SortIndices();
-        }
-
-        /// <summary>
-        /// Permute the rows of the matrix.
-        /// </summary>
-        /// <param name="perm">Permutation matrix P.</param>
         /// <param name="target">The target storage (must be fully initialized to match the source storage).</param>
         public void PermuteRows(int[] perm, CompressedColumnStorage<T> target)
         {
@@ -418,7 +402,7 @@ namespace CSparse.Storage
                 throw new ArgumentException(Resources.InvalidDimensions, "target");
             }
 
-            if (perm.Length != columnCount)
+            if (perm.Length != rowCount)
             {
                 throw new ArgumentException("Invalid permutation length.", "perm");
             }
@@ -426,6 +410,15 @@ namespace CSparse.Storage
             PermuteRows(Values, ColumnPointers, RowIndices, bx, bp, bi, perm);
 
             target.SortIndices();
+        }
+
+        /// <summary>
+        /// Permute the rows of the matrix.
+        /// </summary>
+        /// <param name="perm">Permutation matrix P.</param>
+        public void PermuteRows(int[] perm)
+        {
+            PermuteRows(perm, this);
         }
 
         /// <summary>
