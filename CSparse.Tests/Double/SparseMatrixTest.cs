@@ -6,7 +6,7 @@ namespace CSparse.Tests.Double
     using NUnit.Framework;
     using System;
 
-    public class CompressedColumnStorageTest
+    public class SparseMatrixTest
     {
         [OneTimeSetUp]
         public void Initialize()

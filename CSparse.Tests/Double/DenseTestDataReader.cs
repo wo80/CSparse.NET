@@ -1,6 +1,7 @@
 ﻿
 namespace CSparse.Tests.Double
 {
+    using CSparse.Double;
     using System;
     using System.Globalization;
     using System.IO;
@@ -116,7 +117,7 @@ namespace CSparse.Tests.Double
             };
         }
 
-        private static double[,] ReadMatrix(string line, int m, int n)
+        private static DenseMatrix ReadMatrix(string line, int m, int n)
         {
             var rows = line.Trim().Split(';');
 
@@ -125,7 +126,7 @@ namespace CSparse.Tests.Double
                 throw new InvalidDataException();
             }
 
-            var result = new double[m, n];
+            var result = new DenseMatrix(m, n);
 
             for (int i = 0; i < m; i++)
             {
@@ -138,7 +139,7 @@ namespace CSparse.Tests.Double
 
                 for (int j = 0; j < n; j++)
                 {
-                    result[i, j] = double.Parse(row[j], CultureInfo.InvariantCulture);
+                    result.At(i, j, double.Parse(row[j], CultureInfo.InvariantCulture));
                 }
             }
 

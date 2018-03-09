@@ -1,6 +1,7 @@
 ﻿
 namespace CSparse.Tests
 {
+    using CSparse.Storage;
     using System;
 
     class DenseTestData<T>
@@ -10,23 +11,23 @@ namespace CSparse.Tests
 
         public int ColumnCount;
 
-        public T[,] A;
+        public DenseColumnMajorStorage<T> A;
 
-        public T[,] B;
+        public DenseColumnMajorStorage<T> B;
 
         public T[] x;
 
         public T[] y;
 
-        public T[,] AT;
+        public DenseColumnMajorStorage<T> AT;
 
-        public T[,] BT;
+        public DenseColumnMajorStorage<T> BT;
 
-        public T[,] ApB;
+        public DenseColumnMajorStorage<T> ApB;
 
-        public T[,] AmBT;
+        public DenseColumnMajorStorage<T> AmBT;
 
-        public T[,] ATmB;
+        public DenseColumnMajorStorage<T> ATmB;
 
         public T[] Ax;
 

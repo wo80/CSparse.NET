@@ -5,14 +5,14 @@ namespace CSparse.Tests.Complex
     using NUnit.Framework;
     using System;
 
-    public class CompressedColumnStorageTest
+    public class SparseMatrixTest
     {
         [TestCase(0, 0)]
         [TestCase(0, 5)]
         [TestCase(5, 0)]
         public void TestConstructor(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
+            var A = new SparseMatrix(rows, columns, 0);
 
             Assert.IsNotNull(A);
         }
@@ -22,7 +22,7 @@ namespace CSparse.Tests.Complex
         [TestCase(5, 0)]
         public void TestEmptyTranspose(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
+            var A = new SparseMatrix(rows, columns, 0);
             var B = A.Transpose();
 
             Assert.IsNotNull(B);
@@ -33,8 +33,8 @@ namespace CSparse.Tests.Complex
         [TestCase(5, 0)]
         public void TestEmptyAdd(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
-            var B = MatrixHelper.Load(rows, columns);
+            var A = new SparseMatrix(rows, columns, 0);
+            var B = new SparseMatrix(rows, columns, 0);
 
             var C = A.Add(B);
 
@@ -45,8 +45,8 @@ namespace CSparse.Tests.Complex
         [TestCase(0, 5)]
         public void TestEmptyMultiply(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
-            var B = MatrixHelper.Load(columns, rows);
+            var A = new SparseMatrix(rows, columns, 0);
+            var B = new SparseMatrix(columns, rows, 0);
 
             var C = A.Multiply(B);
 
@@ -56,8 +56,8 @@ namespace CSparse.Tests.Complex
         [TestCase(5, 0)]
         public void TestEmptyMultiplyInvalid(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
-            var B = MatrixHelper.Load(columns, rows);
+            var A = new SparseMatrix(rows, columns, 0);
+            var B = new SparseMatrix(columns, rows, 0);
 
             Assert.Throws<Exception>(() =>
             {
@@ -70,7 +70,7 @@ namespace CSparse.Tests.Complex
         [TestCase(5, 0)]
         public void TestEmptyVectorMultiply(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
+            var A = new SparseMatrix(rows, columns, 0);
             var x = Vector.Create(columns, 1.0);
             var y = Vector.Create(rows, 0.0);
 
@@ -84,8 +84,8 @@ namespace CSparse.Tests.Complex
         [TestCase(5, 0)]
         public void TestEmptyNorm(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
-            var B = MatrixHelper.Load(rows, columns);
+            var A = new SparseMatrix(rows, columns, 0);
+            var B = new SparseMatrix(rows, columns, 0);
 
             var l0 = A.InfinityNorm();
             var l1 = A.L1Norm();

@@ -70,9 +70,11 @@ namespace CSparse.Tests.Double
             return data;
         }
 
-        private static CompressedColumnStorage<double> DenseToSparse(double[,] dense)
+        private static CompressedColumnStorage<double> DenseToSparse(DenseColumnMajorStorage<double> dense)
         {
-            return Converter.ToCompressedColumnStorage(Converter.FromDenseArray(dense));
+            var cs = Converter.FromColumnMajorArray(dense.Values, dense.RowCount, dense.ColumnCount);
+
+            return Converter.ToCompressedColumnStorage(cs);
         }
     }
 }
