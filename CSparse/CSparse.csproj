@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\bin\Debug\CSparse.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\bin\Release\CSparse.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -39,6 +41,7 @@
     <Compile Include="Check.cs" />
     <Compile Include="ColumnOrdering.cs" />
     <Compile Include="Complex\CompressedColumnStorage.cs" />
+    <Compile Include="Complex\DenseMatrix.cs" />
     <Compile Include="Complex\SparseMatrix.cs" />
     <Compile Include="Complex\Factorization\SparseCholesky.cs" />
     <Compile Include="Complex\Factorization\SparseLU.cs" />
@@ -47,6 +50,7 @@
     <Compile Include="Complex\Vector.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Double\CompressedColumnStorage.cs" />
+    <Compile Include="Double\DenseMatrix.cs" />
     <Compile Include="Double\SparseMatrix.cs" />
     <Compile Include="Double\Factorization\SparseCholesky.cs" />
     <Compile Include="Double\Factorization\SparseLDL.cs" />
@@ -75,6 +79,7 @@
     <Compile Include="Converter.cs" />
     <Compile Include="Storage\CoordinateStorage.cs" />
     <Compile Include="Matrix.cs" />
+    <Compile Include="Storage\DenseColumnMajorStorage.cs" />
     <Compile Include="Storage\SymbolicColumnStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Factorization\SymbolicFactorization.cs" />

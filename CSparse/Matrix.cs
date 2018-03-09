@@ -73,18 +73,9 @@ namespace CSparse
         public abstract void Clear();
 
         /// <summary>
-        /// Returns the requested matrix norm.
-        /// </summary>
-        /// <param name="which">The norm to compute (0 = infinity-norm, 1 = L1-norm, 2 = Frobenius norm).</param>
-        /// <returns>The matrix norm.</returns>
-        [Obsolete("Use specialized methods instead (L1Norm() etc.).")]
-        public abstract double Norm(int which);
-
-        /// <summary>
         /// Extract row from matrix.
         /// </summary>
         /// <param name="rowIndex">The column index to extract.</param>
-        /// <param name="target">Dense array.</param>
         public abstract T[] Row(int rowIndex);
 
         /// <summary>
@@ -98,7 +89,6 @@ namespace CSparse
         /// Extract column from matrix.
         /// </summary>
         /// <param name="columnIndex">The column index to extract.</param>
-        /// <param name="target">Dense array.</param>
         public abstract T[] Column(int columnIndex);
 
         /// <summary>

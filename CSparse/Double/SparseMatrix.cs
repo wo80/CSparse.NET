@@ -100,28 +100,64 @@ namespace CSparse.Double
         }
 
         /// <inheritdoc />
-        [Obsolete("Use specialized methods instead (L1Norm() etc.).")]
-        public override double Norm(int which)
-        {
-            return NormInternal(which);
-        }
-
-        /// <inheritdoc />
         public override double L1Norm()
         {
-            return NormInternal(1);
-        }
+            int nz = this.NonZerosCount;
 
+            double sum, norm = 0.0;
+
+            for (int j = 0; j < columnCount; j++)
+            {
+                sum = 0.0;
+                for (int i = ColumnPointers[j]; i < ColumnPointers[j + 1]; i++)
+                {
+                    sum += Math.Abs(Values[i]);
+                }
+                norm = Math.Max(norm, sum);
+            }
+
+            return norm;
+        }
+        
         /// <inheritdoc />
         public override double InfinityNorm()
         {
-            return NormInternal(0);
+            int nz = this.NonZerosCount;
+
+            double norm = 0.0;
+
+            var work = new double[rowCount];
+
+            for (int j = 0; j < columnCount; j++)
+            {
+                for (int i = ColumnPointers[j]; i < ColumnPointers[j + 1]; i++)
+                {
+                    work[RowIndices[i]] += Math.Abs(Values[i]);
+                }
+            }
+
+            for (int j = 0; j < rowCount; j++)
+            {
+                norm = Math.Max(norm, work[j]);
+            }
+
+            return norm;
         }
 
         /// <inheritdoc />
         public override double FrobeniusNorm()
         {
-            return NormInternal(2);
+            int nz = this.NonZerosCount;
+
+            double sum = 0.0, norm = 0.0;
+            
+            for (int i = 0; i < nz; i++)
+            {
+                sum = Math.Abs(Values[i]);
+                norm += sum * sum;
+            }
+
+            return Math.Sqrt(norm);
         }
 
         #endregion
@@ -393,6 +429,7 @@ namespace CSparse.Double
 
         #endregion
 
+        /// <inheritdoc />
         public override bool Equals(Matrix<double> other, double tolerance)
         {
             var o = other as SparseMatrix;
@@ -435,59 +472,7 @@ namespace CSparse.Double
         }
 
         #region Internal methods
-
-        /// <summary>
-        /// Computes the norm of a sparse matrix.
-        /// </summary>
-        /// <param name="which">The norm to compute.</param>
-        /// <returns>The requested norm of the matrix.</returns>
-        internal double NormInternal(int which)
-        {
-            int nz = this.NonZerosCount;
-
-            double sum, norm = 0.0;
-
-            if (which == 1)
-            {
-                for (int j = 0; j < columnCount; j++)
-                {
-                    sum = 0.0;
-                    for (int i = ColumnPointers[j]; i < ColumnPointers[j + 1]; i++)
-                    {
-                        sum += Math.Abs(Values[i]);
-                    }
-                    norm = Math.Max(norm, sum);
-                }
-            }
-            else if (which == 2)
-            {
-                sum = 0.0;
-                for (int i = 0; i < nz; i++)
-                {
-                    sum = Math.Abs(Values[i]);
-                    norm += sum * sum;
-                }
-                norm = Math.Sqrt(norm);
-            }
-            else
-            {
-                var work = new double[rowCount];
-                for (int j = 0; j < columnCount; j++)
-                {
-                    for (int i = ColumnPointers[j]; i < ColumnPointers[j + 1]; i++)
-                    {
-                        work[RowIndices[i]] += Math.Abs(Values[i]);
-                    }
-                }
-                for (int j = 0; j < rowCount; j++)
-                {
-                    norm = Math.Max(norm, work[j]);
-                }
-            }
-
-            return norm;
-        }
-
+        
         internal override void Cleanup()
         {
             int i, j, p, q, nnz = 0;
