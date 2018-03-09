@@ -40,7 +40,7 @@ namespace CSparse.Complex
                 sum = 0.0;
                 for (var i = 0; i < rowCount; i++)
                 {
-                    sum += values[(j * rowCount) + i].Magnitude;
+                    sum += Values[(j * rowCount) + i].Magnitude;
                 }
                 norm = Math.Max(norm, sum);
             }
@@ -57,7 +57,7 @@ namespace CSparse.Complex
             {
                 for (var i = 0; i < rowCount; i++)
                 {
-                    r[i] += values[(j * rowCount) + i].Magnitude;
+                    r[i] += Values[(j * rowCount) + i].Magnitude;
                 }
             }
 
@@ -83,7 +83,7 @@ namespace CSparse.Complex
 
             for (int i = 0; i < length; i++)
             {
-                sum = values[i].Magnitude;
+                sum = Values[i].Magnitude;
                 norm += sum * sum;
             }
 
@@ -91,9 +91,9 @@ namespace CSparse.Complex
         }
 
         /// <inheritdoc />
-        public override object Clone()
+        public override DenseColumnMajorStorage<Complex> Clone()
         {
-            var values = (Complex[])this.values.Clone();
+            var values = (Complex[])this.Values.Clone();
 
             return new DenseMatrix(rowCount, columnCount, values);
         }
@@ -101,7 +101,7 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override void Multiply(Complex[] x, Complex[] y)
         {
-            var A = values;
+            var A = Values;
 
             int rows = rowCount;
             int cols = columnCount;
@@ -122,7 +122,7 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override void Multiply(Complex alpha, Complex[] x, Complex beta, Complex[] y)
         {
-            var A = values;
+            var A = Values;
 
             int rows = rowCount;
             int cols = columnCount;
@@ -143,7 +143,7 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override void TransposeMultiply(Complex[] x, Complex[] y)
         {
-            var A = values;
+            var A = Values;
 
             int rows = rowCount;
             int cols = columnCount;
@@ -166,7 +166,7 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override void TransposeMultiply(Complex alpha, Complex[] x, Complex beta, Complex[] y)
         {
-            var A = values;
+            var A = Values;
 
             int rows = rowCount;
             int cols = columnCount;
@@ -200,7 +200,7 @@ namespace CSparse.Complex
 
             var target = result.Values;
 
-            var a = this.values;
+            var a = this.Values;
             var b = other.Values;
 
             int length = m * n;
@@ -214,7 +214,7 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override void Multiply(DenseColumnMajorStorage<Complex> other, DenseColumnMajorStorage<Complex> result)
         {
-            var A = values;
+            var A = Values;
             var B = other.Values;
             var C = result.Values;
 
@@ -251,7 +251,7 @@ namespace CSparse.Complex
                 throw new ArgumentException(Resources.MatrixDimensions);
             }
 
-            var x = values;
+            var x = Values;
             var y = other.Values;
 
             var target = result.Values;
@@ -285,7 +285,7 @@ namespace CSparse.Complex
 
             for (int i = 0; i < length; i++)
             {
-                if (Complex.Abs(values[i] - otherValues[i]) > tolerance)
+                if (Complex.Abs(Values[i] - otherValues[i]) > tolerance)
                 {
                     return false;
                 }

@@ -8,20 +8,17 @@ namespace CSparse.Storage
     using System.Numerics;
 
     /// <summary>
-    /// Dense column major matrix storage.
+    /// Dense column-major matrix storage.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [Serializable]
-    public abstract class DenseColumnMajorStorage<T> : Matrix<T>, ICloneable
+    public abstract class DenseColumnMajorStorage<T> : Matrix<T>
         where T : struct, IEquatable<T>, IFormattable
     {
-        protected readonly T[] values;
-
-        /// <inheritdoc />
-        public T[] Values
-        {
-            get { return values; }
-        }
+        /// <summary>
+        /// Gets the numerical values in column-major order.
+        /// </summary>
+        public T[] Values;
 
         /// <summary>
         /// Return the matrix value at position (i, j).
@@ -30,8 +27,8 @@ namespace CSparse.Storage
         /// <param name="j">The column index.</param>
         public T this[int i, int j]
         {
-            get { return values[(j * rowCount) + i]; }
-            set { values[(j * rowCount) + i] = value; }
+            get { return Values[(j * rowCount) + i]; }
+            set { Values[(j * rowCount) + i] = value; }
         }
 
         /// <summary>
@@ -48,13 +45,13 @@ namespace CSparse.Storage
         public DenseColumnMajorStorage(int rows, int columns, T[] values)
             : base(rows, columns)
         {
-            this.values = values;
+            this.Values = values;
         }
 
         /// <inheritdoc />
         public override T At(int row, int column)
         {
-            return values[(column * rowCount) + row];
+            return Values[(column * rowCount) + row];
         }
 
         /// <summary>
@@ -62,7 +59,7 @@ namespace CSparse.Storage
         /// </summary>
         public void At(int row, int column, T value)
         {
-            values[(column * rowCount) + row] = value;
+            Values[(column * rowCount) + row] = value;
         }
 
         /// <inheritdoc />
@@ -90,14 +87,14 @@ namespace CSparse.Storage
         {
             for (int i = 0; i < columnCount; i++)
             {
-                target[i] = values[(i * rowCount) + row];
+                target[i] = Values[(i * rowCount) + row];
             }
         }
 
         /// <inheritdoc />
         public override void Column(int column, T[] target)
         {
-            Array.Copy(values, column * rowCount, target, 0, rowCount);
+            Array.Copy(Values, column * rowCount, target, 0, rowCount);
         }
 
         /// <summary>
@@ -107,7 +104,7 @@ namespace CSparse.Storage
         /// <param name="values">The new values.</param>
         public void SetRow(int row, T[] values)
         {
-            var target = this.values;
+            var target = this.Values;
 
             for (int i = 0; i < columnCount; i++)
             {
@@ -122,7 +119,7 @@ namespace CSparse.Storage
         /// <param name="values">The new values.</param>
         public void SetColumn(int column, T[] values)
         {
-            var target = this.values;
+            var target = this.Values;
 
             Array.Copy(values, 0, target, column * rowCount, rowCount);
         }
@@ -155,7 +152,7 @@ namespace CSparse.Storage
                 var index = j * RowCount;
                 for (int i = 0; i < RowCount; i++)
                 {
-                    target[(i * ColumnCount) + j] = values[index + i];
+                    target[(i * ColumnCount) + j] = Values[index + i];
                 }
             }
         }
@@ -233,7 +230,7 @@ namespace CSparse.Storage
         /// <summary>
         /// Returns a clone of this matrix.
         /// </summary>
-        public abstract object Clone();
+        public abstract DenseColumnMajorStorage<T> Clone();
 
         /// <summary>
         /// Returns a new matrix containing the upper triangle of this matrix.
@@ -370,7 +367,7 @@ namespace CSparse.Storage
         /// <inheritdoc />
         public override void Clear()
         {
-            Array.Clear(values, 0, rowCount * columnCount);
+            Array.Clear(Values, 0, rowCount * columnCount);
         }
 
         /// <inheritdoc />
@@ -380,7 +377,7 @@ namespace CSparse.Storage
             {
                 for (int column = 0; column < columnCount; column++)
                 {
-                    yield return new Tuple<int, int, T>(row, column, values[(column * rowCount) + row]);
+                    yield return new Tuple<int, int, T>(row, column, Values[(column * rowCount) + row]);
                 }
             }
         }
@@ -408,7 +405,7 @@ namespace CSparse.Storage
 
             for (int j = sourceColumnIndex, jj = targetColumnIndex; j < sourceColumnIndex + columnCount; j++, jj++)
             {
-                Array.Copy(values, j * RowCount + sourceRowIndex, target.values, jj * target.RowCount + targetRowIndex, rowCount);
+                Array.Copy(Values, j * RowCount + sourceRowIndex, target.Values, jj * target.RowCount + targetRowIndex, rowCount);
             }
         }
 

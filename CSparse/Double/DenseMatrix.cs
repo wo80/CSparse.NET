@@ -39,7 +39,7 @@ namespace CSparse.Double
                 sum = 0.0;
                 for (var i = 0; i < rowCount; i++)
                 {
-                    sum += Math.Abs(values[(j * rowCount) + i]);
+                    sum += Math.Abs(Values[(j * rowCount) + i]);
                 }
                 norm = Math.Max(norm, sum);
             }
@@ -56,7 +56,7 @@ namespace CSparse.Double
             {
                 for (var i = 0; i < rowCount; i++)
                 {
-                    r[i] += Math.Abs(values[(j * rowCount) + i]);
+                    r[i] += Math.Abs(Values[(j * rowCount) + i]);
                 }
             }
 
@@ -82,7 +82,7 @@ namespace CSparse.Double
 
             for (int i = 0; i < length; i++)
             {
-                sum = Math.Abs(values[i]);
+                sum = Math.Abs(Values[i]);
                 norm += sum * sum;
             }
 
@@ -90,9 +90,9 @@ namespace CSparse.Double
         }
 
         /// <inheritdoc />
-        public override object Clone()
+        public override DenseColumnMajorStorage<double> Clone()
         {
-            var values = (double[])this.values.Clone();
+            var values = (double[])this.Values.Clone();
 
             return new DenseMatrix(rowCount, columnCount, values);
         }
@@ -100,7 +100,7 @@ namespace CSparse.Double
         /// <inheritdoc />
         public override void Multiply(double[] x, double[] y)
         {
-            var A = values;
+            var A = Values;
 
             int rows = rowCount;
             int cols = columnCount;
@@ -121,7 +121,7 @@ namespace CSparse.Double
         /// <inheritdoc />
         public override void Multiply(double alpha, double[] x, double beta, double[] y)
         {
-            var A = values;
+            var A = Values;
 
             int rows = rowCount;
             int cols = columnCount;
@@ -142,7 +142,7 @@ namespace CSparse.Double
         /// <inheritdoc />
         public override void TransposeMultiply(double[] x, double[] y)
         {
-            var A = values;
+            var A = Values;
 
             int rows = rowCount;
             int cols = columnCount;
@@ -165,7 +165,7 @@ namespace CSparse.Double
         /// <inheritdoc />
         public override void TransposeMultiply(double alpha, double[] x, double beta, double[] y)
         {
-            var A = values;
+            var A = Values;
 
             int rows = rowCount;
             int cols = columnCount;
@@ -204,7 +204,7 @@ namespace CSparse.Double
 
             var target = result.Values;
 
-            var a = this.values;
+            var a = this.Values;
             var b = other.Values;
 
             int length = rows * columns;
@@ -218,7 +218,7 @@ namespace CSparse.Double
         /// <inheritdoc />
         public override void Multiply(DenseColumnMajorStorage<double> other, DenseColumnMajorStorage<double> result)
         {
-            var A = values;
+            var A = Values;
             var B = other.Values;
             var C = result.Values;
 
@@ -255,7 +255,7 @@ namespace CSparse.Double
                 throw new ArgumentException(Resources.MatrixDimensions);
             }
 
-            var x = values;
+            var x = Values;
             var y = other.Values;
 
             var target = result.Values;
@@ -289,7 +289,7 @@ namespace CSparse.Double
 
             for (int i = 0; i < length; i++)
             {
-                if (Math.Abs(values[i] - otherValues[i]) > tolerance)
+                if (Math.Abs(Values[i] - otherValues[i]) > tolerance)
                 {
                     return false;
                 }
