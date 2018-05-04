@@ -58,11 +58,11 @@ namespace CSparse.IO
         public static CoordinateStorage<T> ReadStorage<T>(TextReader reader, bool autoExpand = true)
             where T : struct, IEquatable<T>, IFormattable
         {
-            bool complex, sparse;
+            bool complex, sparse, pattern;
             MatrixMarketSymmetry symmetry;
-            ExpectHeader(reader, true, out complex, out sparse, out symmetry);
+            ExpectHeader(reader, true, out complex, out sparse, out pattern, out symmetry);
 
-            var parse = CreateValueParser<T>(complex);
+            var parse = CreateValueParser<T>(complex, pattern);
 
             var sizes = ExpectLine(reader).Split(separator, StringSplitOptions.RemoveEmptyEntries);
 
@@ -156,8 +156,9 @@ namespace CSparse.IO
 
         #region Helper
 
-        static void ExpectHeader(TextReader reader, bool matrix, out bool complex, out bool sparse, out MatrixMarketSymmetry symmetry)
+        static void ExpectHeader(TextReader reader, bool matrix, out bool complex, out bool sparse, out bool pattern, out MatrixMarketSymmetry symmetry)
         {
+            complex = pattern = false;
             string line;
             while ((line = reader.ReadLine()) != null)
             {
@@ -202,6 +203,9 @@ namespace CSparse.IO
                                 break;
                             case "complex":
                                 complex = true;
+                                break;
+                            case "pattern":
+                                pattern = true;
                                 break;
                             default:
                                 throw new NotSupportedException("Field type not supported.");
@@ -255,8 +259,13 @@ namespace CSparse.IO
             throw new FormatException(@"End of file reached unexpectedly.");
         }
 
-        static Func<int, string[], T> CreateValueParser<T>(bool sourceIsComplex)
+        static Func<int, string[], T> CreateValueParser<T>(bool sourceIsComplex, bool pattern)
         {
+            if (pattern)
+            {
+                return (offset, tokens) => (T)(object)1.0;
+            }
+
             if (typeof(T) == typeof(double))
             {
                 // ignore imaginary part if source is complex
