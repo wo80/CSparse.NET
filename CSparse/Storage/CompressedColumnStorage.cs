@@ -175,17 +175,37 @@ namespace CSparse.Storage
         /// <summary>
         /// Returns the transpose of this matrix.
         /// </summary>
-        public virtual CompressedColumnStorage<T> Transpose()
+        public CompressedColumnStorage<T> Transpose()
+        {
+            return this.Transpose(false);
+        }
+
+        /// <summary>
+        /// Transpose this matrix and store the result in given matrix.
+        /// </summary>
+        /// <param name="result">Storage for the tranposed matrix.</param>
+        public void Transpose(CompressedColumnStorage<T> result)
+        {
+            this.Transpose(result, false);
+        }
+
+        /// <summary>
+        /// Returns the transpose of this matrix.
+        /// </summary>
+        /// <param name="storage">A value indicating, whether the transpose should be done on storage level (without complex conjugation).</param>
+        public CompressedColumnStorage<T> Transpose(bool storage)
         {
             var result = CompressedColumnStorage<T>.Create(columnCount, rowCount, this.NonZerosCount);
-            this.Transpose(result);
+            this.Transpose(result, storage);
             return result;
         }
 
         /// <summary>
         /// Transpose this matrix and store the result in given matrix.
         /// </summary>
-        public virtual void Transpose(CompressedColumnStorage<T> result)
+        /// <param name="result">Storage for the tranposed matrix.</param>
+        /// <param name="storage">A value indicating, whether the transpose should be done on storage level (without complex conjugation).</param>
+        public virtual void Transpose(CompressedColumnStorage<T> result, bool storage)
         {
             int i, j, p;
 

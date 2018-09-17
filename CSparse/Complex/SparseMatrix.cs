@@ -14,7 +14,7 @@ namespace CSparse.Complex
     using System.Numerics;
 
     /// <inheritdoc />
-    [DebuggerDisplay("SparseMatrix {RowCount}x{ColumnCount}-Double {NonZerosCount}-NonZero")]
+    [DebuggerDisplay("SparseMatrix {RowCount}x{ColumnCount}-Complex {NonZerosCount}-NonZero")]
     [Serializable]
     public class SparseMatrix : CompressedColumnStorage<Complex>
     {
@@ -302,11 +302,22 @@ namespace CSparse.Complex
         #region Linear Algebra (Matrix)
 
         /// <summary>
-        /// Transpose this matrix (with complex conjugation) and store the result in given matrix.
+        /// Transpose this matrix and store the result in given matrix.
         /// </summary>
-        /// <param name="result"></param>
-        public override void Transpose(CompressedColumnStorage<Complex> result)
+        /// <remarks>
+        /// By default transposition of a complex matrix will include complex conjugation of its
+        /// values. Set <paramref name="storage"/> to <c>true</c>, to transpose on storage level
+        /// (meaning, the storage is converted from CSC to CSR).
+        /// </remarks>
+        public override void Transpose(CompressedColumnStorage<Complex> result, bool storage)
         {
+            if (storage)
+            {
+                base.Transpose(result, storage);
+
+                return;
+            }
+
             int i, j, p;
 
             var cx = result.Values;
