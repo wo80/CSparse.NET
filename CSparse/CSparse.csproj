@@ -61,6 +61,7 @@
     <Compile Include="Factorization\SparseQR.cs" />
     <Compile Include="ILinearOperator.cs" />
     <Compile Include="IO\MatrixMarketReader.cs" />
+    <Compile Include="IO\MatrixMarketWriter.cs" />
     <Compile Include="IProgress.cs" />
     <Compile Include="Ordering\AMD.cs" />
     <Compile Include="Ordering\DulmageMendelsohn.cs" />
