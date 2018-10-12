@@ -23,9 +23,10 @@ namespace CSparse.Complex.Factorization
     /// </remarks>
     public class SparseCholesky : ISparseFactorization<Complex>
     {
+        readonly int n;
+
         SymbolicFactorization S;
         CompressedColumnStorage<Complex> L;
-        int n;
 
         Complex[] temp; // workspace
 
@@ -46,8 +47,9 @@ namespace CSparse.Complex.Factorization
         /// </summary>
         /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
         /// <param name="order">Ordering method to use (natural or A+A').</param>
+        /// <param name="progress">Report progress (range from 0.0 to 1.0).</param>
         public static SparseCholesky Create(CompressedColumnStorage<Complex> A, ColumnOrdering order,
-            IProgress progress)
+            IProgress<double> progress)
         {
             if ((int)order > 1)
             {
@@ -72,8 +74,9 @@ namespace CSparse.Complex.Factorization
         /// </summary>
         /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
         /// <param name="p">Permutation.</param>
+        /// <param name="progress">Report progress (range from 0.0 to 1.0).</param>
         public static SparseCholesky Create(CompressedColumnStorage<Complex> A, int[] p,
-            IProgress progress)
+            IProgress<double> progress)
         {
             Check.NotNull(A, "A");
             Check.NotNull(p, "p");
@@ -234,7 +237,7 @@ namespace CSparse.Complex.Factorization
         /// Compute the Numeric Cholesky factorization, L = chol (A, [pinv parent cp]).
         /// </summary>
         /// <returns>Numeric Cholesky factorization</returns>
-        private void Factorize(CompressedColumnStorage<Complex> A, IProgress progress)
+        private void Factorize(CompressedColumnStorage<Complex> A, IProgress<double> progress)
         {
             Complex d, lki;
             int top, i, p, k, cci;

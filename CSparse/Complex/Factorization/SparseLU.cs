@@ -23,10 +23,11 @@ namespace CSparse.Complex.Factorization
     /// </remarks>
     public class SparseLU : ISparseFactorization<Complex>
     {
+        readonly int n;
+
         SymbolicFactorization S;
         CompressedColumnStorage<Complex> L, U;
         int[] pinv; // partial pivoting
-        int n;
 
         Complex[] temp; // workspace
 
@@ -50,8 +51,9 @@ namespace CSparse.Complex.Factorization
         /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
         /// <param name="order">Ordering method to use (natural or A+A').</param>
         /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
+        /// <param name="progress">Report progress (range from 0.0 to 1.0).</param>
         public static SparseLU Create(CompressedColumnStorage<Complex> A, ColumnOrdering order,
-            double tol, IProgress progress)
+            double tol, IProgress<double> progress)
         {
             return Create(A, AMD.Generate(A, order), tol, progress);
         }
@@ -73,8 +75,9 @@ namespace CSparse.Complex.Factorization
         /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
         /// <param name="p">Permutation.</param>
         /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
+        /// <param name="progress">Report progress (range from 0.0 to 1.0).</param>
         public static SparseLU Create(CompressedColumnStorage<Complex> A, int[] p, double tol,
-            IProgress progress)
+            IProgress<double> progress)
         {
             Check.NotNull(A, "A");
             Check.NotNull(p, "p");
@@ -162,7 +165,7 @@ namespace CSparse.Complex.Factorization
         /// <summary>
         /// [L,U,pinv] = lu(A, [q lnz unz]). lnz and unz can be guess.
         /// </summary>
-        private void Factorize(CompressedColumnStorage<Complex> A, double tol, IProgress progress)
+        private void Factorize(CompressedColumnStorage<Complex> A, double tol, IProgress<double> progress)
         {
             int[] q = S.q;
 

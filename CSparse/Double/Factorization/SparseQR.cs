@@ -38,8 +38,9 @@ namespace CSparse.Double.Factorization
         /// </summary>
         /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
         /// <param name="order">Ordering method to use (natural or A+A').</param>
+        /// <param name="progress">Report progress (range from 0.0 to 1.0).</param>
         public static SparseQR Create(CompressedColumnStorage<double> A, ColumnOrdering order,
-            IProgress progress)
+            IProgress<double> progress)
         {
             Check.NotNull(A, "A");
 
@@ -78,9 +79,8 @@ namespace CSparse.Double.Factorization
         #endregion
 
         private SparseQR(int rows, int columns)
+            : base(rows, columns)
         {
-            this.m = rows;
-            this.n = columns;
         }
 
         /// <summary>

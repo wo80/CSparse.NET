@@ -7,7 +7,6 @@
 
 namespace CSparse.Factorization
 {
-    using CSparse.Ordering;
     using CSparse.Storage;
     using System;
 
@@ -17,10 +16,20 @@ namespace CSparse.Factorization
     public abstract class SparseQR<T> : ISparseFactorization<T>
         where T : struct, IEquatable<T>, IFormattable
     {
+        protected readonly int m, n;
+
         protected SymbolicFactorization S;
         protected CompressedColumnStorage<T> Q, R;
         protected double[] beta;
-        protected int m, n;
+
+        /// <summary>
+        /// Initializes a new instance of the SparseQR class.
+        /// </summary>
+        protected SparseQR(int rows, int columns)
+        {
+            this.m = rows;
+            this.n = columns;
+        }
 
         /// <summary>
         /// Gets the number of nonzeros in both Q and R factors together.
@@ -50,7 +59,9 @@ namespace CSparse.Factorization
         /// <summary>
         /// Sparse QR factorization [V,beta,pinv,R] = qr(A)
         /// </summary>
-        protected void Factorize(CompressedColumnStorage<T> A, IProgress progress)
+        /// <param name="A">The matrix to factorize.</param>
+        /// <param name="progress">Report progress (range from 0.0 to 1.0).</param>
+        protected void Factorize(CompressedColumnStorage<T> A, IProgress<double> progress)
         {
             T zero = Helper.ZeroOf<T>();
 
@@ -172,6 +183,7 @@ namespace CSparse.Factorization
         /// </summary>
         /// <param name="A">Matrix to factorize.</param>
         /// <param name="p">Permutation.</param>
+        /// <param name="natural">Indicates whether to use natural ordering or given permutation.</param>
         protected void SymbolicAnalysis(CompressedColumnStorage<T> A, int[] p, bool natural)
         {
             int m = A.RowCount;
