@@ -111,6 +111,14 @@ namespace CSparse.Storage
         }
 
         /// <summary>
+        /// Create a new sparse matrix as a copy of the given coordinate storage.
+        /// </summary>
+        public static CompressedColumnStorage<T> OfIndexed(CoordinateStorage<T> coordinateStorage)
+        {
+            return Converter.ToCompressedColumnStorage(coordinateStorage);
+        }
+
+        /// <summary>
         /// Create a new sparse matrix as a copy of the given indexed enumerable.
         /// </summary>
         public static CompressedColumnStorage<T> OfIndexed(int rows, int columns, IEnumerable<Tuple<int, int, T>> enumerable)
