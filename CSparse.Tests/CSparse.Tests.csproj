@@ -55,8 +55,6 @@
     <Compile Include="Double\SparseMatrixTest.cs" />
     <Compile Include="Double\DenseMatrixTest.cs" />
     <Compile Include="Double\DenseTestDataReader.cs" />
-    <Compile Include="Double\Factorization\DenseCholeskyTest.cs" />
-    <Compile Include="Double\Factorization\DenseLUTest.cs" />
     <Compile Include="Double\Factorization\SparseLUTest.cs" />
     <Compile Include="Double\Factorization\SparseQRTest.cs" />
     <Compile Include="Double\Factorization\SparseCholeskyTest.cs" />
