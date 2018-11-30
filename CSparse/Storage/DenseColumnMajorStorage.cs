@@ -48,6 +48,124 @@ namespace CSparse.Storage
             this.Values = values;
         }
 
+        #region Public static functions
+
+        /// <summary>
+        /// Create a new dense matrix as a copy of the given other matrix.
+        /// </summary>
+        public static DenseColumnMajorStorage<T> OfMatrix(Matrix<T> matrix)
+        {
+            return OfIndexed(matrix.RowCount, matrix.ColumnCount, matrix.EnumerateIndexed());
+        }
+
+        /// <summary>
+        /// Create a new dense matrix as a copy of the given two-dimensional array.
+        /// </summary>
+        public static DenseColumnMajorStorage<T> OfArray(T[,] array)
+        {
+            int rows = array.GetLength(0);
+            int columns = array.GetLength(1);
+
+            var A = Create(rows, columns);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    A.At(i, j, array[i, j]);
+                }
+            }
+
+            return A;
+        }
+
+        /// <summary>
+        /// Create a new dense matrix as a copy of the given indexed enumerable.
+        /// </summary>
+        public static DenseColumnMajorStorage<T> OfIndexed(int rows, int columns, IEnumerable<Tuple<int, int, T>> enumerable)
+        {
+            var A = Create(rows, columns);
+
+            foreach (var item in enumerable)
+            {
+                A.At(item.Item1, item.Item2, item.Item3);
+            }
+
+            return A;
+        }
+
+        /// <summary>
+        /// Create a new dense matrix as a copy of the given array (row-major order).
+        /// </summary>
+        public static DenseColumnMajorStorage<T> OfRowMajor(int rows, int columns, T[] rowMajor)
+        {
+            var A = Create(rows, columns);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    A.At(i, j, rowMajor[(i * columns) + j]);
+                }
+            }
+
+            return A;
+        }
+
+        /// <summary>
+        /// Create a new dense matrix as a copy of the given array (column-major order).
+        /// </summary>
+        public static DenseColumnMajorStorage<T> OfColumnMajor(int rows, int columns, T[] columnMajor)
+        {
+            var A = Create(rows, columns);
+
+            Array.Copy(columnMajor, A.Values, rows * columns);
+
+            return A;
+        }
+
+        /// <summary>
+        /// Create a new square dense matrix with the diagonal as a copy of the given array.
+        /// </summary>
+        public static DenseColumnMajorStorage<T> OfDiagonalArray(T[] diagonal)
+        {
+            int order = diagonal.Length;
+
+            var A = Create(order, order);
+            
+            for (int i = 0; i < order; i++)
+            {
+                A.At(i, i, diagonal[i]);
+            }
+
+            return A;
+        }
+
+        /// <summary>
+        /// Create a new square dense matrix and initialize each diagonal value to the same provided value.
+        /// </summary>
+        public static DenseColumnMajorStorage<T> CreateDiagonal(int order, T value)
+        {
+            var A = Create(order, order);
+
+            for (int i = 0; i < order; i++)
+            {
+                A.At(i, i, value);
+            }
+
+            return A;
+        }
+
+        /// <summary>
+        /// Create a new square dense identity matrix where each diagonal value is set to one.
+        /// </summary>
+        public static DenseColumnMajorStorage<T> CreateIdentity(int order)
+        {
+            return CreateDiagonal(order, One);
+        }
+
+        #endregion
+
         /// <inheritdoc />
         public override T At(int row, int column)
         {

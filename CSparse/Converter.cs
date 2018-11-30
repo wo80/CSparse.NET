@@ -8,6 +8,7 @@ namespace CSparse
 {
     using CSparse.Storage;
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Converter for different types of storages.
@@ -185,6 +186,26 @@ namespace CSparse
                 {
                     storage.At(i, j, array[i * columnCount + j]);
                 }
+            }
+
+            return storage;
+        }
+
+        /// <summary>
+        /// Convert a row major array to coordinate storage.
+        /// </summary>
+        /// <param name="enumerable">Enumerates the entries of a matrix.</param>
+        /// <param name="rowCount">Number of rows.</param>
+        /// <param name="columnCount">Number of columns.</param>
+        /// <returns>Coordinate storage.</returns>
+        public static CoordinateStorage<T> FromEnumerable<T>(IEnumerable<Tuple<int, int, T>> enumerable, int rowCount, int columnCount)
+            where T : struct, IEquatable<T>, IFormattable
+        {
+            var storage = new CoordinateStorage<T>(rowCount, columnCount, Math.Max(rowCount, columnCount));
+
+            foreach (var item in enumerable)
+            {
+                storage.At(item.Item1, item.Item2, item.Item3);
             }
 
             return storage;

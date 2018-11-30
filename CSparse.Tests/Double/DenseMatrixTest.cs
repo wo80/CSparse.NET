@@ -5,14 +5,9 @@ namespace CSparse.Tests.Double
     using NUnit.Framework;
     using System;
 
+    [DefaultFloatingPointTolerance(1e-8)]
     public class DenseMatrixTest
     {
-        [OneTimeSetUp]
-        public void Initialize()
-        {
-            GlobalSettings.DefaultFloatingPointTolerance = 1e-8;
-        }
-
         [TestCase(2, 2)]
         [TestCase(2, 3)]
         public void TestGetRow(int rows, int columns)
@@ -50,14 +45,14 @@ namespace CSparse.Tests.Double
                 }
             }
         }
-
+        
         [TestCase(2, 2)]
         [TestCase(2, 3)]
         public void TestSetRow(int rows, int columns)
         {
             var data = MatrixHelper.LoadDense(rows, columns);
 
-            var A = (DenseMatrix)data.A.Clone();
+            var A = data.A.Clone();
 
             var z = Vector.Create(columns, -1.1);
 
@@ -78,7 +73,7 @@ namespace CSparse.Tests.Double
         {
             var data = MatrixHelper.LoadDense(rows, columns);
 
-            var A = (DenseMatrix)data.A.Clone();
+            var A = data.A.Clone();
 
             var z = Vector.Create(rows, -1.1);
 
@@ -181,5 +176,72 @@ namespace CSparse.Tests.Double
 
             CollectionAssert.AreEqual(data.AmBT.Values, actual.Values);
         }
+
+        #region Matrix creation
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestOfMatrix(int rows, int columns)
+        {
+            var denseData = MatrixHelper.LoadDense(rows, columns);
+
+            var denseA = denseData.A;
+            var denseB = DenseMatrix.OfMatrix(denseA);
+
+            Assert.IsTrue(denseA.Equals(denseB));
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestOfIndexed(int rows, int columns)
+        {
+            var denseData = MatrixHelper.LoadDense(rows, columns);
+            var denseA = denseData.A;
+            var denseB = DenseMatrix.OfIndexed(rows, columns, denseA.EnumerateIndexed());
+
+            Assert.IsTrue(denseA.Equals(denseB));
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestOfColumnMajor(int rows, int columns)
+        {
+            var denseData = MatrixHelper.LoadDense(rows, columns);
+            var denseA = denseData.A;
+            var denseB = DenseMatrix.OfColumnMajor(rows, columns, denseA.Values);
+
+            Assert.IsTrue(denseA.Equals(denseB));
+        }
+
+        [Test]
+        public void TestOfDiagonalArray()
+        {
+            int order = 3;
+
+            var a = 1.0;
+            var diag = Vector.Create(order, a);
+
+            var A = DenseMatrix.OfDiagonalArray(diag);
+
+            for (int i = 0; i < order; i++)
+            {
+                Assert.AreEqual(A.At(i, i), a);
+            }
+        }
+
+        [Test]
+        public void TestCreateIdentity()
+        {
+            int order = 3;
+
+            var A = DenseMatrix.CreateIdentity(order);
+
+            for (int i = 0; i < order; i++)
+            {
+                Assert.AreEqual(A.At(i, i), 1.0);
+            }
+        }
+
+        #endregion
     }
 }

@@ -2,18 +2,12 @@
 namespace CSparse.Tests.Double
 {
     using CSparse.Double;
-    using CSparse.Storage;
     using NUnit.Framework;
     using System;
 
+    [DefaultFloatingPointTolerance(1e-8)]
     public class SparseMatrixTest
     {
-        [OneTimeSetUp]
-        public void Initialize()
-        {
-            GlobalSettings.DefaultFloatingPointTolerance = 1e-8;
-        }
-
         #region Test empty matrix
 
         [TestCase(0, 0)]
@@ -283,5 +277,83 @@ namespace CSparse.Tests.Double
                 CollectionAssert.AreEqual(expectedRow, actualRow);
             }
         }
+
+        #region Matrix creation
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestOfMatrix(int rows, int columns)
+        {
+            var sparseData = MatrixHelper.LoadSparse(rows, columns);
+
+            var sparseA = sparseData.A;
+            var sparseB = SparseMatrix.OfMatrix(sparseA);
+
+            Assert.IsTrue(sparseA.Equals(sparseB));
+
+            var denseData = MatrixHelper.LoadDense(rows, columns);
+            
+            sparseB = SparseMatrix.OfMatrix(denseData.A);
+
+            Assert.IsTrue(sparseA.Equals(sparseB));
+        }
+        
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestOfIndexed(int rows, int columns)
+        {
+            var sparseData = MatrixHelper.LoadSparse(rows, columns);
+
+            var sparseA = sparseData.A;
+            var sparseB = SparseMatrix.OfIndexed(rows, columns, sparseA.EnumerateIndexed());
+
+            Assert.IsTrue(sparseA.Equals(sparseB));
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestOfColumnMajor(int rows, int columns)
+        {
+            var denseData = MatrixHelper.LoadDense(rows, columns);
+            var denseA = denseData.A;
+
+            var sparseData = MatrixHelper.LoadSparse(rows, columns);
+            var sparseA = sparseData.A;
+
+            var sparseB = SparseMatrix.OfColumnMajor(rows, columns, denseA.Values);
+
+            Assert.IsTrue(sparseA.Equals(sparseB));
+        }
+
+        [Test]
+        public void TestOfDiagonalArray()
+        {
+            int order = 3;
+
+            var a = 1.0;
+            var diag = Vector.Create(order, a);
+
+            var A = SparseMatrix.OfDiagonalArray(diag);
+
+            for (int i = 0; i < order; i++)
+            {
+                Assert.AreEqual(A.At(i, i), a);
+            }
+        }
+
+        [Test]
+        public void TestCreateIdentity()
+        {
+            int order = 3;
+
+            var A = SparseMatrix.CreateIdentity(order);
+
+            for (int i = 0; i < order; i++)
+            {
+                Assert.AreEqual(A.At(i, i), 1.0);
+            }
+        }
+
+        #endregion
     }
 }

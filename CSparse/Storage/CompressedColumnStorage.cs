@@ -88,6 +88,116 @@ namespace CSparse.Storage
             this.Values = values;
         }
 
+        #region Public static functions
+
+        /// <summary>
+        /// Create a new sparse matrix as a copy of the given other matrix.
+        /// </summary>
+        public static CompressedColumnStorage<T> OfMatrix(Matrix<T> matrix)
+        {
+            var c = Converter.FromEnumerable<T>(matrix.EnumerateIndexed(), matrix.RowCount, matrix.ColumnCount);
+
+            return Converter.ToCompressedColumnStorage(c);
+        }
+
+        /// <summary>
+        /// Create a new sparse matrix as a copy of the given two-dimensional array.
+        /// </summary>
+        public static CompressedColumnStorage<T> OfArray(T[,] array)
+        {
+            var c = Converter.FromDenseArray(array);
+
+            return Converter.ToCompressedColumnStorage(c);
+        }
+
+        /// <summary>
+        /// Create a new sparse matrix as a copy of the given indexed enumerable.
+        /// </summary>
+        public static CompressedColumnStorage<T> OfIndexed(int rows, int columns, IEnumerable<Tuple<int, int, T>> enumerable)
+        {
+            var c = Converter.FromEnumerable<T>(enumerable, rows, columns);
+
+            return Converter.ToCompressedColumnStorage(c);
+        }
+
+        /// <summary>
+        /// Create a new sparse matrix as a copy of the given array (row-major).
+        /// </summary>
+        public static CompressedColumnStorage<T> OfRowMajor(int rows, int columns, T[] rowMajor)
+        {
+            var c = Converter.FromRowMajorArray<T>(rowMajor, rows, columns);
+
+            return Converter.ToCompressedColumnStorage(c);
+        }
+
+        /// <summary>
+        /// Create a new sparse matrix as a copy of the given array (column-major).
+        /// </summary>
+        public static CompressedColumnStorage<T> OfColumnMajor(int rows, int columns, T[] columnMajor)
+        {
+            var c = Converter.FromColumnMajorArray<T>(columnMajor, rows, columns);
+
+            return Converter.ToCompressedColumnStorage(c);
+        }
+
+        /// <summary>
+        /// Create a new square sparse matrix with the diagonal as a copy of the given array.
+        /// </summary>
+        public static CompressedColumnStorage<T> OfDiagonalArray(T[] diagonal)
+        {
+            int order = diagonal.Length;
+
+            var A = Create(order, order, order);
+
+            var ap = A.ColumnPointers;
+            var ai = A.RowIndices;
+            var ax = A.Values;
+
+            for (int i = 0; i < order; i++)
+            {
+                ap[i] = i;
+                ai[i] = i;
+                ax[i] = diagonal[i];
+            }
+
+            ap[order] = order;
+
+            return A;
+        }
+
+        /// <summary>
+        /// Create a new square sparse matrix and initialize each diagonal value to the same provided value.
+        /// </summary>
+        public static CompressedColumnStorage<T> CreateDiagonal(int order, T value)
+        {
+            var A = Create(order, order, order);
+
+            var ap = A.ColumnPointers;
+            var ai = A.RowIndices;
+            var ax = A.Values;
+
+            for (int i = 0; i < order; i++)
+            {
+                ap[i] = i;
+                ai[i] = i;
+                ax[i] = value;
+            }
+
+            ap[order] = order;
+
+            return A;
+        }
+
+        /// <summary>
+        /// Create a new square sparse identity matrix where each diagonal value is set to One.
+        /// </summary>
+        public static CompressedColumnStorage<T> CreateIdentity(int order)
+        {
+            return CreateDiagonal(order, One);
+        }
+
+        #endregion
+
         /// <inheritdoc />
         public override T At(int row, int column)
         {
