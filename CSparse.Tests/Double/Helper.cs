@@ -1,4 +1,3 @@
-﻿
 namespace CSparse.Tests.Double
 {
     static class Helper

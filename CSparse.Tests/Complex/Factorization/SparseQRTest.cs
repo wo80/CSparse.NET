@@ -1,4 +1,3 @@
-﻿
 namespace CSparse.Tests.Complex.Factorization
 {
     using CSparse.Complex;

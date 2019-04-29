@@ -1,4 +1,3 @@
-﻿
 namespace CSparse.Tests.Double.Factorization
 {
     using CSparse.Double;

@@ -1,4 +1,3 @@
-﻿
 namespace CSparse.Tests
 {
     using CSparse.Storage;

@@ -1,4 +1,3 @@
-﻿
 namespace CSparse.Tests.Ordering
 {
     using CSparse.Ordering;

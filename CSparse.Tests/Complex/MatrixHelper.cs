@@ -1,4 +1,3 @@
-﻿
 namespace CSparse.Tests.Complex
 {
     using CSparse.Complex;
