@@ -42,16 +42,25 @@ namespace CSparse.Ordering
             this.cc = new int[5];  // coarse column decomposition
         }
 
+        /// <summary>
+        /// Gets the number of blocks in the fine decomposition.
+        /// </summary>
         public int Blocks
         {
             get { return nb; }
         }
 
+        /// <summary>
+        /// Gets the number structural rank of the matrix.
+        /// </summary>
         public int StructuralRank
         {
             get { return rr[3]; }
         }
 
+        /// <summary>
+        /// Gets the number of singletons.
+        /// </summary>
         public int Singletons
         {
             get
@@ -196,7 +205,7 @@ namespace CSparse.Ordering
                 }
             }
             C.Reshape(nc, -1);
-            var scc = FindScc(C, nc); // find strongly connected components of C*/
+            var scc = StronglyConnectedComponents.Generate(C, nc); // find strongly connected components of C*/
 
             // Combine coarse and fine decompositions
             ps = scc.p; // C(ps,ps) is the permuted matrix
@@ -231,75 +240,6 @@ namespace CSparse.Ordering
 
             return result;
         }
-
-        #region Block triangular form
-
-        /// <summary>
-        /// Finds the strongly connected components of a square matrix.
-        /// </summary>
-        /// <returns>strongly connected components, null on error</returns>
-        private static DulmageMendelsohn FindScc(SymbolicColumnStorage A, int n)
-        {
-            // matrix A temporarily modified, then restored
-
-            int i, k, b, nb = 0, top;
-            int[] xi, p, r, Ap, ATp;
-
-            var AT = A.Transpose(); // AT = A'
-
-            Ap = A.ColumnPointers;
-            ATp = AT.ColumnPointers;
-
-            xi = new int[2 * n + 1]; // get workspace
-
-            var D = new DulmageMendelsohn(n, 0); // allocate result
-            p = D.p;
-            r = D.r;
-
-            top = n;
-            for (i = 0; i < n; i++) // first dfs(A) to find finish times (xi)
-            {
-                if (!(Ap[i] < 0))
-                {
-                    top = GraphHelper.DepthFirstSearch(i, A.ColumnPointers, A.RowIndices, top, xi, xi, n, null);
-                }
-            }
-            for (i = 0; i < n; i++)
-            {
-                //CS_MARK(Ap, i);
-                Ap[i] = -(Ap[i]) - 2; // restore A; unmark all nodes
-            }
-            top = n;
-            nb = n;
-            for (k = 0; k < n; k++) // dfs(A') to find strongly connnected comp
-            {
-                i = xi[k]; // get i in reverse order of finish times
-                if (ATp[i] < 0)
-                {
-                    continue; // skip node i if already ordered
-                }
-                r[nb--] = top; // node i is the start of a component in p
-                top = GraphHelper.DepthFirstSearch(i, AT.ColumnPointers, AT.RowIndices, top, p, xi, n, null);
-            }
-            r[nb] = 0; // first block starts at zero; shift r up
-            for (k = nb; k <= n; k++) r[k - nb] = r[k];
-            D.nb = nb = n - nb; // nb = # of strongly connected components
-            for (b = 0; b < nb; b++) // sort each block in natural order
-            {
-                for (k = r[b]; k < r[b + 1]; k++) xi[p[k]] = b;
-            }
-            for (b = 0; b <= nb; b++)
-            {
-                xi[n + b] = r[b];
-            }
-            for (i = 0; i < n; i++)
-            {
-                p[xi[n + xi[i]]++] = i;
-            }
-            return D;
-        }
-
-        #endregion
 
         #region Dulmage-Mendelsohn helper
 
