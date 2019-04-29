@@ -1,112 +1,49 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\NUnit.3.11.0\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.11.0\build\NUnit.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C4052DF8-0709-4B5F-86F4-1A7409B82BED}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSparse.Tests</RootNamespace>
-    <AssemblyName>CSparse.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=3.11.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
+    <None Remove="Complex\Data\general-20x40.mat" />
+    <None Remove="Complex\Data\general-40x20.mat" />
+    <None Remove="Complex\Data\general-40x40.mat" />
+    <None Remove="Complex\Data\hermitian-40-spd.mat" />
+    <None Remove="Complex\Data\hermitian-40.mat" />
+    <None Remove="Double\Data\general-20x40.mat" />
+    <None Remove="Double\Data\general-40x20.mat" />
+    <None Remove="Double\Data\general-40x40.mat" />
+    <None Remove="Double\Data\symmetric-40-spd.mat" />
+    <None Remove="Double\Data\symmetric-40.mat" />
+    <None Remove="Double\Data\test-data-dense-2x2.txt" />
+    <None Remove="Double\Data\test-data-dense-2x3.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Complex\SparseMatrixTest.cs" />
-    <Compile Include="Complex\Factorization\SparseLUTest.cs" />
-    <Compile Include="Complex\Factorization\SparseQRTest.cs" />
-    <Compile Include="Complex\Factorization\SparseCholeskyTest.cs" />
-    <Compile Include="Complex\Helper.cs" />
-    <Compile Include="Complex\MatrixHelper.cs" />
-    <Compile Include="ConverterTest.cs" />
-    <Compile Include="DenseTestData.cs" />
-    <Compile Include="SparseTestData.cs" />
-    <Compile Include="Double\SparseMatrixTest.cs" />
-    <Compile Include="Double\DenseMatrixTest.cs" />
-    <Compile Include="Double\DenseTestDataReader.cs" />
-    <Compile Include="Double\Factorization\SparseLUTest.cs" />
-    <Compile Include="Double\Factorization\SparseQRTest.cs" />
-    <Compile Include="Double\Factorization\SparseCholeskyTest.cs" />
-    <Compile Include="Double\Helper.cs" />
-    <Compile Include="Double\MatrixHelper.cs" />
-    <Compile Include="Ordering\TestDulmageMendelsohn.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResourceLoader.cs" />
-    <Compile Include="Storage\SymbolicColumnStorageTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CSparse\CSparse.csproj">
-      <Project>{bd00d9bd-d669-4aee-91b7-0105afc994ec}</Project>
-      <Name>CSparse</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Double\Data\general-20x40.mat" />
-    <EmbeddedResource Include="Double\Data\general-40x20.mat" />
-    <EmbeddedResource Include="Double\Data\general-40x40.mat" />
-    <EmbeddedResource Include="Double\Data\symmetric-40-spd.mat" />
-    <EmbeddedResource Include="Double\Data\symmetric-40.mat" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
-  </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Complex\Data\general-20x40.mat" />
     <EmbeddedResource Include="Complex\Data\general-40x20.mat" />
     <EmbeddedResource Include="Complex\Data\general-40x40.mat" />
     <EmbeddedResource Include="Complex\Data\hermitian-40-spd.mat" />
     <EmbeddedResource Include="Complex\Data\hermitian-40.mat" />
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="Double\Data\general-20x40.mat" />
+    <EmbeddedResource Include="Double\Data\general-40x20.mat" />
+    <EmbeddedResource Include="Double\Data\general-40x40.mat" />
+    <EmbeddedResource Include="Double\Data\symmetric-40-spd.mat" />
+    <EmbeddedResource Include="Double\Data\symmetric-40.mat" />
     <EmbeddedResource Include="Double\Data\test-data-dense-2x2.txt" />
     <EmbeddedResource Include="Double\Data\test-data-dense-2x3.txt" />
   </ItemGroup>
+
   <ItemGroup>
-    <None Include="packages.config" />
+    <PackageReference Include="nunit" Version="3.10.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\NUnit.3.11.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.11.0\build\NUnit.props'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\CSparse\CSparse.csproj" />
+  </ItemGroup>
+
 </Project>

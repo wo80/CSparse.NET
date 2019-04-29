@@ -4,7 +4,7 @@ namespace CSparse.Tests.Complex.Factorization
     using CSparse.Complex;
     using CSparse.Complex.Factorization;
     using NUnit.Framework;
-    using System.Numerics;
+    using Complex = System.Numerics.Complex;
 
     public class SparseLUTest
     {

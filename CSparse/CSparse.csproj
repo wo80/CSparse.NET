@@ -1,100 +1,42 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BD00D9BD-D669-4AEE-91B7-0105AFC994EC}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CSparse</RootNamespace>
+    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageId>CSparse</PackageId>
+    <Summary>A concise library for solving sparse linear systems with direct methods.</Summary>
+    <Description>CSparse.NET provides numerical methods for sparse LU, Cholesky and QR decomposition of real and complex systems.</Description>
+    <Product>CSparse.NET</Product>
+    <Company />
+    <Copyright>Copyright Christian Woltering © 2012-2019</Copyright>
+    <Authors>Christian Woltering</Authors>
+    <PackageProjectUrl>https://github.com/wo80/CSparse.NET</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/wo80/CSparse.NET</RepositoryUrl>
+    <AssemblyVersion>3.2.3.0</AssemblyVersion>
+    <FileVersion>3.2.3.0</FileVersion>
+    <PackageTags>math sparse matrix lu cholesky qr decomposition factorization </PackageTags>
+    <Version>3.2.3</Version>
     <AssemblyName>CSparse</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <RootNamespace>CSparse</RootNamespace>
+    <PackageLicenseUrl>https://github.com/wo80/CSparse.NET/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\bin\Debug\CSparse.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\bin\Release\CSparse.xml</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
+    <Compile Remove="IProgress.cs" Condition="'$(TargetFramework)' != 'net40'" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Check.cs" />
-    <Compile Include="ColumnOrdering.cs" />
-    <Compile Include="Complex\DenseMatrix.cs" />
-    <Compile Include="Complex\SparseMatrix.cs" />
-    <Compile Include="Complex\Factorization\SparseCholesky.cs" />
-    <Compile Include="Complex\Factorization\SparseLU.cs" />
-    <Compile Include="Complex\Factorization\SparseQR.cs" />
-    <Compile Include="Complex\SolverHelper.cs" />
-    <Compile Include="Complex\Vector.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="Double\DenseMatrix.cs" />
-    <Compile Include="Double\SparseMatrix.cs" />
-    <Compile Include="Double\Factorization\SparseCholesky.cs" />
-    <Compile Include="Double\Factorization\SparseLDL.cs" />
-    <Compile Include="Double\Factorization\SparseLU.cs" />
-    <Compile Include="Double\Factorization\SparseQR.cs" />
-    <Compile Include="Double\SolverHelper.cs" />
-    <Compile Include="Double\Vector.cs" />
-    <Compile Include="Factorization\ISolver.cs" />
-    <Compile Include="Factorization\ISparseFactorization.cs" />
-    <Compile Include="Factorization\SparseQR.cs" />
-    <Compile Include="ILinearOperator.cs" />
-    <Compile Include="IO\MatrixMarketReader.cs" />
-    <Compile Include="IO\MatrixMarketWriter.cs" />
-    <Compile Include="IProgress.cs" />
-    <Compile Include="Ordering\AMD.cs" />
-    <Compile Include="Ordering\DulmageMendelsohn.cs" />
-    <Compile Include="Ordering\MaximumMatching.cs" />
-    <Compile Include="GraphHelper.cs" />
-    <Compile Include="Helper.cs" />
-    <Compile Include="Permutation.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
+    <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Storage\CompressedColumnStorage.cs" />
-    <Compile Include="Converter.cs" />
-    <Compile Include="Storage\CoordinateStorage.cs" />
-    <Compile Include="Matrix.cs" />
-    <Compile Include="Storage\DenseColumnMajorStorage.cs" />
-    <Compile Include="Storage\SymbolicColumnStorage.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Factorization\SymbolicFactorization.cs" />
   </ItemGroup>
+
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
