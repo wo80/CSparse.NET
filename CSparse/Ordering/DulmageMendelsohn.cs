@@ -71,6 +71,54 @@ namespace CSparse.Ordering
         }
 
         /// <summary>
+        /// Gets the row permutation.
+        /// </summary>
+        public int[] RowPermutation
+        {
+            get { return p; }
+        }
+
+        /// <summary>
+        /// Gets the column permutation.
+        /// </summary>
+        public int[] ColumnPermutation
+        {
+            get { return q; }
+        }
+
+        /// <summary>
+        /// Gets the block row pointers (block k is rows r[k] to r[k+1]-1 in A(p,q)).
+        /// </summary>
+        public int[] BlockRowPointers
+        {
+            get { return r; }
+        }
+
+        /// <summary>
+        /// Gets the block column pointers (block k is cols s[k] to s[k+1]-1 in A(p,q)).
+        /// </summary>
+        public int[] BlockColumnPointers
+        {
+            get { return s; }
+        }
+
+        /// <summary>
+        /// Gets the coarse row decomposition
+        /// </summary>
+        public int[] CoarseRowDecomposition
+        {
+            get { return rr; }
+        }
+
+        /// <summary>
+        /// Gets the coarse column decomposition.
+        /// </summary>
+        public int[] CoarseColumnDecomposition
+        {
+            get { return cc; }
+        }
+
+        /// <summary>
         /// Compute coarse and then fine Dulmage-Mendelsohn decomposition. seed
         /// optionally selects a randomized algorithm.
         /// </summary>
