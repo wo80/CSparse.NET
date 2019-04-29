@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SparseLDL.cs">
 // Copyright (c) 2005-2013, Timothy A. Davis
-// Copyright (c) 2012-2016, Christian Woltering
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace CSparse.Double.Factorization
 {
     using CSparse.Factorization;

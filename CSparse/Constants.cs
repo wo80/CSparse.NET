@@ -1,9 +1,3 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Constants.cs">
-// Copyright (c) 2012-2016, Christian Woltering
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace CSparse
 {
     using System.Runtime.InteropServices;

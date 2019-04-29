@@ -1,4 +1,3 @@
-﻿
 namespace CSparse.Double
 {
     using CSparse.Properties;

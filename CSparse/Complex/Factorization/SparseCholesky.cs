@@ -1,10 +1,3 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="SparseCholesky.cs">
-// Copyright (c) 2006-2016, Timothy A. Davis
-// Copyright (c) 2012-2016, Christian Woltering
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace CSparse.Complex.Factorization
 {
     using CSparse.Factorization;

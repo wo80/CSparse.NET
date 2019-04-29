@@ -1,9 +1,3 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Vector.cs">
-// Copyright (c) 2012-2016, Christian Woltering
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace CSparse.Complex
 {
     using System;

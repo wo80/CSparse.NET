@@ -1,4 +1,4 @@
-﻿
+
 namespace CSparse
 {
     // If the project gets updated to .NET 4.5, this interface can be replaced

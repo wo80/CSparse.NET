@@ -1,4 +1,3 @@
-﻿
 namespace CSparse
 {
     using CSparse.Properties;

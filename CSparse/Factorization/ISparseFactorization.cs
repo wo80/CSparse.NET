@@ -1,9 +1,3 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="ISparseFactorization.cs">
-// Copyright (c) 2012-2016, Christian Woltering
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace CSparse.Factorization
 {
     using System;

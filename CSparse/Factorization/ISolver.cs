@@ -1,4 +1,3 @@
-﻿
 namespace CSparse.Factorization
 {
     using System;

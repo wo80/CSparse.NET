@@ -1,4 +1,3 @@
-﻿
 namespace CSparse.Storage
 {
     using CSparse;

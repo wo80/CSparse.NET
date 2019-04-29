@@ -1,9 +1,3 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="MatrixMarketWriter.cs">
-// Copyright (c) 2012-2016, Christian Woltering
-// </copyright>
-// -----------------------------------------------------------------------
-
 namespace CSparse.IO
 {
     using System;
