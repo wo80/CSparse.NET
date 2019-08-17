@@ -231,6 +231,27 @@ namespace CSparse.Tests.Double
 
         [TestCase(2, 2)]
         [TestCase(2, 3)]
+        public void TestMatrixParallelMultiply(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+            var B = data.B;
+
+            var AT = data.AT;
+            var BT = data.BT;
+
+            var actual = AT.ParallelMultiply(B);
+
+            CollectionAssert.AreEqual(data.ATmB.Values, actual.Values);
+
+            actual = A.ParallelMultiply(BT);
+
+            CollectionAssert.AreEqual(data.AmBT.Values, actual.Values);
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
         public void TestMatrixPermuteColumns(int rows, int columns)
         {
             var p = Permutation.Create(columns, -1);

@@ -4,6 +4,7 @@ namespace CSparse.Double
     using CSparse.Storage;
     using System;
     using System.Diagnostics;
+    using System.Threading.Tasks;
 
     /// <inheritdoc />
     [DebuggerDisplay("SparseMatrix {RowCount}x{ColumnCount}-Double {NonZerosCount}-NonZero")]
@@ -418,6 +419,98 @@ namespace CSparse.Double
             result.SortIndices();
 
             return result; // success
+        }
+
+        public override CompressedColumnStorage<double> ParallelMultiply(CompressedColumnStorage<double> other)
+        {
+            int m = this.rowCount;
+            int n = other.ColumnCount;
+
+            int anz = this.NonZerosCount;
+            int bnz = other.NonZerosCount;
+
+            // Check inputs
+            if (other == null)
+            {
+                throw new ArgumentNullException("other");
+            }
+
+            if (this.ColumnCount != other.RowCount)
+            {
+                throw new ArgumentException(Resources.MatrixDimensions);
+            }
+
+            if ((m > 0 && this.ColumnCount == 0) || (other.RowCount == 0 && n > 0))
+            {
+                throw new Exception(Resources.InvalidDimensions);
+            }
+
+            var bp = other.ColumnPointers;
+            var bi = other.RowIndices;
+            var bx = other.Values;
+
+            var results = new SparseMatrix[n];
+            var indices = new int[n];
+            var nresults = 0;
+            for (var j = 0; j < n; j++)
+            {
+                if (bp[j] != bp[j + 1])
+                {
+                    indices[nresults] = j;
+                    results[nresults++] = new SparseMatrix(m, 1, m);
+                }
+            }
+            Parallel.For(0, nresults,
+                index =>
+                {
+                    int j = indices[index], rnz = 0;
+                    var result = results[index];
+                    var ci = result.RowIndices;
+                    var cx = result.Values;
+
+                    // Workspace
+                    var w = new int[m];
+                    var x = new double[m];
+
+                    for (var p = bp[j]; p < bp[j + 1]; p++)
+                    {
+                        rnz = this.Scatter(bi[p], bx[p], w, x, j + 1, result, rnz);
+                    }
+
+                    for (var p = 0; p < rnz; p++)
+                    {
+                        cx[p] = x[ci[p]];
+                    }
+                    result.ColumnPointers[1] = rnz; // finalize the last column of C
+                    result.Resize(0); // remove extra space from C
+                    result.SortIndices();
+                });
+
+
+            int nz = 0;
+            for (var j = 0; j < nresults; j++)
+            {
+                nz += results[j].NonZerosCount;
+            }
+            var values = new double[nz];
+            var ri = new int[nz];
+            var cp = new int[n + 1];
+            nz = 0;
+            for (var j = 0; j < nresults; j++)
+            {
+                var start = j == 0 ? 0 : indices[j - 1] + 1;
+                for (var k = start; k <= indices[j]; k++)
+                {
+                    cp[k] = nz;
+                }
+                var rnz = results[j].NonZerosCount;
+                Array.Copy(results[j].Values, 0, values, nz, rnz);
+                Array.Copy(results[j].RowIndices, 0, ri, nz, rnz);
+                nz += rnz;
+            }
+            cp[n] = nz;
+
+            return new SparseMatrix(m, n, values, ri, cp);
         }
 
         #endregion
