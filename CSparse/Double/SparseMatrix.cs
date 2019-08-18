@@ -425,6 +425,11 @@ namespace CSparse.Double
         {
             int m = this.rowCount;
             int n = other.ColumnCount;
+            int block_size = 16;
+            if (n <= block_size)
+            {
+                return Multiply(other);
+            }
 
             int anz = this.NonZerosCount;
             int bnz = other.NonZerosCount;
@@ -449,8 +454,8 @@ namespace CSparse.Double
             var bi = other.RowIndices;
             var bx = other.Values;
 
-            var block_size = Math.Min(n, 16);
             var nblocks = (n + block_size - 1) / block_size;
+            block_size = (n + nblocks - 1) / nblocks;
             var results = new SparseMatrix[nblocks];
             var indices = new int[nblocks];
             var nresults = 0;
