@@ -449,43 +449,60 @@ namespace CSparse.Double
             var bi = other.RowIndices;
             var bx = other.Values;
 
-            var results = new SparseMatrix[n];
-            var indices = new int[n];
+            var block_size = Math.Min(n, 16);
+            var nblocks = (n + block_size - 1) / block_size;
+            var results = new SparseMatrix[nblocks];
+            var indices = new int[nblocks];
             var nresults = 0;
-            for (var j = 0; j < n; j++)
+            for (var j = 0; j < nblocks; j++)
             {
-                if (bp[j] != bp[j + 1])
+                var start = j * block_size;
+                var end = Math.Min(n, (j + 1) * block_size);
+                var bnz2 = bp[end] - bp[start];
+                if (bnz2 != 0)
                 {
-                    indices[nresults] = j;
-                    results[nresults++] = new SparseMatrix(m, 1, m);
+                    indices[nresults] = start;
+                    results[nresults++] = new SparseMatrix(m, end - start, anz + bnz2);
                 }
             }
             Parallel.For(0, nresults,
                 index =>
                 {
-                    int j = indices[index], rnz = 0;
                     var result = results[index];
-                    var ci = result.RowIndices;
-                    var cx = result.Values;
+                    var rnz = 0;
 
                     // Workspace
                     var w = new int[m];
                     var x = new double[m];
 
-                    for (var p = bp[j]; p < bp[j + 1]; p++)
+                    var rcp = result.ColumnPointers;
+                    var nc = result.ColumnCount;
+                    for (var j = 0; j < nc; j++)
                     {
-                        rnz = this.Scatter(bi[p], bx[p], w, x, j + 1, result, rnz);
+                        if (rnz + m > result.Values.Length)
+                        {
+                            // Might throw out of memory exception.
+                            result.Resize(2 * (result.Values.Length) + m);
+                        }
+                        var ci = result.RowIndices;
+                        var cx = result.Values; // C.i and C.x may be reallocated
+                        rcp[j] = rnz; // column j of C starts here
+                        var j2 = j + indices[index];
+                        for (var p = bp[j2]; p < bp[j2 + 1]; p++)
+                        {
+                            rnz = this.Scatter(bi[p], bx[p], w, x, j + 1, result, rnz);
+                        }
+
+                        for (var p = rcp[j]; p < rnz; p++)
+                        {
+                            cx[p] = x[ci[p]];
+                        }
                     }
 
-                    for (var p = 0; p < rnz; p++)
-                    {
-                        cx[p] = x[ci[p]];
-                    }
-                    result.ColumnPointers[1] = rnz; // finalize the last column of C
+                    rcp[nc] = rnz; // finalize the last column of C
                     result.Resize(0); // remove extra space from C
                     result.SortIndices();
                 });
-
 
             int nz = 0;
             for (var j = 0; j < nresults; j++)
@@ -496,20 +513,31 @@ namespace CSparse.Double
             var ri = new int[nz];
             var cp = new int[n + 1];
             nz = 0;
+            var prev = 0;
             for (var j = 0; j < nresults; j++)
             {
-                var start = j == 0 ? 0 : indices[j - 1] + 1;
-                for (var k = start; k <= indices[j]; k++)
+                var start = indices[j];
+                for (var k = prev; k < start; k++)
                 {
                     cp[k] = nz;
                 }
-                var rnz = results[j].NonZerosCount;
-                Array.Copy(results[j].Values, 0, values, nz, rnz);
-                Array.Copy(results[j].RowIndices, 0, ri, nz, rnz);
+                var result = results[j];
+                var rcp = result.ColumnPointers;
+                var nc = result.ColumnCount;
+                prev = start + nc;
+                for (var k = 0; k < nc; k++)
+                {
+                    cp[start + k] = nz + rcp[k];
+                }
+                var rnz = result.NonZerosCount;
+                Array.Copy(result.Values, 0, values, nz, rnz);
+                Array.Copy(result.RowIndices, 0, ri, nz, rnz);
                 nz += rnz;
             }
-            cp[n] = nz;
-
+            for (var k = prev; k <= n; k++)
+            {
+                cp[k] = nz;
+            }
             return new SparseMatrix(m, n, values, ri, cp);
         }
 
