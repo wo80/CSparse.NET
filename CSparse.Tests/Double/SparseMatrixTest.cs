@@ -229,25 +229,35 @@ namespace CSparse.Tests.Double
             CollectionAssert.AreEqual(data.AmBT.Values, actual.Values);
         }
 
-        [TestCase(2, 2)]
-        [TestCase(2, 3)]
-        public void TestMatrixParallelMultiply(int rows, int columns)
+        [Test]
+        public void TestMatrixParallelMultiply()
         {
-            var data = MatrixHelper.LoadSparse(rows, columns);
-
-            var A = data.A;
-            var B = data.B;
-
-            var AT = data.AT;
-            var BT = data.BT;
-
-            var actual = AT.ParallelMultiply(B);
-
-            CollectionAssert.AreEqual(data.ATmB.Values, actual.Values);
-
-            actual = A.ParallelMultiply(BT);
-
-            CollectionAssert.AreEqual(data.AmBT.Values, actual.Values);
+            var data = ResourceLoader.Get<double>("general-40x40.mat");
+            var acs = new CSparse.Storage.CoordinateStorage<double>(40, 400, 40 * 400);
+            for (var k = 0; k < 10; k++)
+            {
+                for (var i = 0; i < 40; i++)
+                {
+                    for (var j = 0; j < 40; j++)
+                    {
+                        acs.At(i, j + 40 * k, data.At(i, j));
+                    }
+                }
+            }
+            var bcs = new CSparse.Storage.CoordinateStorage<double>(400, 40, 40 * 400);
+            for (var k = 0; k < 10; k++)
+            {
+                for (var i = 0; i < 40; i++)
+                {
+                    for (var j = 0; j < 40; j++)
+                    {
+                        bcs.At(i + 40 * k, j, data.At(i, j));
+                    }
+                }
+            }
+            var A = Converter.ToCompressedColumnStorage(acs);
+            var B = Converter.ToCompressedColumnStorage(bcs);
+            CollectionAssert.AreEqual(A.Multiply(B).Values, A.ParallelMultiply(B).Values);
         }
 
         [TestCase(2, 2)]

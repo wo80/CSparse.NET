@@ -423,17 +423,6 @@ namespace CSparse.Double
 
         public override CompressedColumnStorage<double> ParallelMultiply(CompressedColumnStorage<double> other)
         {
-            int m = this.rowCount;
-            int n = other.ColumnCount;
-            int block_size = 16;
-            if (n <= block_size)
-            {
-                return Multiply(other);
-            }
-
-            int anz = this.NonZerosCount;
-            int bnz = other.NonZerosCount;
-
             // Check inputs
             if (other == null)
             {
@@ -445,17 +434,40 @@ namespace CSparse.Double
                 throw new ArgumentException(Resources.MatrixDimensions);
             }
 
+            int m = this.rowCount;
+            int n = other.ColumnCount;
+
             if ((m > 0 && this.ColumnCount == 0) || (other.RowCount == 0 && n > 0))
             {
                 throw new Exception(Resources.InvalidDimensions);
             }
 
+            if (m <= 0 || n <= 0)
+            {
+                return Multiply(other);
+            }
+
+            int anz = this.NonZerosCount;
+            int bnz = other.NonZerosCount;
+
+            // Heuristics to determine whether parallel multiplication is faster
+            // Number of ops to exceed parallel overhead
+            const int min_ops = 15000;
+            // Average number of "x[i] += beta * Values[p]" per result column
+            long col_ops = (long)anz * bnz / this.ColumnCount / n;
+            if (col_ops * n < 4 * min_ops)
+            {
+                // Less than 4 threads
+                return Multiply(other);
+            }
+            var nblocks = (int)Math.Min(Environment.ProcessorCount, col_ops * n / min_ops);
+            var block_size = Math.Max(4, (n + nblocks - 1) / nblocks);
+            nblocks = (n + block_size - 1) / block_size;
+
             var bp = other.ColumnPointers;
             var bi = other.RowIndices;
             var bx = other.Values;
 
-            var nblocks = (n + block_size - 1) / block_size;
-            block_size = (n + nblocks - 1) / nblocks;
             var results = new SparseMatrix[nblocks];
             var indices = new int[nblocks];
             var nresults = 0;
