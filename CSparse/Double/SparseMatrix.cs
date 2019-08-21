@@ -442,7 +442,8 @@ namespace CSparse.Double
                 throw new Exception(Resources.InvalidDimensions);
             }
 
-            if (m <= 0 || n <= 0)
+            // Allow for at least 2 threads with 4 columns each
+            if (m <= 0 || n < 2 * 4 || Environment.ProcessorCount < 2)
             {
                 return Multiply(other);
             }
@@ -452,17 +453,15 @@ namespace CSparse.Double
 
             // Heuristics to determine whether parallel multiplication is faster
             // Number of ops to exceed parallel overhead
-            const int min_ops = 15000;
-            // Average number of "x[i] += beta * Values[p]" per result column
-            long col_ops = (long)anz * bnz / this.ColumnCount / n;
-            if (col_ops * n < 4 * min_ops)
+            const int min_total_ops = 150000;
+            // Total number of "x[i] += beta * Values[p]"
+            long total_ops = (long)anz * bnz / this.ColumnCount;
+            if (total_ops < min_total_ops)
             {
-                // Less than 4 threads
                 return Multiply(other);
             }
-            var nblocks = (int)Math.Min(Environment.ProcessorCount, col_ops * n / min_ops);
-            var block_size = Math.Max(4, (n + nblocks - 1) / nblocks);
-            nblocks = (n + block_size - 1) / block_size;
+            // With such a large overall threshold, there is no need of a per-thread threshold around 3000 ops.
+            var nblocks = Math.Min(Environment.ProcessorCount, n);
 
             var bp = other.ColumnPointers;
             var bi = other.RowIndices;
@@ -473,8 +472,8 @@ namespace CSparse.Double
             var nresults = 0;
             for (var j = 0; j < nblocks; j++)
             {
-                var start = j * block_size;
-                var end = Math.Min(n, (j + 1) * block_size);
+                var start = j * n / nblocks;
+                var end = (j + 1) * n / nblocks;
                 var bnz2 = bp[end] - bp[start];
                 if (bnz2 != 0)
                 {
@@ -517,7 +516,6 @@ namespace CSparse.Double
                     }
 
                     rcp[nc] = rnz; // finalize the last column of C
-                    result.Resize(0); // remove extra space from C
                     result.SortIndices();
                 });
 

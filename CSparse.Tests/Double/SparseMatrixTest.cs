@@ -233,26 +233,17 @@ namespace CSparse.Tests.Double
         public void TestMatrixParallelMultiply()
         {
             var data = ResourceLoader.Get<double>("general-40x40.mat");
-            var acs = new CSparse.Storage.CoordinateStorage<double>(40, 400, 40 * 400);
-            for (var k = 0; k < 10; k++)
+            var acs = new Storage.CoordinateStorage<double>(40, 800, 40 * 800);
+            var bcs = new Storage.CoordinateStorage<double>(800, 40, 800 * 40);
+            // This just exceeds min_total_ops in ParallelMultiply
+            foreach (var item in data.EnumerateIndexed())
             {
-                for (var i = 0; i < 40; i++)
+                int i = item.Item1;
+                int j = item.Item2;
+                for (var k = 0; k < 20; k++)
                 {
-                    for (var j = 0; j < 40; j++)
-                    {
-                        acs.At(i, j + 40 * k, data.At(i, j));
-                    }
-                }
-            }
-            var bcs = new CSparse.Storage.CoordinateStorage<double>(400, 40, 40 * 400);
-            for (var k = 0; k < 10; k++)
-            {
-                for (var i = 0; i < 40; i++)
-                {
-                    for (var j = 0; j < 40; j++)
-                    {
-                        bcs.At(i + 40 * k, j, data.At(i, j));
-                    }
+                    acs.At(i, j + 40 * k, item.Item3);
+                    bcs.At(i + 40 * k, j, item.Item3);
                 }
             }
             var A = Converter.ToCompressedColumnStorage(acs);
