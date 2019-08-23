@@ -229,6 +229,28 @@ namespace CSparse.Tests.Double
             CollectionAssert.AreEqual(data.AmBT.Values, actual.Values);
         }
 
+        [Test]
+        public void TestMatrixParallelMultiply()
+        {
+            var data = ResourceLoader.Get<double>("general-40x40.mat");
+            var acs = new Storage.CoordinateStorage<double>(40, 800, 40 * 800);
+            var bcs = new Storage.CoordinateStorage<double>(800, 40, 800 * 40);
+            // This just exceeds min_total_ops in ParallelMultiply
+            foreach (var item in data.EnumerateIndexed())
+            {
+                int i = item.Item1;
+                int j = item.Item2;
+                for (var k = 0; k < 20; k++)
+                {
+                    acs.At(i, j + 40 * k, item.Item3);
+                    bcs.At(i + 40 * k, j, item.Item3);
+                }
+            }
+            var A = Converter.ToCompressedColumnStorage(acs);
+            var B = Converter.ToCompressedColumnStorage(bcs);
+            CollectionAssert.AreEqual(A.Multiply(B).Values, A.ParallelMultiply(B).Values);
+        }
+
         [TestCase(2, 2)]
         [TestCase(2, 3)]
         public void TestMatrixPermuteColumns(int rows, int columns)

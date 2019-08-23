@@ -393,6 +393,11 @@ namespace CSparse.Storage
         /// <returns>C = A*B, null on error</returns>
         public abstract CompressedColumnStorage<T> Multiply(CompressedColumnStorage<T> other);
 
+        public virtual CompressedColumnStorage<T> ParallelMultiply(CompressedColumnStorage<T> other)
+        {
+            return Multiply(other);
+        }
+
         #endregion
 
         /// <summary>
