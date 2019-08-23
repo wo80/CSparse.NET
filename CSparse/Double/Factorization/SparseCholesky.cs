@@ -112,9 +112,9 @@ namespace CSparse.Double.Factorization
         /// <param name="result">The left hand side vector, <c>x</c>.</param>
         public void Solve(double[] input, double[] result)
         {
-            if (input == null) throw new ArgumentNullException("input");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
-            if (result == null) throw new ArgumentNullException("result");
+            if (result == null) throw new ArgumentNullException(nameof(result));
 
             var x = this.temp;
 
@@ -396,7 +396,7 @@ namespace CSparse.Double.Factorization
                     if (i > j) continue; // skip lower triangular part of A
                     i2 = pinv != null ? pinv[i] : i; // row i of A is row i2 of C
                     ci[q = w[Math.Max(i2, j2)]++] = Math.Min(i2, j2);
-                    if (cx != null)
+                    if (values)
                     {
                         cx[q] = ax[p];
                     }

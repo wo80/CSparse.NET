@@ -397,7 +397,7 @@ namespace CSparse.Storage
         {
             if (result == null)
             {
-                throw new ArgumentNullException("result");
+                throw new ArgumentNullException(nameof(result));
             }
 
             if (result.RowCount != RowCount || result.ColumnCount != ColumnCount)
@@ -424,7 +424,7 @@ namespace CSparse.Storage
         {
             if (result == null)
             {
-                throw new ArgumentNullException("result");
+                throw new ArgumentNullException(nameof(result));
             }
 
             if (result.RowCount != RowCount || result.ColumnCount != ColumnCount)
@@ -505,7 +505,7 @@ namespace CSparse.Storage
         {
             if (target == null)
             {
-                throw new ArgumentNullException("target");
+                throw new ArgumentNullException(nameof(target));
             }
 
             if (rowCount == 0 || columnCount == 0)

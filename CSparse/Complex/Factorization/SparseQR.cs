@@ -88,9 +88,9 @@ namespace CSparse.Complex.Factorization
         /// </remarks>
         public override void Solve(Complex[] input, Complex[] result)
         {
-            if (input == null) throw new ArgumentNullException("input");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
-            if (result == null) throw new ArgumentNullException("result");
+            if (result == null) throw new ArgumentNullException(nameof(result));
 
             var x = new Complex[S.m2];
 

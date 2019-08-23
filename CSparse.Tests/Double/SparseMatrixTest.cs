@@ -98,6 +98,16 @@ namespace CSparse.Tests.Double
             Assert.IsTrue(l2 == 0.0);
         }
 
+        [Test]
+        public void TestMultiplyZeroMatrix()
+        {
+            var A = SparseMatrix.OfColumnMajor(3, 2, new double[6]);
+            var B = SparseMatrix.OfColumnMajor(2, 4, new double[8]);
+            var C = A.Multiply(B);
+
+            Assert.IsTrue(C.NonZerosCount == 0);
+        }
+
         #endregion
 
         [TestCase(2, 2)]

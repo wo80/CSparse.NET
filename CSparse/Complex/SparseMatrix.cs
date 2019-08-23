@@ -356,6 +356,16 @@ namespace CSparse.Complex
         public override void Add(Complex alpha, Complex beta, CompressedColumnStorage<Complex> other,
             CompressedColumnStorage<Complex> result)
         {
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+
             int p, j, nz = 0;
 
             int m = this.rowCount;
@@ -404,22 +414,21 @@ namespace CSparse.Complex
         /// <returns>C = A*B, null on error</returns>
         public override CompressedColumnStorage<Complex> Multiply(CompressedColumnStorage<Complex> other)
         {
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            int p, j, nz = 0;
+            int[] cp, ci;
+            Complex[] cx;
+
             int m = this.rowCount;
             int n = other.ColumnCount;
 
             int anz = this.NonZerosCount;
             int bnz = other.NonZerosCount;
             
-            int p, j, nz = 0;
-            int[] cp, ci;
-            Complex[] cx;
-
-            // Check inputs
-            if (other == null)
-            {
-                throw new ArgumentNullException("other");
-            }
-
             if (this.ColumnCount != other.RowCount)
             {
                 throw new ArgumentException(Resources.MatrixDimensions);

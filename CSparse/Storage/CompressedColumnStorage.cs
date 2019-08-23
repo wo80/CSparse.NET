@@ -53,11 +53,7 @@ namespace CSparse.Storage
         {
             this.ColumnPointers = new int[columnCount + 1];
             this.RowIndices = new int[valueCount];
-
-            if (valueCount > 0)
-            {
-                this.Values = new T[valueCount];
-            }
+            this.Values = new T[valueCount];
         }
 
         /// <summary>
@@ -442,18 +438,16 @@ namespace CSparse.Storage
 
             if (values)
             {
-                Buffer.BlockCopy(ap, 0, result.ColumnPointers, 0, (columns + 1) * Constants.SizeOfInt);
-                Buffer.BlockCopy(ai, 0, result.RowIndices, 0, nnz * Constants.SizeOfInt);
-
                 Array.Copy(this.Values, 0, result.Values, 0, nnz);
             }
-            else
+            else if (nnz > 0)
             {
+                // Fix size of row indices array in case values == false.
                 result.RowIndices = new int[nnz];
-
-                Buffer.BlockCopy(ap, 0, result.ColumnPointers, 0, (columns + 1) * Constants.SizeOfInt);
-                Buffer.BlockCopy(ai, 0, result.RowIndices, 0, nnz * Constants.SizeOfInt);
             }
+
+            Buffer.BlockCopy(ap, 0, result.ColumnPointers, 0, (columns + 1) * Constants.SizeOfInt);
+            Buffer.BlockCopy(ai, 0, result.RowIndices, 0, nnz * Constants.SizeOfInt);
 
             return result;
         }
@@ -522,7 +516,7 @@ namespace CSparse.Storage
             var bx = target.Values;
             var bp = target.ColumnPointers;
             var bi = target.RowIndices;
-            
+
             if (target.rowCount != rowCount || target.columnCount != columnCount)
             {
                 throw new ArgumentException(Resources.InvalidDimensions, "target");
@@ -590,7 +584,7 @@ namespace CSparse.Storage
 
             return result;
         }
-         
+
 
         /// <summary>
         /// Returns the positions of the diagonal elements of a sparse matrix.
@@ -746,7 +740,7 @@ namespace CSparse.Storage
             }
 
             throw new NotSupportedException();
-        }        
+        }
 
         /// <summary>
         /// Change the max # of entries sparse matrix

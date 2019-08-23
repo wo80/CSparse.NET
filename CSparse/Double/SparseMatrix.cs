@@ -309,6 +309,16 @@ namespace CSparse.Double
         public override void Add(double alpha, double beta, CompressedColumnStorage<double> other,
             CompressedColumnStorage<double> result)
         {
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+
             int p, j, nz = 0;
 
             int m = this.rowCount;
@@ -357,21 +367,20 @@ namespace CSparse.Double
         /// <returns>C = A*B, null on error</returns>
         public override CompressedColumnStorage<double> Multiply(CompressedColumnStorage<double> other)
         {
-            int m = this.rowCount;
-            int n = other.ColumnCount;
-
-            int anz = this.NonZerosCount;
-            int bnz = other.NonZerosCount;
+            if (other == null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
 
             int p, j, nz = 0;
             int[] cp, ci;
             double[] cx;
 
-            // Check inputs
-            if (other == null)
-            {
-                throw new ArgumentNullException("other");
-            }
+            int m = this.rowCount;
+            int n = other.ColumnCount;
+
+            int anz = this.NonZerosCount;
+            int bnz = other.NonZerosCount;
 
             if (this.ColumnCount != other.RowCount)
             {
@@ -426,7 +435,7 @@ namespace CSparse.Double
             // Check inputs
             if (other == null)
             {
-                throw new ArgumentNullException("other");
+                throw new ArgumentNullException(nameof(other));
             }
 
             if (this.ColumnCount != other.RowCount)

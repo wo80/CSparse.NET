@@ -118,9 +118,9 @@ namespace CSparse.Complex.Factorization
         /// <param name="result">The left hand side vector, <c>x</c>.</param>
         public void Solve(Complex[] input, Complex[] result)
         {
-            if (input == null) throw new ArgumentNullException("input");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
-            if (result == null) throw new ArgumentNullException("result");
+            if (result == null) throw new ArgumentNullException(nameof(result));
 
             var x = this.temp;
 
@@ -140,9 +140,9 @@ namespace CSparse.Complex.Factorization
         /// <param name="result">The left hand side vector, <c>x</c>.</param>
         public void SolveTranspose(Complex[] input, Complex[] result)
         {
-            if (input == null) throw new ArgumentNullException("input");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
-            if (result == null) throw new ArgumentNullException("result");
+            if (result == null) throw new ArgumentNullException(nameof(result));
 
             var x = this.temp;
 

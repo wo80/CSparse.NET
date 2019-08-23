@@ -87,9 +87,9 @@ namespace CSparse.Double.Factorization
         /// </remarks>
         public override void Solve(double[] input, double[] result)
         {
-            if (input == null) throw new ArgumentNullException("input");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
-            if (result == null) throw new ArgumentNullException("result");
+            if (result == null) throw new ArgumentNullException(nameof(result));
 
             var x = new double[S.m2];
 

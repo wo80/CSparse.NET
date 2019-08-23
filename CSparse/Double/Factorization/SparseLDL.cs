@@ -57,9 +57,9 @@ namespace CSparse.Double.Factorization
         /// <param name="result">Solution vector x.</param>
         public void Solve(double[] input, double[] result)
         {
-            if (input == null) throw new ArgumentNullException("input");
+            if (input == null) throw new ArgumentNullException(nameof(input));
 
-            if (result == null) throw new ArgumentNullException("result");
+            if (result == null) throw new ArgumentNullException(nameof(result));
 
             double[] x = new double[n];
 

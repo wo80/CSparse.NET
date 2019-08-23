@@ -4,6 +4,8 @@ namespace CSparse.Tests.Complex
     using NUnit.Framework;
     using System;
 
+    using Complex = System.Numerics.Complex;
+
     public class SparseMatrixTest
     {
         [TestCase(0, 0)]
@@ -93,6 +95,16 @@ namespace CSparse.Tests.Complex
             Assert.IsTrue(l0 == 0.0);
             Assert.IsTrue(l1 == 0.0);
             Assert.IsTrue(l2 == 0.0);
+        }
+
+        [Test]
+        public void TestMultiplyZeroMatrix()
+        {
+            var A = SparseMatrix.OfColumnMajor(3, 2, new Complex[6]);
+            var B = SparseMatrix.OfColumnMajor(2, 4, new Complex[8]);
+            var C = A.Multiply(B);
+
+            Assert.IsTrue(C.NonZerosCount == 0);
         }
     }
 }
