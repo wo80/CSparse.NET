@@ -646,7 +646,7 @@ namespace CSparse.Double
         /// <param name="j">the column of A to use</param>
         /// <param name="beta">scalar multiplied by A(:,j)</param>
         /// <param name="w">size m, node i is marked if w[i] = mark</param>
-        /// <param name="x">size m, ignored if null</param>
+        /// <param name="x">size m, not null</param>
         /// <param name="mark">mark value of w</param>
         /// <param name="mat">pattern of x accumulated in C.i</param>
         /// <param name="nz">pattern of x placed in C starting at C.i[nz]</param>
@@ -658,6 +658,11 @@ namespace CSparse.Double
 
             if (w == null || mat == null) return -1; // check inputs
 
+            if (x == null)
+            {
+                throw new ArgumentNullException(nameof(x));
+            }
+
             var cj = mat.RowIndices;
 
             for (p = ColumnPointers[j]; p < ColumnPointers[j + 1]; p++)
@@ -667,10 +672,10 @@ namespace CSparse.Double
                 if (w[i] < mark)
                 {
                     w[i] = mark; // i is new entry in column j
-                    if (x != null) x[i] = beta * Values[p]; // x(i) = beta*A(i,j)
+                    x[i] = beta * Values[p]; // x(i) = beta*A(i,j)
                     cj[nz++] = i; // add i to pattern of C(:,j)
                 }
-                else if (x != null)
+                else
                 {
                     x[i] += beta * Values[p]; // i exists in C(:,j) already
                 }

@@ -58,9 +58,8 @@ namespace CSparse.Factorization
         {
             T zero = Helper.ZeroOf<T>();
 
-            int i, p, p1, top, len, col;
+            int i, j, p, p1, top, len, col;
 
-            int m = A.RowCount;
             int n = A.ColumnCount;
 
             var ap = A.ColumnPointers;
@@ -155,7 +154,16 @@ namespace CSparse.Factorization
                     x[i] = zero;
                     if (parent[i] == k)
                     {
-                        vnz = V.Scatter(i, zero, w, null, k, V, vnz);
+                        //vnz = V.Scatter(i, zero, w, null, k, V, vnz);
+                        for (int l = vp[i]; l < vp[i + 1]; l++)
+                        {
+                            j = vi[l]; // V(j,i) is nonzero
+                            if (w[j] < k)
+                            {
+                                w[j] = k; // j is new entry in column i
+                                vi[vnz++] = j; // add j to pattern of V(:,i)
+                            }
+                        }
                     }
                 }
                 for (p = p1; p < vnz; p++) // gather V(:,k) = x
