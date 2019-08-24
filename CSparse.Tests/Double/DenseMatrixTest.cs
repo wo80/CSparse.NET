@@ -176,6 +176,27 @@ namespace CSparse.Tests.Double
             CollectionAssert.AreEqual(data.AmBT.Values, actual.Values);
         }
 
+        [Test]
+        public void TestMatrixParallelMultiply()
+        {
+            var data = ResourceLoader.Get<double>("general-40x40.mat");
+            var values = new double[120 * 120];
+            foreach (var item in data.EnumerateIndexed())
+            {
+                int i = item.Item1;
+                int j = item.Item2;
+                for (var k = 0; k < 3; k++)
+                {
+                    for (var m = 0; m < 3; m++)
+                    {
+                        values[120 * (i + 40 * k) + j + 40 * m] = item.Item3;
+                    }
+                }
+            }
+            var A = DenseMatrix.OfColumnMajor(120, 120, values);
+            CollectionAssert.AreEqual(A.Multiply(A).Values, A.ParallelMultiply(A).Values);
+        }
+
         #region Matrix creation
 
         [TestCase(2, 2)]

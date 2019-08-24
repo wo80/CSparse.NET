@@ -335,6 +335,29 @@ namespace CSparse.Storage
         /// <param name="result">The product matrix.</param>
         public abstract void Multiply(DenseColumnMajorStorage<T> other, DenseColumnMajorStorage<T> result);
 
+        public DenseColumnMajorStorage<T> ParallelMultiply(DenseColumnMajorStorage<T> other)
+        {
+            int m = this.rowCount;
+            int n = other.columnCount;
+
+            // check inputs
+            if (this.columnCount != other.RowCount)
+            {
+                throw new ArgumentException(Resources.MatrixDimensions, "other");
+            }
+
+            var result = DenseColumnMajorStorage<T>.Create(m, n);
+
+            ParallelMultiply(other, result);
+
+            return result;
+        }
+
+        public virtual void ParallelMultiply(DenseColumnMajorStorage<T> other, DenseColumnMajorStorage<T> result)
+        {
+            Multiply(other, result);
+        }
+
         /// <summary>
         /// Pointwise multiplies this matrix with another matrix and stores the result into the result matrix.
         /// </summary>
