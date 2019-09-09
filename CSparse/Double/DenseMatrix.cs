@@ -215,7 +215,7 @@ namespace CSparse.Double
             }
         }
 
-        public override void ParallelMultiply(DenseColumnMajorStorage<double> other, DenseColumnMajorStorage<double> result)
+        public override void ParallelMultiply(DenseColumnMajorStorage<double> other, DenseColumnMajorStorage<double> result, ParallelOptions options = null)
         {
             var A = Values;
             var B = other.Values;
@@ -232,14 +232,14 @@ namespace CSparse.Double
                 return;
             }
 
-            var nblocks = Math.Min(Environment.ProcessorCount, m);
+            var nblocks = Math.Min(Math.Min(Environment.ProcessorCount, options?.MaxDegreeOfParallelism ?? Int32.MaxValue), m);
             var starts = new int[nblocks + 1];
             for (var i = 0; i <= nblocks; i++)
             {
                 starts[i] = i * m / nblocks;
             }
 
-            Parallel.For(0, nblocks, index =>
+            void body(int index)
             {
                 for (int i = starts[index]; i < starts[index + 1]; i++)
                 {
@@ -255,7 +255,15 @@ namespace CSparse.Double
                         C[(j * m) + i] += sum;
                     }
                 }
-            });
+            }
+            if (options != null)
+            {
+                Parallel.For(0, nblocks, options, body);
+            }
+            else
+            {
+                Parallel.For(0, nblocks, body);
+            }
         }
 
         /// <inheritdoc />

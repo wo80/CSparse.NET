@@ -335,7 +335,7 @@ namespace CSparse.Storage
         /// <param name="result">The product matrix.</param>
         public abstract void Multiply(DenseColumnMajorStorage<T> other, DenseColumnMajorStorage<T> result);
 
-        public DenseColumnMajorStorage<T> ParallelMultiply(DenseColumnMajorStorage<T> other)
+        public DenseColumnMajorStorage<T> ParallelMultiply(DenseColumnMajorStorage<T> other, System.Threading.Tasks.ParallelOptions options = null)
         {
             int m = this.rowCount;
             int n = other.columnCount;
@@ -348,12 +348,12 @@ namespace CSparse.Storage
 
             var result = DenseColumnMajorStorage<T>.Create(m, n);
 
-            ParallelMultiply(other, result);
+            ParallelMultiply(other, result, options);
 
             return result;
         }
 
-        public virtual void ParallelMultiply(DenseColumnMajorStorage<T> other, DenseColumnMajorStorage<T> result)
+        public virtual void ParallelMultiply(DenseColumnMajorStorage<T> other, DenseColumnMajorStorage<T> result, System.Threading.Tasks.ParallelOptions options = null)
         {
             Multiply(other, result);
         }
