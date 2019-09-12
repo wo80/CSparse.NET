@@ -4,6 +4,7 @@ namespace CSparse.Double
     using CSparse.Storage;
     using System;
     using System.Diagnostics;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Dense matrix stored in column major order.
@@ -211,6 +212,57 @@ namespace CSparse.Double
             for (int i = 0; i < length; i++)
             {
                 target[i] = a[i] + b[i];
+            }
+        }
+
+        public override void ParallelMultiply(DenseColumnMajorStorage<double> other, DenseColumnMajorStorage<double> result, ParallelOptions options = null)
+        {
+            var A = Values;
+            var B = other.Values;
+            var C = result.Values;
+
+            int m = rowCount; // rows of matrix A
+            int n = other.ColumnCount;
+            int o = columnCount;
+
+            // Allow for at least 2 threads with 4 rows each
+            if (m < 2 * 4 || n <= 0 || Environment.ProcessorCount < 2 || (long)m * n * o < 1000000L)
+            {
+                Multiply(other, result);
+                return;
+            }
+
+            var nblocks = Math.Min(Math.Min(Environment.ProcessorCount, options?.MaxDegreeOfParallelism ?? Int32.MaxValue), m);
+            var starts = new int[nblocks + 1];
+            for (var i = 0; i <= nblocks; i++)
+            {
+                starts[i] = i * m / nblocks;
+            }
+
+            void body(int index)
+            {
+                for (int i = starts[index]; i < starts[index + 1]; i++)
+                {
+                    for (int j = 0; j < n; j++)
+                    {
+                        double sum = 0.0;
+
+                        for (int k = 0; k < o; ++k)
+                        {
+                            sum += A[(k * m) + i] * B[(j * o) + k];
+                        }
+
+                        C[(j * m) + i] += sum;
+                    }
+                }
+            }
+            if (options != null)
+            {
+                Parallel.For(0, nblocks, options, body);
+            }
+            else
+            {
+                Parallel.For(0, nblocks, body);
             }
         }
 
