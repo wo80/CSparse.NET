@@ -110,6 +110,89 @@ namespace CSparse.Tests.Double
 
         #endregion
 
+        [Test]
+        public void TestDropZeros()
+        {
+            var data = MatrixHelper.LoadSparse(2, 2);
+
+            var A = data.A.Clone();
+
+            A.Values[0] = 0.0;
+
+            int nnz = A.DropZeros();
+
+            Assert.AreEqual(nnz, 3);
+            Assert.AreEqual(A.NonZerosCount, 3);
+        }
+
+        [Test]
+        public void TestKeep()
+        {
+            var data = MatrixHelper.LoadSparse(2, 2);
+
+            var A = data.A.Clone();
+
+            // Keep strict upper part of the matrix.
+            int nnz = A.Keep((i, j, a) => i < j);
+
+            Assert.AreEqual(nnz, 1);
+            Assert.AreEqual(A.NonZerosCount, 1);
+        }
+
+        [Test]
+        public void TestL1Norm()
+        {
+            var A = SparseMatrix.CreateDiagonal(9, 2.0);
+
+            var actual = A.L1Norm();
+            var expected = 2.0;
+
+            Assert.AreEqual(expected, actual);
+
+            var data = MatrixHelper.LoadSparse(2, 2);
+
+            actual = data.A.L1Norm();
+            expected = 6.0;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestInfinityNorm()
+        {
+            var A = SparseMatrix.CreateDiagonal(9, 2.0);
+
+            var actual = A.InfinityNorm();
+            var expected = 2.0;
+
+            Assert.AreEqual(expected, actual);
+
+            var data = MatrixHelper.LoadSparse(2, 2);
+
+            actual = data.A.InfinityNorm();
+            expected = 7.0;
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void TestFrobeniusNorm()
+        {
+            var A = SparseMatrix.CreateDiagonal(9, 2.0);
+
+            var actual = A.FrobeniusNorm();
+            var expected = 6.0;
+
+            Assert.AreEqual(expected, actual);
+
+            var data = MatrixHelper.LoadSparse(2, 2);
+
+            actual = data.A.FrobeniusNorm();
+            expected = 5.477225575;
+
+            Assert.AreEqual(expected, actual);
+        }
+
         [TestCase(2, 2)]
         [TestCase(2, 3)]
         public void TestGetRow(int rows, int columns)
@@ -184,6 +267,38 @@ namespace CSparse.Tests.Double
             var AT = data.AT;
 
             AT.Multiply(y, actual);
+
+            CollectionAssert.AreEqual(data.ATy, actual);
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestMatrixVectorMultiplyUpdate(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+            var x = data.x;
+
+            var actual = Vector.Create(A.RowCount, 1.0);
+
+            A.Multiply(1.0, x, 0.0, actual);
+
+            CollectionAssert.AreEqual(data.Ax, actual);
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestMatrixVectorTransposeMultiplyUpdate(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+            var y = data.y;
+
+            var actual = Vector.Create(A.ColumnCount, 1.0);
+
+            A.TransposeMultiply(1.0, y, 0.0, actual);
 
             CollectionAssert.AreEqual(data.ATy, actual);
         }
