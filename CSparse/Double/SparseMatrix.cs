@@ -430,7 +430,8 @@ namespace CSparse.Double
             return result; // success
         }
 
-        public override CompressedColumnStorage<double> ParallelMultiply(CompressedColumnStorage<double> other)
+        /// <inheritdoc />
+        public override CompressedColumnStorage<double> ParallelMultiply(CompressedColumnStorage<double> other, ParallelOptions options = null)
         {
             // Check inputs
             if (other == null)
@@ -469,8 +470,17 @@ namespace CSparse.Double
             {
                 return Multiply(other);
             }
+
+            if (options == null)
+            {
+                options = new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount };
+            }
+
+            // Be aware that ParallelOptions.MaxDegreeOfParallelism can be -1.
+            var degreeOfParallelism = options.MaxDegreeOfParallelism < 0 ? Environment.ProcessorCount : options.MaxDegreeOfParallelism;
+
             // With such a large overall threshold, there is no need of a per-thread threshold around 3000 ops.
-            var nblocks = Math.Min(Environment.ProcessorCount, n);
+            var nblocks = Math.Min(Math.Min(Environment.ProcessorCount, degreeOfParallelism), n);
 
             var bp = other.ColumnPointers;
             var bi = other.RowIndices;
@@ -490,7 +500,7 @@ namespace CSparse.Double
                     results[nresults++] = new SparseMatrix(m, end - start, anz + bnz2);
                 }
             }
-            Parallel.For(0, nresults,
+            Parallel.For(0, nresults, options,
                 index =>
                 {
                     var result = results[index];

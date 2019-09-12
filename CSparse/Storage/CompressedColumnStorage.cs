@@ -385,11 +385,17 @@ namespace CSparse.Storage
         /// <summary>
         /// Sparse matrix multiplication, C = A*B
         /// </summary>
-        /// <param name="other">column-compressed matrix</param>
-        /// <returns>C = A*B, null on error</returns>
+        /// <param name="other">The sparse matrix multiplied to this instance.</param>
+        /// <returns>C = A*B</returns>
         public abstract CompressedColumnStorage<T> Multiply(CompressedColumnStorage<T> other);
 
-        public virtual CompressedColumnStorage<T> ParallelMultiply(CompressedColumnStorage<T> other)
+        /// <summary>
+        /// Sparse matrix multiplication, C = A*B
+        /// </summary>
+        /// <param name="other">The sparse matrix multiplied to this instance.</param>
+        /// <param name="options">Parallel options (optional).</param>
+        /// <returns>C = A*B</returns>
+        public virtual CompressedColumnStorage<T> ParallelMultiply(CompressedColumnStorage<T> other, System.Threading.Tasks.ParallelOptions options = null)
         {
             return Multiply(other);
         }

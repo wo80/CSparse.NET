@@ -305,8 +305,8 @@ namespace CSparse.Storage
         /// <summary>
         /// Dense matrix multiplication, C = A*B
         /// </summary>
-        /// <param name="other">Dense matrix</param>
-        /// <returns>C = A*B, null on error</returns>
+        /// <param name="other">The dense matrix multiplied with this instance.</param>
+        /// <returns>C = A*B</returns>
         public DenseColumnMajorStorage<T> Multiply(DenseColumnMajorStorage<T> other)
         {
             // A = (3x4)
@@ -331,10 +331,16 @@ namespace CSparse.Storage
         /// <summary>
         /// Dense matrix multiplication, C = A*B
         /// </summary>
-        /// <param name="other">The matrix multiplied to this instance.</param>
+        /// <param name="other">The dense matrix multiplied to this instance.</param>
         /// <param name="result">The product matrix.</param>
         public abstract void Multiply(DenseColumnMajorStorage<T> other, DenseColumnMajorStorage<T> result);
 
+        /// <summary>
+        /// Dense matrix multiplication, C = A*B
+        /// </summary>
+        /// <param name="other">The dense matrix multiplied to this instance.</param>
+        /// <param name="options">Parallel options (optional).</param>
+        /// <returns>C = A*B</returns>
         public DenseColumnMajorStorage<T> ParallelMultiply(DenseColumnMajorStorage<T> other, System.Threading.Tasks.ParallelOptions options = null)
         {
             int m = this.rowCount;
@@ -353,6 +359,12 @@ namespace CSparse.Storage
             return result;
         }
 
+        /// <summary>
+        /// Dense matrix multiplication, C = A*B
+        /// </summary>
+        /// <param name="other">The dense matrix multiplied to this instance.</param>
+        /// <param name="result">The product matrix.</param>
+        /// <param name="options">Parallel options (optional).</param>
         public virtual void ParallelMultiply(DenseColumnMajorStorage<T> other, DenseColumnMajorStorage<T> result, System.Threading.Tasks.ParallelOptions options = null)
         {
             Multiply(other, result);
