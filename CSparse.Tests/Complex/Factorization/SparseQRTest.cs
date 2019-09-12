@@ -92,7 +92,7 @@ namespace CSparse.Tests.Complex.Factorization
         [TestCase(5, 0)]
         public void TestEmptyFactorize(int rows, int columns)
         {
-            var A = MatrixHelper.Load(rows, columns);
+            var A = new SparseMatrix(rows, columns, 0);
 
             var qr = SparseQR.Create(A, ColumnOrdering.MinimumDegreeAtA);
 

@@ -60,7 +60,7 @@ namespace CSparse.Tests.Complex.Factorization
         [Test]
         public void TestEmptyFactorize()
         {
-            var A = MatrixHelper.Load(0, 0);
+            var A = new SparseMatrix(0, 0, 0);
 
             var lu = SparseLU.Create(A, ColumnOrdering.MinimumDegreeAtPlusA, 1.0);
 
