@@ -452,8 +452,10 @@ namespace CSparse.Double
                 throw new Exception(Resources.InvalidDimensions);
             }
 
+            int processorCount = Environment.ProcessorCount;
+
             // Allow for at least 2 threads with 4 columns each
-            if (m <= 0 || n < 2 * 4 || Environment.ProcessorCount < 2)
+            if (m <= 0 || n < 2 * 4 || processorCount < 2)
             {
                 return Multiply(other);
             }
@@ -464,6 +466,7 @@ namespace CSparse.Double
             // Heuristics to determine whether parallel multiplication is faster
             // Number of ops to exceed parallel overhead
             const int min_total_ops = 150000;
+
             // Total number of "x[i] += beta * Values[p]"
             long total_ops = (long)anz * bnz / this.ColumnCount;
             if (total_ops < min_total_ops)
@@ -473,14 +476,15 @@ namespace CSparse.Double
 
             if (options == null)
             {
-                options = new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount };
+                options = new ParallelOptions() { MaxDegreeOfParallelism = processorCount };
+            }
+            else if (options.MaxDegreeOfParallelism < 0 || options.MaxDegreeOfParallelism > processorCount)
+            {
+                options.MaxDegreeOfParallelism = processorCount;
             }
 
-            // Be aware that ParallelOptions.MaxDegreeOfParallelism can be -1.
-            var degreeOfParallelism = options.MaxDegreeOfParallelism < 0 ? Environment.ProcessorCount : options.MaxDegreeOfParallelism;
-
             // With such a large overall threshold, there is no need of a per-thread threshold around 3000 ops.
-            var nblocks = Math.Min(Math.Min(Environment.ProcessorCount, degreeOfParallelism), n);
+            var nblocks = Math.Min(options.MaxDegreeOfParallelism, n);
 
             var bp = other.ColumnPointers;
             var bi = other.RowIndices;

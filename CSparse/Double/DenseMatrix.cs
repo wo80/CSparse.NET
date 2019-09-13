@@ -253,8 +253,10 @@ namespace CSparse.Double
             int n = other.ColumnCount;
             int o = columnCount;
 
+            int processorCount = Environment.ProcessorCount;
+
             // Allow for at least 2 threads with 4 rows each
-            if (m < 2 * 4 || n <= 0 || Environment.ProcessorCount < 2 || (long)m * n * o < 1000000L)
+            if (m < 2 * 4 || n <= 0 || processorCount < 2 || (long)m * n * o < 1000000L)
             {
                 Multiply(other, result);
                 return;
@@ -262,13 +264,14 @@ namespace CSparse.Double
 
             if (options == null)
             {
-                options = new ParallelOptions() { MaxDegreeOfParallelism = Environment.ProcessorCount };
+                options = new ParallelOptions() { MaxDegreeOfParallelism = processorCount };
+            }
+            else if (options.MaxDegreeOfParallelism < 0 || options.MaxDegreeOfParallelism > processorCount)
+            {
+                options.MaxDegreeOfParallelism = processorCount;
             }
 
-            // Be aware that ParallelOptions.MaxDegreeOfParallelism can be -1.
-            var degreeOfParallelism = options.MaxDegreeOfParallelism < 0 ? Environment.ProcessorCount : options.MaxDegreeOfParallelism;
-
-            var nblocks = Math.Min(Math.Min(Environment.ProcessorCount, degreeOfParallelism), m);
+            var nblocks = Math.Min(options.MaxDegreeOfParallelism, m);
             var starts = new int[nblocks + 1];
             for (var i = 0; i <= nblocks; i++)
             {
