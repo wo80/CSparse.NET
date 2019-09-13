@@ -57,7 +57,7 @@ namespace CSparse.Ordering
         public static StronglyConnectedComponents Generate<T>(CompressedColumnStorage<T> matrix)
              where T : struct, IEquatable<T>, IFormattable
         {
-            return Generate(SymbolicColumnStorage.Create(matrix), matrix.ColumnCount);
+            return Generate(SymbolicColumnStorage.Create(matrix, false), matrix.ColumnCount);
         }
         
         /// <summary>
@@ -89,13 +89,14 @@ namespace CSparse.Ordering
             {
                 if (!(Ap[i] < 0))
                 {
+                    // This will modify the column pointers (mark all nodes).
                     top = GraphHelper.DepthFirstSearch(i, A.ColumnPointers, A.RowIndices, top, xi, xi, n, null);
                 }
             }
             for (i = 0; i < n; i++)
             {
-                //CS_MARK(Ap, i);
-                Ap[i] = -(Ap[i]) - 2; // restore A; unmark all nodes
+                // This will restore all column pointers (unmark all nodes).
+                Ap[i] = -(Ap[i]) - 2; //CS_MARK(Ap, i);
             }
             top = n;
             nb = n;
