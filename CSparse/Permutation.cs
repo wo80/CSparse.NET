@@ -19,7 +19,7 @@ namespace CSparse
         /// </remarks>
         public static void Apply<T>(int[] p, T[] b, T[] x, int n)
         {
-            if (b == null)
+            if (p == null)
             {
                 Array.Copy(b, x, n);
             }
@@ -44,7 +44,7 @@ namespace CSparse
         /// </remarks>
         public static void ApplyInverse<T>(int[] p, T[] b, T[] x, int n)
         {
-            if (b == null)
+            if (p == null)
             {
                 Array.Copy(b, x, n);
             }
