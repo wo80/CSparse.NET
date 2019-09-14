@@ -9,7 +9,7 @@ namespace CSparse.Storage
     /// <summary>
     /// Dense column-major matrix storage.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="T:Complex"/>.</typeparam>
     [Serializable]
     public abstract class DenseColumnMajorStorage<T> : Matrix<T>
         where T : struct, IEquatable<T>, IFormattable
@@ -31,19 +31,32 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Initializes a new instance of the DenseColumnMajorStorage class.
+        /// Initializes a new instance of the <see cref="DenseColumnMajorStorage{T}"/> class.
         /// </summary>
+        /// <param name="rows">The number of rows.</param>
+        /// <param name="columns">The number of columns.</param>
+        /// <remarks>
+        /// A new array for the matrix values will be allocated (size <c>rows * columns</c>).
+        /// </remarks>
         public DenseColumnMajorStorage(int rows, int columns)
             : this(rows, columns, new T[rows * columns])
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the DenseColumnMajorStorage class.
+        /// Initializes a new instance of the <see cref="DenseColumnMajorStorage{T}"/> class.
         /// </summary>
+        /// <param name="rows">The number of rows.</param>
+        /// <param name="columns">The number of columns.</param>
+        /// <param name="values">The values array (minimum size <c>rows * columns</c>)</param>
         public DenseColumnMajorStorage(int rows, int columns, T[] values)
             : base(rows, columns)
         {
+            if (values.Length < rows * columns)
+            {
+                throw new ArgumentException("Invalid values array size.", nameof(values));
+            }
+
             this.Values = values;
         }
 
@@ -172,7 +185,7 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Sets the element without range checking.
+        /// Sets the element (without range checking).
         /// </summary>
         public void At(int row, int column, T value)
         {
@@ -275,7 +288,7 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Adds two matrices in CSC format, C = A + B, where A is current instance.
+        /// Adds two dense matrices, C = A + B.
         /// </summary>
         public DenseColumnMajorStorage<T> Add(DenseColumnMajorStorage<T> other)
         {
@@ -296,7 +309,7 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Adds two matrices, C = A + B, where A is current instance.
+        /// Adds two dense matrices, C = A + B.
         /// </summary>
         /// <param name="other">The matrix added to this instance.</param>
         /// <param name="result">Contains the sum.</param>
@@ -309,9 +322,6 @@ namespace CSparse.Storage
         /// <returns>C = A*B</returns>
         public DenseColumnMajorStorage<T> Multiply(DenseColumnMajorStorage<T> other)
         {
-            // A = (3x4)
-            // B = (4x5)
-            // C = (3x5)
             int m = this.rowCount;
             int n = other.columnCount;
 

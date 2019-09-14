@@ -50,9 +50,9 @@ namespace CSparse.Ordering
         }
 
         /// <summary>
-        /// Compute strongly connected components of matrix.
+        /// Compute strongly connected components of a matrix.
         /// </summary>
-        /// <param name="matrix">column-compressed matrix</param>
+        /// <param name="matrix">Column-compressed matrix (representing a directed graph).</param>
         /// <returns>Strongly connected components</returns>
         public static StronglyConnectedComponents Generate<T>(CompressedColumnStorage<T> matrix)
              where T : struct, IEquatable<T>, IFormattable
@@ -61,7 +61,7 @@ namespace CSparse.Ordering
         }
         
         /// <summary>
-        /// find strongly connected components of A
+        /// Find strongly connected components of A.
         /// </summary>
         /// <param name="A"></param>
         /// <param name="n"></param>

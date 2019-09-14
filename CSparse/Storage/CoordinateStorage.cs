@@ -69,16 +69,24 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Initializes a new instance of the CoordinateStorage class.
+        /// Initializes a new instance of the <see cref="CoordinateStorage{T}"/> class.
         /// </summary>
-        public CoordinateStorage(int rowCount, int columnCount, int nzmax, bool alloc = true)
+        /// <param name="rowCount">The number of rows.</param>
+        /// <param name="columnCount">The number of columns.</param>
+        /// <param name="nzmax">The number of non-zeros to allocate (will be expanded dynamically).</param>
+        public CoordinateStorage(int rowCount, int columnCount, int nzmax)
+            : this(rowCount, columnCount, nzmax, nzmax >= 0)
+        {
+        }
+
+        private CoordinateStorage(int rowCount, int columnCount, int nzmax, bool alloc)
         {
             this.nrows = rowCount;
             this.ncols = columnCount;
 
             if (alloc)
             {
-                this.nzmax = (nzmax = Math.Max(nzmax, 1));
+                this.nzmax = nzmax;
                 this.nz = 0;
 
                 this.rowind = new int[nzmax];

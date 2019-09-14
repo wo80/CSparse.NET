@@ -12,7 +12,7 @@ namespace CSparse.Complex
     public class SparseMatrix : CompressedColumnStorage<Complex>
     {
         /// <summary>
-        /// Initializes a new instance of the SparseMatrix class.
+        /// Initializes a new instance of the <see cref="SparseMatrix"/> class.
         /// </summary>
         public SparseMatrix(int rowCount, int columnCount)
             : base(rowCount, columnCount)
@@ -20,7 +20,7 @@ namespace CSparse.Complex
         }
 
         /// <summary>
-        /// Initializes a new instance of the SparseMatrix class.
+        /// Initializes a new instance of the <see cref="SparseMatrix"/> class.
         /// </summary>
         public SparseMatrix(int rowCount, int columnCount, int valueCount)
             : base(rowCount, columnCount, valueCount)
@@ -155,14 +155,10 @@ namespace CSparse.Complex
         }
 
         #endregion
-        
+
         #region Linear Algebra (Vector)
 
-        /// <summary>
-        /// Multiplies a (m-by-n) matrix by a vector, y = A*x. 
-        /// </summary>
-        /// <param name="x">Vector of length n (column count).</param>
-        /// <param name="y">Vector of length m (row count), containing the result.</param>
+        /// <inheritdoc />
         public override void Multiply(Complex[] x, Complex[] y)
         {
             var ax = this.Values;
@@ -189,16 +185,7 @@ namespace CSparse.Complex
             }
         }
 
-        /// <summary>
-        /// Multiplies a (m-by-n) matrix by a vector, y = alpha*A*x + beta*y. 
-        /// </summary>
-        /// <param name="x">Vector of length n (column count).</param>
-        /// <param name="y">Vector of length m (row count), containing the result.</param>
-        /// <param name="alpha">Scalar to multiply with matrix.</param>
-        /// <param name="beta">Scalar to multiply with vector y.</param>
-        /// <remarks>
-        /// Input values of vector y will be accumulated.
-        /// </remarks>
+        /// <inheritdoc />
         public override void Multiply(Complex alpha, Complex[] x, Complex beta, Complex[] y)
         {
             var ax = this.Values;
@@ -227,11 +214,7 @@ namespace CSparse.Complex
             }
         }
 
-        /// <summary>
-        /// Multiplies the transpose of a (m-by-n) matrix by a vector, y = A'*x. 
-        /// </summary>
-        /// <param name="x">Vector of length m (column count of A').</param>
-        /// <param name="y">Vector of length n (row count of A'), containing the result.</param>
+        /// <inheritdoc />
         public override void TransposeMultiply(Complex[] x, Complex[] y)
         {
             var ax = this.Values;
@@ -255,16 +238,7 @@ namespace CSparse.Complex
             }
         }
 
-        /// <summary>
-        /// Multiplies the transpose of a (m-by-n) matrix by a vector, y = alpha*A'*x + beta*y. 
-        /// </summary>
-        /// <param name="x">Vector of length m (column count of A').</param>
-        /// <param name="y">Vector of length n (row count of A'), containing the result.</param>
-        /// <param name="alpha">Scalar to multiply with matrix.</param>
-        /// <param name="beta">Scalar to multiply with vector y.</param>
-        /// <remarks>
-        /// Input values of vector y will be accumulated.
-        /// </remarks>
+        /// <inheritdoc />
         public override void TransposeMultiply(Complex alpha, Complex[] x, Complex beta, Complex[] y)
         {
             var ax = this.Values;
@@ -341,18 +315,7 @@ namespace CSparse.Complex
             }
         }
 
-        /// <summary>
-        /// Adds two matrices, C = alpha*A + beta*B, where A is current instance.
-        /// </summary>
-        /// <param name="alpha">Scalar factor for A, current instance.</param>
-        /// <param name="beta">Scalar factor for B, other instance.</param>
-        /// <param name="other">The matrix added to this instance.</param>
-        /// <param name="result">Contains the sum.</param>
-        /// <remarks>
-        /// The (result) matrix has to be fully initialized and provide enough space for
-        /// the nonzero entries of the sum. An upper bound is the sum of the nonzeros count
-        /// of (this) and (other).
-        /// </remarks>
+        /// <inheritdoc />
         public override void Add(Complex alpha, Complex beta, CompressedColumnStorage<Complex> other,
             CompressedColumnStorage<Complex> result)
         {
@@ -407,11 +370,7 @@ namespace CSparse.Complex
             result.SortIndices();
         }
 
-        /// <summary>
-        /// Sparse matrix multiplication, C = A*B
-        /// </summary>
-        /// <param name="other">column-compressed matrix</param>
-        /// <returns>C = A*B, null on error</returns>
+        /// <inheritdoc />
         public override CompressedColumnStorage<Complex> Multiply(CompressedColumnStorage<Complex> other)
         {
             if (other == null)

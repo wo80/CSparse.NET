@@ -14,7 +14,7 @@ namespace CSparse.Complex
     public class DenseMatrix : DenseColumnMajorStorage<Complex>
     {
         /// <summary>
-        /// Initializes a new instance of the DenseMatrix class.
+        /// Initializes a new instance of the <see cref="DenseMatrix"/> class.
         /// </summary>
         public DenseMatrix(int rows, int columns)
             : this(rows, columns, new Complex[rows * columns])
@@ -22,7 +22,7 @@ namespace CSparse.Complex
         }
 
         /// <summary>
-        /// Initializes a new instance of the DenseMatrix class.
+        /// Initializes a new instance of the <see cref="DenseMatrix"/> class.
         /// </summary>
         public DenseMatrix(int rows, int columns, Complex[] values)
             : base(rows, columns, values)

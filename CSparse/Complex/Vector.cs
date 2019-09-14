@@ -156,7 +156,7 @@ namespace CSparse.Complex
         }
 
         /// <summary>
-        /// Add a scaled vector t o another vector, y = y + alpha * x.
+        /// Add a scaled vector to another vector, y = y + alpha * x.
         /// </summary>
         public static void Axpy(Complex alpha, Complex[] x, Complex[] y)
         {

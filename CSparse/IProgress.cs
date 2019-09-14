@@ -1,8 +1,7 @@
 
 namespace CSparse
 {
-    // If the project gets updated to .NET 4.5, this interface can be replaced
-    // with the official System.IProgress<T> interface.
+    // Only included when .NET version is 4.0.
 
     /// <summary>
     /// Used to report progress of a factorization.

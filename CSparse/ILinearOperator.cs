@@ -5,7 +5,7 @@ namespace CSparse
     /// <summary>
     /// Linear operator interface.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="T:Complex"/>.</typeparam>
     public interface ILinearOperator<T> where T : struct, IEquatable<T>, IFormattable
     {
         /// <summary>
@@ -32,6 +32,9 @@ namespace CSparse
         /// <param name="x">Vector of length n (column count).</param>
         /// <param name="beta">Scaling factor fo vertor y.</param>
         /// <param name="y">Vector of length m (row count), containing the result.</param>
+        /// <remarks>
+        /// Input values of vector <paramref name="y"/> will be accumulated.
+        /// </remarks>
         void Multiply(T alpha, T[] x, T beta, T[] y);
 
         /// <summary>
@@ -48,6 +51,9 @@ namespace CSparse
         /// <param name="x">Vector of length m (column count of A').</param>
         /// <param name="beta">Scaling factor fo vertor y.</param>
         /// <param name="y">Vector of length n (row count of A'), containing the result.</param>
+        /// <remarks>
+        /// Input values of vector <paramref name="y"/> will be accumulated.
+        /// </remarks>
         void TransposeMultiply(T alpha, T[] x, T beta, T[] y);
     }
 }

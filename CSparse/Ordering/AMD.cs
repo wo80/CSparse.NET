@@ -5,8 +5,11 @@ namespace CSparse.Ordering
     using System;
 
     /// <summary>
-    /// Approximate Minimum Degree ordering.
+    /// Approximate Minimum Degree (AMD) ordering.
     /// </summary>
+    /// <remarks>
+    /// See Chapter 7.1 (Minimum degree ordering) in "Direct Methods for Sparse Linear Systems" by Tim Davis.
+    /// </remarks>
     public static class AMD
     {
         /// <summary>

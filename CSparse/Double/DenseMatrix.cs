@@ -14,7 +14,7 @@ namespace CSparse.Double
     public class DenseMatrix : DenseColumnMajorStorage<Double>
     {
         /// <summary>
-        /// Initializes a new instance of the DenseMatrix class.
+        /// Initializes a new instance of the <see cref="DenseMatrix"/> class.
         /// </summary>
         public DenseMatrix(int rows, int columns)
             : this(rows, columns, new double[rows * columns])
@@ -22,7 +22,7 @@ namespace CSparse.Double
         }
 
         /// <summary>
-        /// Initializes a new instance of the DenseMatrix class.
+        /// Initializes a new instance of the <see cref="DenseMatrix"/> class.
         /// </summary>
         public DenseMatrix(int rows, int columns, double[] values)
             : base(rows, columns, values)

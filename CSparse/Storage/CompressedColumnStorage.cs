@@ -37,8 +37,11 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Initializes a new instance of the CompressedColumnStorage class.
+        /// Initializes a new instance of the <see cref="CompressedColumnStorage{T}"/> class.
         /// </summary>
+        /// <param name="rowCount">The number of rows.</param>
+        /// <param name="columnCount">The number of columns.</param>
+        /// <remarks>By default, no arrays are allocated. The user will have to assign the storage arrays.</remarks>
         protected CompressedColumnStorage(int rowCount, int columnCount)
             : base(rowCount, columnCount)
         {
@@ -46,8 +49,11 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Initializes a new instance of the CompressedColumnStorage class.
+        /// Initializes a new instance of the <see cref="CompressedColumnStorage{T}"/> class.
         /// </summary>
+        /// <param name="rowCount">The number of rows.</param>
+        /// <param name="columnCount">The number of columns.</param>
+        /// <param name="valueCount">The number of non-zero values.</param>
         protected CompressedColumnStorage(int rowCount, int columnCount, int valueCount)
             : base(rowCount, columnCount)
         {
@@ -57,8 +63,14 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Initializes a new instance of the CompressedColumnStorage class. Based on other CCS arrays
+        /// Initializes a new instance of the <see cref="CompressedColumnStorage{T}"/> class. Based on other CCS arrays
         /// </summary>
+        /// <param name="rowCount">The number of rows.</param>
+        /// <param name="columnCount">The number of columns.</param>
+        /// <param name="values"></param>
+        /// <param name="rowIndices"></param>
+        /// <param name="columnPointers"></param>
+        /// <remarks>The provided arrays will be re-used (not cloned).</remarks>
         public CompressedColumnStorage(int rowCount, int columnCount, T[] values, int[] rowIndices, int[] columnPointers)
             : base(rowCount, columnCount)
         {

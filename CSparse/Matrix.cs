@@ -7,6 +7,7 @@ namespace CSparse
     /// <summary>
     /// Abstract base class for matrix implementations.
     /// </summary>
+    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="T:Complex"/>.</typeparam>
     [Serializable]
     public abstract class Matrix<T> : ILinearOperator<T>
         where T : struct, IEquatable<T>, IFormattable
@@ -37,7 +38,7 @@ namespace CSparse
         }
 
         /// <summary>
-        /// Initializes a new instance of the Matrix class.
+        /// Initializes a new instance of the <see cref="Matrix{T}"/> class.
         /// </summary>
         protected Matrix(int rowCount, int columnCount)
         {
@@ -131,13 +132,11 @@ namespace CSparse
         #region Storage equality
 
         /// <summary>
-        /// Indicates whether the current object is equal to another object of the same type.
+        /// Indicates whether the current <see cref="Matrix{T}"/> object is equal to another matrix of the same type.
         /// </summary>
-        /// <param name="other">
-        /// An object to compare with this object.
-        /// </param>
+        /// <param name="other">A <see cref="Matrix{T}"/> object to compare with this matrix.</param>
         /// <returns>
-        /// <c>true</c> if the current object is equal to the <paramref name="other"/> parameter; otherwise, <c>false</c>.
+        /// Returns <c>true</c> if the current object is equal to the <paramref name="other"/> parameter; otherwise, <c>false</c>.
         /// </returns>
         public virtual bool Equals(Matrix<T> other)
         {
@@ -157,8 +156,10 @@ namespace CSparse
         }
 
         /// <summary>
-        /// Check two matrices for equality.
+        /// Indicates whether the current <see cref="Matrix{T}"/> object is equal to another matrix of the same type.
         /// </summary>
+        /// <param name="other">A <see cref="Matrix{T}"/> object to compare with this matrix.</param>
+        /// <param name="tolerance">Tolerance value for two matrix entries to be the same.</param>
         public abstract bool Equals(Matrix<T> other, double tolerance);
 
         /// <summary>
