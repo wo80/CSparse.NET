@@ -1,5 +1,6 @@
 namespace CSparse.Storage
 {
+    using CSparse.Properties;
     using System;
 
     /// <summary>
@@ -81,6 +82,21 @@ namespace CSparse.Storage
 
         private CoordinateStorage(int rowCount, int columnCount, int nzmax, bool alloc)
         {
+            if (rowCount < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(rowCount), Resources.MatrixDimensionNonNegative);
+            }
+
+            if (columnCount < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(columnCount), Resources.MatrixDimensionNonNegative);
+            }
+
+            if (nzmax < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(nzmax), Resources.ValueNonNegative);
+            }
+
             this.nrows = rowCount;
             this.ncols = columnCount;
 

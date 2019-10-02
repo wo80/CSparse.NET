@@ -141,6 +141,9 @@
   <data name="MatrixSymmetricPositiveDefinite" xml:space="preserve">
     <value>Matrix must be symmetric positive definite.</value>
   </data>
+  <data name="ValueNonNegative" xml:space="preserve">
+    <value>Value must be non-negative.</value>
+  </data>
   <data name="ValueNotNaN" xml:space="preserve">
     <value>Value must not be NaN.</value>
   </data>

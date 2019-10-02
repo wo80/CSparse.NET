@@ -1,8 +1,10 @@
-﻿using CSparse.Storage;
-using NUnit.Framework;
-
+﻿
 namespace CSparse.Tests.Storage
 {
+    using CSparse.Storage;
+    using NUnit.Framework;
+    using System;
+
     public class CoordinateStorageTest
     {
         [Test]
@@ -24,11 +26,9 @@ namespace CSparse.Tests.Storage
 
             B.At(1, 2, 3.0);
 
-            var C = new CoordinateStorage<double>(10, 10, -1);
-
-            Assert.IsNull(C.RowIndices);
-            Assert.IsNull(C.ColumnIndices);
-            Assert.IsNull(C.Values);
+            Assert.Throws<ArgumentOutOfRangeException>(() => new CoordinateStorage<double>(-1,  1,  1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new CoordinateStorage<double>( 1, -1,  1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new CoordinateStorage<double>( 1,  1, -1));
         }
     }
 }
