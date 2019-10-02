@@ -17,7 +17,7 @@ namespace CSparse.Double
         /// Initializes a new instance of the <see cref="DenseMatrix"/> class.
         /// </summary>
         public DenseMatrix(int rows, int columns)
-            : this(rows, columns, new double[rows * columns])
+            : base(rows, columns)
         {
         }
 

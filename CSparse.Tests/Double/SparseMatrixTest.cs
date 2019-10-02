@@ -112,6 +112,14 @@ namespace CSparse.Tests.Double
         #endregion
 
         [Test]
+        public void TestConstructor()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMatrix(-1, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMatrix(1, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMatrix(1, 1, -1));
+        }
+
+        [Test]
         public void TestDropZeros()
         {
             var data = MatrixHelper.LoadSparse(2, 2);
@@ -390,7 +398,7 @@ namespace CSparse.Tests.Double
 
             var actualColumn = new double[rows];
             var expectedColumn = new double[rows];
-            
+
             for (int i = 0; i < columns; i++)
             {
                 A.Column(p[i], expectedColumn);
@@ -439,12 +447,12 @@ namespace CSparse.Tests.Double
             Assert.IsTrue(sparseA.Equals(sparseB));
 
             var denseData = MatrixHelper.LoadDense(rows, columns);
-            
+
             sparseB = SparseMatrix.OfMatrix(denseData.A);
 
             Assert.IsTrue(sparseA.Equals(sparseB));
         }
-        
+
         [TestCase(2, 2)]
         [TestCase(2, 3)]
         public void TestOfIndexed(int rows, int columns)

@@ -57,6 +57,11 @@ namespace CSparse.Storage
         protected CompressedColumnStorage(int rowCount, int columnCount, int valueCount)
             : base(rowCount, columnCount)
         {
+            if (valueCount < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(valueCount), Resources.ValueNonNegative);
+            }
+
             this.ColumnPointers = new int[columnCount + 1];
             this.RowIndices = new int[valueCount];
             this.Values = new T[valueCount];

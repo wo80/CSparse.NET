@@ -114,6 +114,14 @@ namespace CSparse.Tests.Complex
         #endregion
 
         [Test]
+        public void TestConstructor()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMatrix(-1, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMatrix(1, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new SparseMatrix(1, 1, -1));
+        }
+
+        [Test]
         public void TestDropZeros()
         {
             var data = MatrixHelper.LoadSparse(2, 2);

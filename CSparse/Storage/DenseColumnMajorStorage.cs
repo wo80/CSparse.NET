@@ -39,8 +39,9 @@ namespace CSparse.Storage
         /// A new array for the matrix values will be allocated (size <c>rows * columns</c>).
         /// </remarks>
         public DenseColumnMajorStorage(int rows, int columns)
-            : this(rows, columns, new T[rows * columns])
+            : base(rows, columns)
         {
+            this.Values = new T[rows * columns];
         }
 
         /// <summary>

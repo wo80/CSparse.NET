@@ -2,12 +2,20 @@ namespace CSparse.Tests.Complex
 {
     using CSparse.Complex;
     using NUnit.Framework;
+    using System;
 
     using Complex = System.Numerics.Complex;
 
     [DefaultFloatingPointTolerance(1e-8)]
     public class DenseMatrixTest
     {
+        [Test]
+        public void TestConstructor()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => new DenseMatrix(-1, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new DenseMatrix(1, -1));
+        }
+
         [Test]
         public void TestL1Norm()
         {
@@ -99,7 +107,7 @@ namespace CSparse.Tests.Complex
                 }
             }
         }
-        
+
         [TestCase(2, 2)]
         [TestCase(2, 3)]
         public void TestSetRow(int rows, int columns)

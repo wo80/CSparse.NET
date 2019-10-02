@@ -8,6 +8,13 @@ namespace CSparse.Tests.Double
     public class DenseMatrixTest
     {
         [Test]
+        public void TestConstructor()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => new DenseMatrix(-1, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => new DenseMatrix(1, -1));
+        }
+
+        [Test]
         public void TestL1Norm()
         {
             var A = DenseMatrix.CreateDiagonal(9, 2.0);

@@ -42,9 +42,14 @@ namespace CSparse
         /// </summary>
         protected Matrix(int rowCount, int columnCount)
         {
-            if (rowCount < 0 || columnCount < 0)
+            if (rowCount < 0)
             {
-                throw new ArgumentOutOfRangeException(Resources.MatrixDimensionNonNegative);
+                throw new ArgumentOutOfRangeException(nameof(rowCount), Resources.MatrixDimensionNonNegative);
+            }
+
+            if (columnCount < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(columnCount), Resources.MatrixDimensionNonNegative);
             }
 
             this.rowCount = rowCount;
