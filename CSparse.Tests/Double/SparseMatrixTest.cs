@@ -1,6 +1,7 @@
 namespace CSparse.Tests.Double
 {
     using CSparse.Double;
+    using CSparse.Storage;
     using NUnit.Framework;
     using System;
 
@@ -358,8 +359,8 @@ namespace CSparse.Tests.Double
         public void TestMatrixParallelMultiply()
         {
             var data = ResourceLoader.Get<double>("general-40x40.mat");
-            var acs = new Storage.CoordinateStorage<double>(40, 800, 40 * 800);
-            var bcs = new Storage.CoordinateStorage<double>(800, 40, 800 * 40);
+            var acs = new CoordinateStorage<double>(40, 800, 40 * 800);
+            var bcs = new CoordinateStorage<double>(800, 40, 800 * 40);
             // This just exceeds min_total_ops in ParallelMultiply
             foreach (var item in data.EnumerateIndexed())
             {

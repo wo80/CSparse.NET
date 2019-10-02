@@ -86,7 +86,7 @@ namespace CSparse.Storage
 
             if (alloc)
             {
-                this.nzmax = nzmax;
+                this.nzmax = nzmax = Math.Max(nzmax, 1);
                 this.nz = 0;
 
                 this.rowind = new int[nzmax];
@@ -114,9 +114,14 @@ namespace CSparse.Storage
         /// </remarks>
         public void At(int i, int j, T value)
         {
-            if (i < 0 || j < 0)
+            if (i < 0 || i >= nrows)
             {
-                return;
+                throw new ArgumentOutOfRangeException(nameof(i));
+            }
+
+            if (j < 0 || j >= ncols)
+            {
+                throw new ArgumentOutOfRangeException(nameof(j));
             }
 
             if (value.Equals(Zero))
@@ -127,16 +132,6 @@ namespace CSparse.Storage
             if (nz >= nzmax)
             {
                 Resize(2 * nzmax);
-            }
-
-            if (i < 0 || i >= nrows)
-            {
-                throw new ArgumentOutOfRangeException("i");
-            }
-
-            if (j < 0 || j >= ncols)
-            {
-                throw new ArgumentOutOfRangeException("j");
             }
 
             rowind[nz] = i;
