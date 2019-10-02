@@ -5,20 +5,21 @@
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <PackageId>CSparse</PackageId>
     <Summary>A concise library for solving sparse linear systems with direct methods.</Summary>
-    <Description>CSparse.NET provides numerical methods for sparse LU, Cholesky and QR decomposition of real and complex systems.</Description>
+    <Description>CSparse.NET provides numerical methods for sparse LU, Cholesky and QR decomposition of real and complex linear systems.</Description>
     <Product>CSparse.NET</Product>
     <Company />
     <Copyright>Copyright Christian Woltering © 2012-2019</Copyright>
     <Authors>Christian Woltering</Authors>
-    <PackageProjectUrl>https://github.com/wo80/CSparse.NET</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/wo80/CSparse.NET</RepositoryUrl>
-    <AssemblyVersion>3.3.0.0</AssemblyVersion>
-    <FileVersion>3.3.0.0</FileVersion>
+    <AssemblyVersion>3.4.0.0</AssemblyVersion>
+    <FileVersion>3.4.0.0</FileVersion>
     <PackageTags>math sparse matrix lu cholesky qr decomposition factorization </PackageTags>
-    <Version>3.3.0</Version>
+    <Version>3.4.0</Version>
     <AssemblyName>CSparse</AssemblyName>
     <RootNamespace>CSparse</RootNamespace>
-    <PackageLicenseUrl>https://github.com/wo80/CSparse.NET/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/wo80/CSparse.NET</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/wo80/CSparse.NET</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
   <ItemGroup>
