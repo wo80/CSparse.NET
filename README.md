@@ -6,7 +6,7 @@ A concise library for solving sparse linear systems with direct methods. The cod
 
 ## Features
 
-* Sparse LU, Cholesky and QR decomposition of real and complex systems
+* Sparse LU, Cholesky, LDL<sup>T</sup> and QR decomposition of real and complex systems
 * Fill-reducing orderings
 * Dulmage-Mendelsohn decomposition
 
@@ -14,6 +14,7 @@ All methods are described in detail in the excellent textbook _Direct Methods fo
 
 ## Examples
 
+* Creating a [sparse LDL<sup>T</sup> factorization](https://github.com/wo80/CSparse.NET/wiki/Sparse-LDLt-example)
 * Creating a [sparse LU factorization](https://github.com/wo80/CSparse.NET/wiki/Sparse-LU-example)
 * Creating a [sparse Cholesky factorization](https://github.com/wo80/CSparse.NET/wiki/Sparse-Cholesky-example)
 * Creating a [sparse QR factorization](https://github.com/wo80/CSparse.NET/wiki/Sparse-QR-example)
