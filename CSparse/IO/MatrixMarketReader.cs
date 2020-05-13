@@ -42,7 +42,7 @@ namespace CSparse.IO
         {
             using (var reader = new StreamReader(stream))
             {
-                return Converter.ToCompressedColumnStorage(ReadStorage<T>(reader));
+                return CompressedColumnStorage<T>.OfIndexed(ReadStorage<T>(reader));
             }
         }
 

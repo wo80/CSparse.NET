@@ -33,7 +33,7 @@ namespace CSparse.Storage
         /// </summary>
         public int NonZerosCount
         {
-            get { return ColumnPointers[columnCount]; }
+            get { return ColumnPointers[columns]; }
         }
 
         /// <summary>
@@ -101,9 +101,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfMatrix(Matrix<T> matrix)
         {
-            var c = Converter.FromEnumerable<T>(matrix.EnumerateIndexed(), matrix.RowCount, matrix.ColumnCount);
+            var c = Converter.FromEnumerable_<T>(matrix.EnumerateIndexed(), matrix.RowCount, matrix.ColumnCount);
 
-            return Converter.ToCompressedColumnStorage(c);
+            return Converter.ToCompressedColumnStorage_(c);
         }
 
         /// <summary>
@@ -111,9 +111,19 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfArray(T[,] array)
         {
-            var c = Converter.FromDenseArray(array);
+            var c = Converter.FromDenseArray_(array);
 
-            return Converter.ToCompressedColumnStorage(c);
+            return Converter.ToCompressedColumnStorage_(c);
+        }
+
+        /// <summary>
+        /// Create a new sparse matrix as a copy of the given two-dimensional array.
+        /// </summary>
+        public static CompressedColumnStorage<T> OfJaggedArray(T[][] array)
+        {
+            var c = Converter.FromJaggedArray_(array);
+
+            return Converter.ToCompressedColumnStorage_(c);
         }
 
         /// <summary>
@@ -121,7 +131,7 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfIndexed(CoordinateStorage<T> coordinateStorage)
         {
-            return Converter.ToCompressedColumnStorage(coordinateStorage);
+            return Converter.ToCompressedColumnStorage_(coordinateStorage);
         }
 
         /// <summary>
@@ -129,9 +139,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfIndexed(int rows, int columns, IEnumerable<Tuple<int, int, T>> enumerable)
         {
-            var c = Converter.FromEnumerable<T>(enumerable, rows, columns);
+            var c = Converter.FromEnumerable_<T>(enumerable, rows, columns);
 
-            return Converter.ToCompressedColumnStorage(c);
+            return Converter.ToCompressedColumnStorage_(c);
         }
 
         /// <summary>
@@ -139,9 +149,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfRowMajor(int rows, int columns, T[] rowMajor)
         {
-            var c = Converter.FromRowMajorArray<T>(rowMajor, rows, columns);
+            var c = Converter.FromRowMajorArray_<T>(rowMajor, rows, columns);
 
-            return Converter.ToCompressedColumnStorage(c);
+            return Converter.ToCompressedColumnStorage_(c);
         }
 
         /// <summary>
@@ -149,9 +159,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfColumnMajor(int rows, int columns, T[] columnMajor)
         {
-            var c = Converter.FromColumnMajorArray<T>(columnMajor, rows, columns);
+            var c = Converter.FromColumnMajorArray_<T>(columnMajor, rows, columns);
 
-            return Converter.ToCompressedColumnStorage(c);
+            return Converter.ToCompressedColumnStorage_(c);
         }
 
         /// <summary>
@@ -319,7 +329,7 @@ namespace CSparse.Storage
         /// <param name="storage">A value indicating, whether the transpose should be done on storage level (without complex conjugation).</param>
         public CompressedColumnStorage<T> Transpose(bool storage)
         {
-            var result = CompressedColumnStorage<T>.Create(columnCount, rowCount, this.NonZerosCount);
+            var result = CompressedColumnStorage<T>.Create(columns, rows, this.NonZerosCount);
             this.Transpose(result, storage);
             return result;
         }
@@ -337,18 +347,18 @@ namespace CSparse.Storage
             var cp = result.ColumnPointers;
             var ci = result.RowIndices;
 
-            int[] w = new int[rowCount];
+            int[] w = new int[rows];
 
-            for (p = 0; p < ColumnPointers[columnCount]; p++)
+            for (p = 0; p < ColumnPointers[columns]; p++)
             {
                 // Row counts.
                 w[RowIndices[p]]++;
             }
 
             // Row pointers.
-            Helper.CumulativeSum(cp, w, rowCount);
+            Helper.CumulativeSum(cp, w, rows);
 
-            for (i = 0; i < columnCount; i++)
+            for (i = 0; i < columns; i++)
             {
                 for (p = ColumnPointers[i]; p < ColumnPointers[i + 1]; p++)
                 {
@@ -366,8 +376,8 @@ namespace CSparse.Storage
         /// </summary>
         public CompressedColumnStorage<T> Add(CompressedColumnStorage<T> other)
         {
-            int m = this.rowCount;
-            int n = this.columnCount;
+            int m = this.rows;
+            int n = this.columns;
 
             // check inputs
             if (m != other.RowCount || n != other.ColumnCount)
@@ -540,12 +550,12 @@ namespace CSparse.Storage
             var bp = target.ColumnPointers;
             var bi = target.RowIndices;
 
-            if (target.rowCount != rowCount || target.columnCount != columnCount)
+            if (target.rows != rows || target.columns != columns)
             {
                 throw new ArgumentException(Resources.InvalidDimensions, "target");
             }
 
-            if (perm.Length != rowCount)
+            if (perm.Length != rows)
             {
                 throw new ArgumentException("Invalid permutation length.", "perm");
             }
@@ -580,12 +590,12 @@ namespace CSparse.Storage
                 throw new ArgumentException("Cannot use this instance as target.", "target");
             }
 
-            if (target.rowCount != rowCount || target.columnCount != columnCount)
+            if (target.rows != rows || target.columns != columns)
             {
                 throw new ArgumentException(Resources.InvalidDimensions, "target");
             }
 
-            if (perm.Length != columnCount)
+            if (perm.Length != columns)
             {
                 throw new ArgumentException("Invalid permutation length.", "perm");
             }
@@ -601,7 +611,7 @@ namespace CSparse.Storage
         /// <param name="perm">Permutation matrix P.</param>
         public CompressedColumnStorage<T> PermuteColumns(int[] perm)
         {
-            var result = Create(RowCount, columnCount, Values.Length);
+            var result = Create(RowCount, columns, Values.Length);
 
             PermuteColumns(perm, result);
 
@@ -660,7 +670,7 @@ namespace CSparse.Storage
             int k;
 
             // Determine pointers for output matix. 
-            for (int i = 0; i < columnCount; i++)
+            for (int i = 0; i < columns; i++)
             {
                 k = perm[i];
                 bi[k + 1] = ai[i + 1] - ai[i];
@@ -668,13 +678,13 @@ namespace CSparse.Storage
 
             // Get pointers from lengths
             bi[0] = 0;
-            for (int i = 0; i < columnCount; i++)
+            for (int i = 0; i < columns; i++)
             {
                 bi[i + 1] += bi[i];
             }
 
             // Copying
-            for (int i = 0; i < columnCount; i++)
+            for (int i = 0; i < columns; i++)
             {
                 // Old row = i, new row = perm(i), k = new pointer
                 k = bi[perm[i]];
@@ -713,7 +723,7 @@ namespace CSparse.Storage
         protected void PermuteRows(T[] ax, int[] ai, int[] aj, T[] bx, int[] bi, int[] bj,
             int[] perm, bool copy = false)
         {
-            int i, nnz = ai[columnCount];
+            int i, nnz = ai[columns];
 
             for (i = 0; i < nnz; i++)
             {
@@ -723,7 +733,7 @@ namespace CSparse.Storage
             if (copy)
             {
                 Array.Copy(ax, bx, nnz);
-                Array.Copy(ai, bi, columnCount);
+                Array.Copy(ai, bi, columns);
             }
         }
 
@@ -774,7 +784,7 @@ namespace CSparse.Storage
         {
             if (size <= 0)
             {
-                size = this.ColumnPointers[columnCount];
+                size = this.ColumnPointers[columns];
             }
 
             // TODO: check available memory
@@ -791,7 +801,7 @@ namespace CSparse.Storage
             int from, size, to, p, q, idx;
             T val;
 
-            for (int i = 0; i < columnCount; i++)
+            for (int i = 0; i < columns; i++)
             {
                 from = ColumnPointers[i];
                 to = ColumnPointers[i + 1] - 1;
@@ -845,7 +855,7 @@ namespace CSparse.Storage
             int i, p, k = 0;
             unchecked
             {
-                for (i = 0; i < columnCount; i++)
+                for (i = 0; i < columns; i++)
                 {
                     for (p = ColumnPointers[i]; p < ColumnPointers[i + 1]; p++)
                     {

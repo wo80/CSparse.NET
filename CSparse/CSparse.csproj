@@ -8,18 +8,20 @@
     <Description>CSparse.NET provides numerical methods for sparse LU, Cholesky and QR decomposition of real and complex linear systems.</Description>
     <Product>CSparse.NET</Product>
     <Company />
-    <Copyright>Copyright Christian Woltering © 2012-2019</Copyright>
+    <Copyright>Copyright Christian Woltering © 2012-2020</Copyright>
     <Authors>Christian Woltering</Authors>
-    <AssemblyVersion>3.4.0.0</AssemblyVersion>
-    <FileVersion>3.4.0.0</FileVersion>
+    <AssemblyVersion>3.4.2.0</AssemblyVersion>
+    <FileVersion>3.4.2.0</FileVersion>
     <PackageTags>math sparse matrix lu cholesky qr decomposition factorization </PackageTags>
-    <Version>3.4.0</Version>
+    <Version>3.4.2</Version>
     <AssemblyName>CSparse</AssemblyName>
     <RootNamespace>CSparse</RootNamespace>
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/wo80/CSparse.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/wo80/CSparse.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes>* Make CSparse.NET CLS compliant
+* Mark public methods of Converter class as obsolete</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

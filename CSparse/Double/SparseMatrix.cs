@@ -65,7 +65,7 @@ namespace CSparse.Double
         {
             int i, j, nz = 0;
 
-            for (j = 0; j < columnCount; j++)
+            for (j = 0; j < columns; j++)
             {
                 i = ColumnPointers[j];
 
@@ -85,7 +85,7 @@ namespace CSparse.Double
             }
 
             // Record new nonzero count.
-            ColumnPointers[columnCount] = nz;
+            ColumnPointers[columns] = nz;
 
             // Remove extra space.
             this.Resize(0);
@@ -100,7 +100,7 @@ namespace CSparse.Double
 
             double sum, norm = 0.0;
 
-            for (int j = 0; j < columnCount; j++)
+            for (int j = 0; j < columns; j++)
             {
                 sum = 0.0;
                 for (int i = ColumnPointers[j]; i < ColumnPointers[j + 1]; i++)
@@ -120,9 +120,9 @@ namespace CSparse.Double
 
             double norm = 0.0;
 
-            var work = new double[rowCount];
+            var work = new double[rows];
 
-            for (int j = 0; j < columnCount; j++)
+            for (int j = 0; j < columns; j++)
             {
                 for (int i = ColumnPointers[j]; i < ColumnPointers[j + 1]; i++)
                 {
@@ -130,7 +130,7 @@ namespace CSparse.Double
                 }
             }
 
-            for (int j = 0; j < rowCount; j++)
+            for (int j = 0; j < rows; j++)
             {
                 norm = Math.Max(norm, work[j]);
             }
@@ -166,14 +166,14 @@ namespace CSparse.Double
             var ai = this.RowIndices;
 
             // Clear y.
-            for (int i = 0; i < rowCount; i++)
+            for (int i = 0; i < rows; i++)
             {
                 y[i] = 0.0;
             }
 
             int end;
 
-            for (int j = 0; j < columnCount; j++)
+            for (int j = 0; j < columns; j++)
             {
                 end = ap[j + 1];
 
@@ -193,7 +193,7 @@ namespace CSparse.Double
             var ai = this.RowIndices;
 
             // Scale y by beta
-            for (int j = 0; j < rowCount; j++)
+            for (int j = 0; j < rows; j++)
             {
                 y[j] = beta * y[j];
             }
@@ -201,7 +201,7 @@ namespace CSparse.Double
             int end;
             double xi;
 
-            for (int i = 0; i < columnCount; i++)
+            for (int i = 0; i < columns; i++)
             {
                 xi = alpha * x[i];
 
@@ -223,7 +223,7 @@ namespace CSparse.Double
 
             double yi;
 
-            for (int i = 0; i < columnCount; i++)
+            for (int i = 0; i < columns; i++)
             {
                 yi = 0.0;
 
@@ -249,7 +249,7 @@ namespace CSparse.Double
 
             int end, start = ap[0];
 
-            for (int i = 0; i < columnCount; i++)
+            for (int i = 0; i < columns; i++)
             {
                 end = ap[i + 1];
 
@@ -284,8 +284,8 @@ namespace CSparse.Double
 
             int p, j, nz = 0;
 
-            int m = this.rowCount;
-            int n = this.columnCount;
+            int m = this.rows;
+            int n = this.columns;
 
             // check inputs
             if (m != other.RowCount || n != other.ColumnCount)
@@ -335,7 +335,7 @@ namespace CSparse.Double
             int[] cp, ci;
             double[] cx;
 
-            int m = this.rowCount;
+            int m = this.rows;
             int n = other.ColumnCount;
 
             int anz = this.NonZerosCount;
@@ -403,7 +403,7 @@ namespace CSparse.Double
                 throw new ArgumentException(Resources.MatrixDimensions);
             }
 
-            int m = this.rowCount;
+            int m = this.rows;
             int n = other.ColumnCount;
 
             if ((m > 0 && this.ColumnCount == 0) || (other.RowCount == 0 && n > 0))
@@ -552,12 +552,12 @@ namespace CSparse.Double
 
             int nz = this.NonZerosCount;
 
-            if (this.columnCount != o.ColumnCount || this.rowCount != o.RowCount || nz != o.NonZerosCount)
+            if (this.columns != o.ColumnCount || this.rows != o.RowCount || nz != o.NonZerosCount)
             {
                 return false;
             }
 
-            for (int i = 0; i < this.columnCount; i++)
+            for (int i = 0; i < this.columns; i++)
             {
                 if (this.ColumnPointers[i] != o.ColumnPointers[i])
                 {
@@ -587,14 +587,14 @@ namespace CSparse.Double
         internal override void Cleanup()
         {
             int i, j, p, q, nnz = 0;
-            int[] marker = new int[rowCount];
+            int[] marker = new int[rows];
 
-            for (j = 0; j < rowCount; j++)
+            for (j = 0; j < rows; j++)
             {
                 marker[j] = -1; // Row j not yet seen.
             }
 
-            for (i = 0; i < columnCount; i++)
+            for (i = 0; i < columns; i++)
             {
                 q = nnz; // Column i will start at q
                 for (p = ColumnPointers[i]; p < ColumnPointers[i + 1]; p++)
@@ -616,7 +616,7 @@ namespace CSparse.Double
                 ColumnPointers[i] = q; // Record start of row i
             }
 
-            this.ColumnPointers[columnCount] = nnz;
+            this.ColumnPointers[columns] = nnz;
 
             // Remove extra space from arrays
             this.Resize(0);

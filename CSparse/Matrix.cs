@@ -1,9 +1,11 @@
+using CSparse.Properties;
+using System;
+using System.Collections.Generic;
+
+[assembly: CLSCompliant(true)]
+
 namespace CSparse
 {
-    using CSparse.Properties;
-    using System;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Abstract base class for matrix implementations.
     /// </summary>
@@ -22,19 +24,19 @@ namespace CSparse
         /// </summary>
         protected static readonly T One = Helper.OneOf<T>();
 
-        protected readonly int rowCount;
-        protected readonly int columnCount;
+        protected readonly int rows;
+        protected readonly int columns;
 
         /// <inheritdoc />
         public int RowCount
         {
-            get { return rowCount; }
+            get { return rows; }
         }
 
         /// <inheritdoc />
         public int ColumnCount
         {
-            get { return columnCount; }
+            get { return columns; }
         }
 
         /// <summary>
@@ -52,8 +54,8 @@ namespace CSparse
                 throw new ArgumentOutOfRangeException(nameof(columnCount), Resources.MatrixDimensionNonNegative);
             }
 
-            this.rowCount = rowCount;
-            this.columnCount = columnCount;
+            this.rows = rowCount;
+            this.columns = columnCount;
         }
 
         /// <summary>

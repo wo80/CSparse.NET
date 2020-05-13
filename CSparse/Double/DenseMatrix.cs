@@ -34,12 +34,12 @@ namespace CSparse.Double
         {
             double sum, norm = 0.0;
 
-            for (var j = 0; j < columnCount; j++)
+            for (var j = 0; j < columns; j++)
             {
                 sum = 0.0;
-                for (var i = 0; i < rowCount; i++)
+                for (var i = 0; i < rows; i++)
                 {
-                    sum += Math.Abs(Values[(j * rowCount) + i]);
+                    sum += Math.Abs(Values[(j * rows) + i]);
                 }
                 norm = Math.Max(norm, sum);
             }
@@ -50,19 +50,19 @@ namespace CSparse.Double
         /// <inheritdoc />
         public override double InfinityNorm()
         {
-            var r = new double[rowCount];
+            var r = new double[rows];
 
-            for (var j = 0; j < columnCount; j++)
+            for (var j = 0; j < columns; j++)
             {
-                for (var i = 0; i < rowCount; i++)
+                for (var i = 0; i < rows; i++)
                 {
-                    r[i] += Math.Abs(Values[(j * rowCount) + i]);
+                    r[i] += Math.Abs(Values[(j * rows) + i]);
                 }
             }
 
             double norm = r[0];
 
-            for (int i = 1; i < rowCount; i++)
+            for (int i = 1; i < rows; i++)
             {
                 if (r[i] > norm)
                 {
@@ -78,7 +78,7 @@ namespace CSparse.Double
         {
             double sum = 0.0, norm = 0.0;
 
-            int length = rowCount * columnCount;
+            int length = rows * columns;
 
             for (int i = 0; i < length; i++)
             {
@@ -94,7 +94,7 @@ namespace CSparse.Double
         {
             var values = (double[])this.Values.Clone();
 
-            return new DenseMatrix(rowCount, columnCount, values);
+            return new DenseMatrix(rows, columns, values);
         }
 
         /// <inheritdoc />
@@ -102,8 +102,8 @@ namespace CSparse.Double
         {
             var A = Values;
 
-            int rows = rowCount;
-            int cols = columnCount;
+            int rows = base.rows;
+            int cols = columns;
 
             for (int i = 0; i < rows; i++)
             {
@@ -123,8 +123,8 @@ namespace CSparse.Double
         {
             var A = Values;
 
-            int rows = rowCount;
-            int cols = columnCount;
+            int rows = base.rows;
+            int cols = columns;
 
             for (int i = 0; i < rows; i++)
             {
@@ -144,8 +144,8 @@ namespace CSparse.Double
         {
             var A = Values;
 
-            int rows = rowCount;
-            int cols = columnCount;
+            int rows = base.rows;
+            int cols = columns;
             
             for (int j = 0; j < cols; j++)
             {
@@ -167,8 +167,8 @@ namespace CSparse.Double
         {
             var A = Values;
 
-            int rows = rowCount;
-            int cols = columnCount;
+            int rows = base.rows;
+            int cols = columns;
 
             for (int j = 0; j < cols; j++)
             {
@@ -193,8 +193,8 @@ namespace CSparse.Double
         /// <inheritdoc />
         public override void Add(DenseColumnMajorStorage<double> other, DenseColumnMajorStorage<double> result)
         {
-            int rows = this.rowCount;
-            int columns = this.columnCount;
+            int rows = this.rows;
+            int columns = this.columns;
 
             // check inputs
             if (rows != other.RowCount || columns != other.ColumnCount)
@@ -222,9 +222,9 @@ namespace CSparse.Double
             var B = other.Values;
             var C = result.Values;
 
-            int m = rowCount; // rows of matrix A
+            int m = rows; // rows of matrix A
             int n = other.ColumnCount;
-            int o = columnCount;
+            int o = columns;
 
             for (int i = 0; i < m; i++)
             {
@@ -249,9 +249,9 @@ namespace CSparse.Double
             var B = other.Values;
             var C = result.Values;
 
-            int m = rowCount; // rows of matrix A
+            int m = rows; // rows of matrix A
             int n = other.ColumnCount;
-            int o = columnCount;
+            int o = columns;
 
             int processorCount = Environment.ProcessorCount;
 
@@ -326,7 +326,7 @@ namespace CSparse.Double
         /// <inheritdoc />
         public override bool Equals(Matrix<double> other, double tolerance)
         {
-            if (rowCount != other.RowCount || columnCount != other.ColumnCount)
+            if (rows != other.RowCount || columns != other.ColumnCount)
             {
                 return false;
             }
@@ -338,7 +338,7 @@ namespace CSparse.Double
                 return false;
             }
 
-            int length = rowCount * columnCount;
+            int length = rows * columns;
 
             var otherValues = dense.Values;
 

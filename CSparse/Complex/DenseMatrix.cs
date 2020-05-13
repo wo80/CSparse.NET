@@ -34,12 +34,12 @@ namespace CSparse.Complex
         {
             double sum, norm = 0.0;
 
-            for (var j = 0; j < columnCount; j++)
+            for (var j = 0; j < columns; j++)
             {
                 sum = 0.0;
-                for (var i = 0; i < rowCount; i++)
+                for (var i = 0; i < rows; i++)
                 {
-                    sum += Values[(j * rowCount) + i].Magnitude;
+                    sum += Values[(j * rows) + i].Magnitude;
                 }
                 norm = Math.Max(norm, sum);
             }
@@ -50,19 +50,19 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override double InfinityNorm()
         {
-            var r = new double[rowCount];
+            var r = new double[rows];
 
-            for (var j = 0; j < columnCount; j++)
+            for (var j = 0; j < columns; j++)
             {
-                for (var i = 0; i < rowCount; i++)
+                for (var i = 0; i < rows; i++)
                 {
-                    r[i] += Values[(j * rowCount) + i].Magnitude;
+                    r[i] += Values[(j * rows) + i].Magnitude;
                 }
             }
 
             double norm = r[0];
 
-            for (int i = 1; i < rowCount; i++)
+            for (int i = 1; i < rows; i++)
             {
                 if (r[i] > norm)
                 {
@@ -78,7 +78,7 @@ namespace CSparse.Complex
         {
             double sum = 0.0, norm = 0.0;
 
-            int length = rowCount * columnCount;
+            int length = rows * columns;
 
             for (int i = 0; i < length; i++)
             {
@@ -94,7 +94,7 @@ namespace CSparse.Complex
         {
             var values = (Complex[])this.Values.Clone();
 
-            return new DenseMatrix(rowCount, columnCount, values);
+            return new DenseMatrix(rows, columns, values);
         }
 
         /// <inheritdoc />
@@ -102,8 +102,8 @@ namespace CSparse.Complex
         {
             var A = Values;
 
-            int rows = rowCount;
-            int cols = columnCount;
+            int rows = base.rows;
+            int cols = columns;
 
             for (int i = 0; i < rows; i++)
             {
@@ -123,8 +123,8 @@ namespace CSparse.Complex
         {
             var A = Values;
 
-            int rows = rowCount;
-            int cols = columnCount;
+            int rows = base.rows;
+            int cols = columns;
 
             for (int i = 0; i < rows; i++)
             {
@@ -144,8 +144,8 @@ namespace CSparse.Complex
         {
             var A = Values;
 
-            int rows = rowCount;
-            int cols = columnCount;
+            int rows = base.rows;
+            int cols = columns;
 
             for (int j = 0; j < cols; j++)
             {
@@ -167,8 +167,8 @@ namespace CSparse.Complex
         {
             var A = Values;
 
-            int rows = rowCount;
-            int cols = columnCount;
+            int rows = base.rows;
+            int cols = columns;
 
             for (int j = 0; j < cols; j++)
             {
@@ -188,8 +188,8 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override void Add(DenseColumnMajorStorage<Complex> other, DenseColumnMajorStorage<Complex> result)
         {
-            int m = rowCount;
-            int n = columnCount;
+            int m = rows;
+            int n = columns;
 
             // check inputs
             if (m != other.RowCount || n != other.ColumnCount)
@@ -217,9 +217,9 @@ namespace CSparse.Complex
             var B = other.Values;
             var C = result.Values;
 
-            int m = rowCount; // rows of matrix A
+            int m = rows; // rows of matrix A
             int n = other.ColumnCount;
-            int o = columnCount;
+            int o = columns;
 
             for (int i = 0; i < m; i++)
             {
@@ -266,7 +266,7 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override bool Equals(Matrix<Complex> other, double tolerance)
         {
-            if (rowCount != other.RowCount || columnCount != other.ColumnCount)
+            if (rows != other.RowCount || columns != other.ColumnCount)
             {
                 return false;
             }
@@ -278,7 +278,7 @@ namespace CSparse.Complex
                 return false;
             }
 
-            int length = rowCount * columnCount;
+            int length = rows * columns;
 
             var otherValues = dense.Values;
 

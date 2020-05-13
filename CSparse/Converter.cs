@@ -15,8 +15,15 @@ namespace CSparse
         /// <param name="storage">Coordinate storage.</param>
         /// <param name="cleanup">Remove and sum duplicate entries.</param>
         /// <returns>Compressed sparse column storage.</returns>
+        [Obsolete("Will be removed in future versions. Use SparseMatrix.OfIndexed(...) instead.")]
         public static CompressedColumnStorage<T> ToCompressedColumnStorage<T>(CoordinateStorage<T> storage,
             bool cleanup = true) where T : struct, IEquatable<T>, IFormattable
+        {
+            return ToCompressedColumnStorage_(storage, cleanup);
+        }
+
+        internal static CompressedColumnStorage<T> ToCompressedColumnStorage_<T>(CoordinateStorage<T> storage,
+                bool cleanup = true) where T : struct, IEquatable<T>, IFormattable
         {
             int nrows = storage.RowCount;
             int ncols = storage.ColumnCount;
@@ -64,13 +71,20 @@ namespace CSparse
 
             return result;
         }
-                
+
         /// <summary>
         /// Convert a 2D array to coordinate storage.
         /// </summary>
         /// <param name="array">2D array storage.</param>
         /// <returns>Coordinate storage.</returns>
+        [Obsolete("Will be removed in future versions. Use SparseMatrix.OfArray(...) instead.")]
         public static CoordinateStorage<T> FromDenseArray<T>(T[,] array)
+            where T : struct, IEquatable<T>, IFormattable
+        {
+            return FromDenseArray_(array);
+        }
+
+        internal static CoordinateStorage<T> FromDenseArray_<T>(T[,] array)
             where T : struct, IEquatable<T>, IFormattable
         {
             int rowCount = array.GetLength(0);
@@ -94,12 +108,13 @@ namespace CSparse
         /// </summary>
         /// <param name="array">Jagged array storage.</param>
         /// <returns>Compressed sparse column storage.</returns>
+        [Obsolete("Will be removed in future versions. Use SparseMatrix.OfJaggedArray(...) instead.")]
         public static CompressedColumnStorage<T> ToCompressedColumnStorage<T>(T[][] array)
             where T : struct, IEquatable<T>, IFormattable
         {
             int nrows = array.Length;
             int ncols = array[0].Length;
-            
+
             var storage = new CoordinateStorage<T>(nrows, ncols, nrows);
 
             for (int i = 0; i < nrows; i++)
@@ -110,7 +125,7 @@ namespace CSparse
                 }
             }
 
-            return ToCompressedColumnStorage<T>(storage, false);
+            return ToCompressedColumnStorage_<T>(storage, false);
         }
 
 
@@ -121,7 +136,14 @@ namespace CSparse
         /// <param name="rowCount">Number of rows.</param>
         /// <param name="columnCount">Number of columns.</param>
         /// <returns>Coordinate storage.</returns>
+        [Obsolete("Will be removed in future versions. Use SparseMatrix.OfColumnMajor(...) instead.")]
         public static CoordinateStorage<T> FromColumnMajorArray<T>(T[] array, int rowCount, int columnCount)
+            where T : struct, IEquatable<T>, IFormattable
+        {
+            return FromColumnMajorArray_(array, rowCount, columnCount);
+        }
+
+        internal static CoordinateStorage<T> FromColumnMajorArray_<T>(T[] array, int rowCount, int columnCount)
             where T : struct, IEquatable<T>, IFormattable
         {
             var storage = new CoordinateStorage<T>(rowCount, columnCount, Math.Max(rowCount, columnCount));
@@ -143,12 +165,19 @@ namespace CSparse
         /// <param name="array">jagged array storage.</param>
         /// <returns>Coordinate storage.</returns>
         /// <remarks>All rows of the array are assumed to be equal in length</remarks>
-        public static CoordinateStorage<T> FromDenseArray<T>(T[][] array)
+        [Obsolete("Will be removed in future versions. Use SparseMatrix.OfColumnMajor(...) instead.")]
+        public static CoordinateStorage<T> FromJaggedArray<T>(T[][] array)
+            where T : struct, IEquatable<T>, IFormattable
+        {
+            return FromJaggedArray_(array);
+        }
+
+        internal static CoordinateStorage<T> FromJaggedArray_<T>(T[][] array)
             where T : struct, IEquatable<T>, IFormattable
         {
             int rowCount = array.Length;
             int columnCount = array[0].Length;
-            
+
             var storage = new CoordinateStorage<T>(rowCount, columnCount, rowCount);
 
             for (int i = 0; i < rowCount; i++)
@@ -169,7 +198,14 @@ namespace CSparse
         /// <param name="rowCount">Number of rows.</param>
         /// <param name="columnCount">Number of columns.</param>
         /// <returns>Coordinate storage.</returns>
+        [Obsolete("Will be removed in future versions. Use SparseMatrix.OfRowMajor(...) instead.")]
         public static CoordinateStorage<T> FromRowMajorArray<T>(T[] array, int rowCount, int columnCount)
+            where T : struct, IEquatable<T>, IFormattable
+        {
+            return FromRowMajorArray_(array, rowCount, columnCount);
+        }
+
+        internal static CoordinateStorage<T> FromRowMajorArray_<T>(T[] array, int rowCount, int columnCount)
             where T : struct, IEquatable<T>, IFormattable
         {
             var storage = new CoordinateStorage<T>(rowCount, columnCount, Math.Max(rowCount, columnCount));
@@ -192,7 +228,14 @@ namespace CSparse
         /// <param name="rowCount">Number of rows.</param>
         /// <param name="columnCount">Number of columns.</param>
         /// <returns>Coordinate storage.</returns>
+        [Obsolete("Will be removed in future versions. Use SparseMatrix.OfIndexed(...) instead.")]
         public static CoordinateStorage<T> FromEnumerable<T>(IEnumerable<Tuple<int, int, T>> enumerable, int rowCount, int columnCount)
+            where T : struct, IEquatable<T>, IFormattable
+        {
+            return FromEnumerable_(enumerable, rowCount, columnCount);
+        }
+
+        internal static CoordinateStorage<T> FromEnumerable_<T>(IEnumerable<Tuple<int, int, T>> enumerable, int rowCount, int columnCount)
             where T : struct, IEquatable<T>, IFormattable
         {
             var storage = new CoordinateStorage<T>(rowCount, columnCount, Math.Max(rowCount, columnCount));
