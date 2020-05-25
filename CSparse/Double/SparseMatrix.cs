@@ -290,7 +290,7 @@ namespace CSparse.Double
             // check inputs
             if (m != other.RowCount || n != other.ColumnCount)
             {
-                throw new ArgumentException(Resources.MatrixDimensions);
+                throw new ArgumentException(Resources.MatrixDimensions, nameof(other));
             }
 
             // Workspace
@@ -324,11 +324,16 @@ namespace CSparse.Double
         }
 
         /// <inheritdoc />
-        public override CompressedColumnStorage<double> Multiply(CompressedColumnStorage<double> other)
+        public override void Multiply(CompressedColumnStorage<double> other, CompressedColumnStorage<double> result)
         {
             if (other == null)
             {
                 throw new ArgumentNullException(nameof(other));
+            }
+
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
             }
 
             int p, j, nz = 0;
@@ -343,12 +348,17 @@ namespace CSparse.Double
 
             if (this.ColumnCount != other.RowCount)
             {
-                throw new ArgumentException(Resources.MatrixDimensions);
+                throw new ArgumentException(Resources.MatrixDimensions, nameof(other));
             }
 
             if ((m > 0 && this.ColumnCount == 0) || (other.RowCount == 0 && n > 0))
             {
                 throw new Exception(Resources.InvalidDimensions);
+            }
+
+            if (result.RowCount != m || result.ColumnCount != n)
+            {
+                throw new ArgumentException(Resources.InvalidDimensions, nameof(result));
             }
 
             var bp = other.ColumnPointers;
@@ -358,8 +368,6 @@ namespace CSparse.Double
             // Workspace
             var w = new int[m];
             var x = new double[m];
-
-            var result = new SparseMatrix(m, n, anz + bnz);
 
             cp = result.ColumnPointers;
             for (j = 0; j < n; j++)
@@ -385,8 +393,6 @@ namespace CSparse.Double
             cp[n] = nz; // finalize the last column of C
             result.Resize(0); // remove extra space from C
             result.SortIndices();
-
-            return result; // success
         }
 
         /// <inheritdoc />

@@ -402,9 +402,9 @@ namespace CSparse.Storage
         /// <param name="other">The matrix added to this instance.</param>
         /// <param name="result">Contains the sum.</param>
         /// <remarks>
-        /// The (result) matrix has to be fully initialized and provide enough space for
-        /// the nonzero entries of the sum. An upper bound is the sum of the nonzeros count
-        /// of (this) and (other).
+        /// The <paramref name="result"/> matrix has to be fully initialized and provide enough
+        /// space for the nonzero entries of the sum. An upper bound is the sum of the nonzeros
+        /// count of A and B.
         /// </remarks>
         public abstract void Add(T alpha, T beta, CompressedColumnStorage<T> other,
             CompressedColumnStorage<T> result);
@@ -414,7 +414,29 @@ namespace CSparse.Storage
         /// </summary>
         /// <param name="other">The sparse matrix multiplied to this instance.</param>
         /// <returns>C = A*B</returns>
-        public abstract CompressedColumnStorage<T> Multiply(CompressedColumnStorage<T> other);
+        public CompressedColumnStorage<T> Multiply(CompressedColumnStorage<T> other)
+        {
+            int m = this.rows;
+            int n = other.ColumnCount;
+
+            var result = CompressedColumnStorage<T>.Create(m, n, this.NonZerosCount + other.NonZerosCount);
+
+            Multiply(other, result);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Sparse matrix multiplication, C = A*B
+        /// </summary>
+        /// <param name="other">The sparse matrix multiplied to this instance.</param>
+        /// <param name="result">Contains the matrix product.</param>
+        /// <remarks>
+        /// The <paramref name="result"/> matrix has to be fully initialized, but doesn't have
+        /// to provide enough space for the nonzero entries of the product. The storage will be
+        /// automatically expanded if necessary.
+        /// </remarks>
+        public abstract void Multiply(CompressedColumnStorage<T> other, CompressedColumnStorage<T> result);
 
         /// <summary>
         /// Sparse matrix multiplication, C = A*B

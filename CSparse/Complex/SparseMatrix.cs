@@ -337,7 +337,7 @@ namespace CSparse.Complex
             // check inputs
             if (m != other.RowCount || n != other.ColumnCount)
             {
-                throw new ArgumentException(Resources.MatrixDimensions);
+                throw new ArgumentException(Resources.MatrixDimensions, nameof(other));
             }
 
             // Workspace
@@ -371,11 +371,16 @@ namespace CSparse.Complex
         }
 
         /// <inheritdoc />
-        public override CompressedColumnStorage<Complex> Multiply(CompressedColumnStorage<Complex> other)
+        public override void Multiply(CompressedColumnStorage<Complex> other, CompressedColumnStorage<Complex> result)
         {
             if (other == null)
             {
                 throw new ArgumentNullException(nameof(other));
+            }
+
+            if (result == null)
+            {
+                throw new ArgumentNullException(nameof(result));
             }
 
             int p, j, nz = 0;
@@ -390,12 +395,17 @@ namespace CSparse.Complex
             
             if (this.ColumnCount != other.RowCount)
             {
-                throw new ArgumentException(Resources.MatrixDimensions);
+                throw new ArgumentException(Resources.MatrixDimensions, nameof(other));
             }
 
             if ((m > 0 && this.ColumnCount == 0) || (other.RowCount == 0 && n > 0))
             {
                 throw new Exception(Resources.InvalidDimensions);
+            }
+
+            if (result.RowCount != m || result.ColumnCount != n)
+            {
+                throw new ArgumentException(Resources.InvalidDimensions, nameof(result));
             }
 
             var bp = other.ColumnPointers;
@@ -405,8 +415,6 @@ namespace CSparse.Complex
             // Workspace
             var w = new int[m];
             var x = new Complex[m];
-
-            var result = new SparseMatrix(m, n, anz + bnz);
 
             cp = result.ColumnPointers;
             for (j = 0; j < n; j++)
@@ -432,8 +440,6 @@ namespace CSparse.Complex
             cp[n] = nz; // finalize the last column of C
             result.Resize(0); // remove extra space from C
             result.SortIndices();
-
-            return result; // success
         }
 
 
