@@ -6,12 +6,6 @@ namespace CSparse
     public static class Helper
     {
         /// <summary>
-        /// Gets or sets a value indicating whether the storage should be
-        /// automatically resized to non-zeros count. Defaults to false.
-        /// </summary>
-        public static bool AutoTrimStorage { get; set; } = false;
-
-        /// <summary>
         /// Cumulative sum of given array.
         /// </summary>
         /// <param name="sum">Output: cumulative sum of counts</param>

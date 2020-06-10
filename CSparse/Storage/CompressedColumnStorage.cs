@@ -14,6 +14,12 @@ namespace CSparse.Storage
         where T : struct, IEquatable<T>, IFormattable
     {
         /// <summary>
+        /// Gets or sets a value indicating whether the storage should be
+        /// automatically resized to non-zeros count. Defaults to true.
+        /// </summary>
+        public static bool AutoTrimStorage { get; set; } = true;
+
+        /// <summary>
         /// Row pointers with last entry equal number of non-zeros (size = RowCount + 1)
         /// </summary>
         public int[] ColumnPointers;

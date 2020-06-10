@@ -87,7 +87,7 @@ namespace CSparse.Double
             // Record new nonzero count.
             ColumnPointers[columns] = nz;
 
-            if (Helper.AutoTrimStorage)
+            if (AutoTrimStorage)
             {
                 // Remove extra space.
                 this.Resize(0);
@@ -321,7 +321,7 @@ namespace CSparse.Double
             // Finalize the last column
             ci[n] = nz;
 
-            if (Helper.AutoTrimStorage)
+            if (AutoTrimStorage)
             {
                 // Remove extra space.
                 result.Resize(0);
@@ -399,7 +399,7 @@ namespace CSparse.Double
             }
             cp[n] = nz; // finalize the last column of C
 
-            if (Helper.AutoTrimStorage)
+            if (AutoTrimStorage)
             {
                 // Remove extra space.
                 result.Resize(0);
