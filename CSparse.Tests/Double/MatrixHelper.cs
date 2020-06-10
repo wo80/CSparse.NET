@@ -71,9 +71,7 @@ namespace CSparse.Tests.Double
 
         private static CompressedColumnStorage<double> DenseToSparse(DenseColumnMajorStorage<double> dense)
         {
-            var cs = Converter.FromColumnMajorArray(dense.Values, dense.RowCount, dense.ColumnCount);
-
-            return Converter.ToCompressedColumnStorage(cs);
+            return CompressedColumnStorage<double>.OfColumnMajor(dense.RowCount, dense.ColumnCount, dense.Values);
         }
     }
 }

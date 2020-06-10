@@ -21,7 +21,7 @@ namespace CSparse.Tests
             Jarray[0][1] = 2.0; Jarray[1][0] = 2.0;   // | 0 2 4 |
             Jarray[0][2] = 4.0; Jarray[2][0] = 4.0;   // | 2 0 0 |
             Jarray[2][2] = 6.0;                       // | 4 0 6 |
-            Jcsc = Converter.ToCompressedColumnStorage(Jarray);
+            Jcsc = CompressedColumnStorage<double>.OfJaggedArray(Jarray);
 
             // multidimentional array
             Marray = new double[,] 
@@ -30,7 +30,7 @@ namespace CSparse.Tests
                 {2, 0, 0 },
                 {4, 0, 6 }
             };
-            Mcsc = Converter.ToCompressedColumnStorage(Converter.FromDenseArray(Marray));
+            Mcsc = CompressedColumnStorage<double>.OfArray(Marray);
         }
 
         [Test]

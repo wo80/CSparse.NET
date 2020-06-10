@@ -371,7 +371,7 @@ namespace CSparse.Complex
             if (Helper.AutoTrimStorage)
             {
                 // Remove extra space.
-                this.Resize(0);
+                result.Resize(0);
             }
 
             Helper.SortIndices(result);
@@ -449,7 +449,7 @@ namespace CSparse.Complex
             if (Helper.AutoTrimStorage)
             {
                 // Remove extra space.
-                this.Resize(0);
+                result.Resize(0);
             }
 
             Helper.SortIndices(result);

@@ -332,6 +332,8 @@ namespace CSparse.Tests.Double
         [TestCase(2, 3)]
         public void TestMatrixSum(int rows, int columns)
         {
+            CSparse.Helper.AutoTrimStorage = true;
+
             var data = MatrixHelper.LoadSparse(rows, columns);
 
             var A = data.A;
@@ -346,6 +348,8 @@ namespace CSparse.Tests.Double
         [TestCase(2, 3)]
         public void TestMatrixMultiply(int rows, int columns)
         {
+            CSparse.Helper.AutoTrimStorage = true;
+
             var data = MatrixHelper.LoadSparse(rows, columns);
 
             var A = data.A;
@@ -366,6 +370,8 @@ namespace CSparse.Tests.Double
         [Test]
         public void TestMatrixParallelMultiply()
         {
+            CSparse.Helper.AutoTrimStorage = true;
+
             var data = ResourceLoader.Get<double>("general-40x40.mat");
             var acs = new CoordinateStorage<double>(40, 800, 40 * 800);
             var bcs = new CoordinateStorage<double>(800, 40, 800 * 40);
@@ -380,8 +386,8 @@ namespace CSparse.Tests.Double
                     bcs.At(i + 40 * k, j, item.Item3);
                 }
             }
-            var A = Converter.ToCompressedColumnStorage(acs);
-            var B = Converter.ToCompressedColumnStorage(bcs);
+            var A = CompressedColumnStorage<double>.OfIndexed(acs);
+            var B = CompressedColumnStorage<double>.OfIndexed(bcs);
             CollectionAssert.AreEqual(A.Multiply(B).Values, A.ParallelMultiply(B).Values);
         }
 

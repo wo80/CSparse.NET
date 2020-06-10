@@ -125,9 +125,7 @@ namespace CSparse.Tests.Complex
 
         private static CompressedColumnStorage<Complex> DenseToSparse(DenseColumnMajorStorage<Complex> dense)
         {
-            var cs = Converter.FromColumnMajorArray(dense.Values, dense.RowCount, dense.ColumnCount);
-
-            return Converter.ToCompressedColumnStorage(cs);
+            return CompressedColumnStorage<Complex>.OfColumnMajor(dense.RowCount, dense.ColumnCount, dense.Values);
         }
     }
 }
