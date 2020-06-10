@@ -87,8 +87,11 @@ namespace CSparse.Complex
             // Record new nonzero count.
             ColumnPointers[columns] = nz;
 
-            // Remove extra space.
-            this.Resize(0);
+            if (Helper.AutoTrimStorage)
+            {
+                // Remove extra space.
+                this.Resize(0);
+            }
 
             return nz;
         }
@@ -365,9 +368,13 @@ namespace CSparse.Complex
             // Finalize the last column
             ci[n] = nz;
 
-            // Remove extra space
-            result.Resize(0);
-            result.SortIndices();
+            if (Helper.AutoTrimStorage)
+            {
+                // Remove extra space.
+                this.Resize(0);
+            }
+
+            Helper.SortIndices(result);
         }
 
         /// <inheritdoc />
@@ -438,8 +445,14 @@ namespace CSparse.Complex
                 }
             }
             cp[n] = nz; // finalize the last column of C
-            result.Resize(0); // remove extra space from C
-            result.SortIndices();
+
+            if (Helper.AutoTrimStorage)
+            {
+                // Remove extra space.
+                this.Resize(0);
+            }
+
+            Helper.SortIndices(result);
         }
 
 

@@ -6,6 +6,12 @@ namespace CSparse
     public static class Helper
     {
         /// <summary>
+        /// Gets or sets a value indicating whether the storage should be
+        /// automatically resized to non-zeros count. Defaults to false.
+        /// </summary>
+        public static bool AutoTrimStorage { get; set; } = false;
+
+        /// <summary>
         /// Cumulative sum of given array.
         /// </summary>
         /// <param name="sum">Output: cumulative sum of counts</param>
@@ -28,8 +34,22 @@ namespace CSparse
             return nz;
         }
 
+        /// <summary>
+        /// Trim row indices and values array of the storage to the exact size (non-zeros count).
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="storage">The sparse matrix.</param>
+        public static void TrimStorage<T>(CompressedColumnStorage<T> storage)
+            where T : struct, IEquatable<T>, IFormattable
+        {
+            storage.Resize(0);
+        }
 
-
+        /// <summary>
+        /// Sort the row indices of the storage.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="storage">The sparse matrix.</param>
         public static void SortIndices<T>(CompressedColumnStorage<T> storage)
             where T : struct, IEquatable<T>, IFormattable
         {

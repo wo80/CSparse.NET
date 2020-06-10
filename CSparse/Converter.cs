@@ -62,7 +62,7 @@ namespace CSparse
             result.ColumnPointers = columnPointers;
             result.Values = storageValues;
 
-            result.SortIndices();
+            Helper.SortIndices(result);
 
             if (cleanup)
             {

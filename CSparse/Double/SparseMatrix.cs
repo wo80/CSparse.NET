@@ -87,8 +87,11 @@ namespace CSparse.Double
             // Record new nonzero count.
             ColumnPointers[columns] = nz;
 
-            // Remove extra space.
-            this.Resize(0);
+            if (Helper.AutoTrimStorage)
+            {
+                // Remove extra space.
+                this.Resize(0);
+            }
 
             return nz;
         }
@@ -318,9 +321,13 @@ namespace CSparse.Double
             // Finalize the last column
             ci[n] = nz;
 
-            // Remove extra space
-            result.Resize(0);
-            result.SortIndices();
+            if (Helper.AutoTrimStorage)
+            {
+                // Remove extra space.
+                this.Resize(0);
+            }
+
+            Helper.SortIndices(result);
         }
 
         /// <inheritdoc />
@@ -391,8 +398,14 @@ namespace CSparse.Double
                 }
             }
             cp[n] = nz; // finalize the last column of C
-            result.Resize(0); // remove extra space from C
-            result.SortIndices();
+
+            if (Helper.AutoTrimStorage)
+            {
+                // Remove extra space.
+                this.Resize(0);
+            }
+
+            Helper.SortIndices(result);
         }
 
         /// <inheritdoc />
@@ -504,7 +517,7 @@ namespace CSparse.Double
                     }
 
                     rcp[nc] = rnz; // finalize the last column of C
-                    result.SortIndices();
+                    Helper.SortIndices(result);
                 });
 
             int nz = 0;
