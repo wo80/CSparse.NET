@@ -17,6 +17,9 @@ namespace CSparse.Storage
         /// Gets or sets a value indicating whether the storage should be
         /// automatically resized to non-zeros count. Defaults to true.
         /// </summary>
+        /// <remarks>
+        /// Affects only sparse matrix addition and multiplication.
+        /// </remarks>
         public static bool AutoTrimStorage { get; set; } = true;
 
         /// <summary>

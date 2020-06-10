@@ -14,9 +14,9 @@ All methods are described in detail in the excellent textbook _Direct Methods fo
 
 ## Examples
 
-* Creating a [sparse LDL<sup>T</sup> factorization](https://github.com/wo80/CSparse.NET/wiki/Sparse-LDLt-example)
 * Creating a [sparse LU factorization](https://github.com/wo80/CSparse.NET/wiki/Sparse-LU-example)
 * Creating a [sparse Cholesky factorization](https://github.com/wo80/CSparse.NET/wiki/Sparse-Cholesky-example)
+* Creating a [sparse LDL<sup>T</sup> factorization](https://github.com/wo80/CSparse.NET/wiki/Sparse-LDLt-example)
 * Creating a [sparse QR factorization](https://github.com/wo80/CSparse.NET/wiki/Sparse-QR-example)
 * Using [Math.NET Numerics and CSparse.NET](https://github.com/wo80/CSparse.NET/wiki/Math.NET-Numerics-and-CSparse)
 

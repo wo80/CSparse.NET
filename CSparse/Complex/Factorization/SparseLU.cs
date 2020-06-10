@@ -2,7 +2,6 @@ namespace CSparse.Complex.Factorization
 {
     using CSparse.Factorization;
     using CSparse.Ordering;
-    using CSparse.Properties;
     using CSparse.Storage;
     using System;
     using System.Numerics;
