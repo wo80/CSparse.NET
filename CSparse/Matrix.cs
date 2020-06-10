@@ -17,7 +17,7 @@ namespace CSparse
         /// <summary>
         /// Zero value for T.
         /// </summary>
-        protected static readonly T Zero = Helper.ZeroOf<T>();
+        protected static readonly T Zero = default; // default = zero
 
         /// <summary>
         /// One value for T.

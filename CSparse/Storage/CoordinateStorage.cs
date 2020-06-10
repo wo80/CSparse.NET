@@ -9,7 +9,7 @@ namespace CSparse.Storage
     public class CoordinateStorage<T>
         where T : struct, IEquatable<T>, IFormattable
     {
-        private static readonly T Zero = Helper.ZeroOf<T>();
+        private static readonly T Zero = default; // default = zero
 
         private readonly int nrows;
         private readonly int ncols;

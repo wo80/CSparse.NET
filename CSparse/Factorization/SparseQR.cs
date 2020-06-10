@@ -56,7 +56,7 @@ namespace CSparse.Factorization
         /// <param name="progress">Report progress (range from 0.0 to 1.0).</param>
         protected void Factorize(CompressedColumnStorage<T> A, IProgress<double> progress)
         {
-            T zero = Helper.ZeroOf<T>();
+            T zero = default; // default = zero
 
             int i, j, p, p1, top, len, col;
 

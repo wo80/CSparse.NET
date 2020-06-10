@@ -2,7 +2,7 @@ namespace CSparse
 {
     using System;
 
-    internal static class Helper
+    public static class Helper
     {
         /// <summary>
         /// Cumulative sum of given array.
@@ -56,17 +56,7 @@ namespace CSparse
         /// <returns>The value of <c>0.0</c> for type T.</returns>
         public static T ZeroOf<T>()
         {
-            if (typeof(T) == typeof(double))
-            {
-                return (T)(object)0.0d;
-            }
-
-            if (typeof(T) == typeof(System.Numerics.Complex))
-            {
-                return (T)(object)System.Numerics.Complex.Zero;
-            }
-
-            throw new NotSupportedException();
+            return default;
         }
 
         #endregion
