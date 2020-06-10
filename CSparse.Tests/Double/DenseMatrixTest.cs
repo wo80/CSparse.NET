@@ -306,6 +306,54 @@ namespace CSparse.Tests.Double
 
         [TestCase(2, 2)]
         [TestCase(2, 3)]
+        public void TestOfArray(int rows, int columns)
+        {
+            var denseData = MatrixHelper.LoadDense(rows, columns);
+
+            var denseA = denseData.A;
+
+            var jArray = new double[rows, columns];
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    jArray[i, j] = denseA.At(i, j);
+                }
+            }
+
+            var denseB = DenseMatrix.OfArray(jArray);
+
+            Assert.IsTrue(denseA.Equals(denseB));
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestOfJaggedArray(int rows, int columns)
+        {
+            var denseData = MatrixHelper.LoadDense(rows, columns);
+
+            var denseA = denseData.A;
+
+            var jArray = new double[rows][];
+
+            for (int i = 0; i < rows; i++)
+            {
+                var r = jArray[i] = new double[columns];
+
+                for (int j = 0; j < columns; j++)
+                {
+                    r[j] = denseA.At(i, j);
+                }
+            }
+
+            var denseB = DenseMatrix.OfJaggedArray(jArray);
+
+            Assert.IsTrue(denseA.Equals(denseB));
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
         public void TestOfIndexed(int rows, int columns)
         {
             var denseData = MatrixHelper.LoadDense(rows, columns);

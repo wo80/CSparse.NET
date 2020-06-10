@@ -93,6 +93,27 @@ namespace CSparse.Storage
         }
 
         /// <summary>
+        /// Create a new dense matrix as a copy of the given two-dimensional array.
+        /// </summary>
+        public static DenseColumnMajorStorage<T> OfJaggedArray(T[][] array)
+        {
+            int rows = array.Length;
+            int columns = array[0].Length;
+
+            var A = Create(rows, columns);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    A.At(i, j, array[i][j]);
+                }
+            }
+
+            return A;
+        }
+
+        /// <summary>
         /// Create a new dense matrix as a copy of the given indexed enumerable.
         /// </summary>
         public static DenseColumnMajorStorage<T> OfIndexed(int rows, int columns, IEnumerable<Tuple<int, int, T>> enumerable)
