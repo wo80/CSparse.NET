@@ -57,7 +57,7 @@ namespace CSparse.Tests
         [Test]
         public void TestEquality()
         {
-            // both should be equal after convertion
+            // both should be equal after conversion
             Assert.AreEqual(Jcsc, Mcsc);
         }
     }
