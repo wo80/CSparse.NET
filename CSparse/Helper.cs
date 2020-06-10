@@ -1,5 +1,6 @@
 namespace CSparse
 {
+    using CSparse.Storage;
     using System;
 
     public static class Helper
@@ -25,6 +26,53 @@ namespace CSparse
             sum[size] = nz;
 
             return nz;
+        }
+
+
+
+        public static void SortIndices<T>(CompressedColumnStorage<T> storage)
+            where T : struct, IEquatable<T>, IFormattable
+        {
+            int from, size, to, p, q, idx;
+            T val;
+
+            int columns = storage.ColumnCount;
+
+            var ap = storage.ColumnPointers;
+            var ai = storage.RowIndices;
+            var ax = storage.Values;
+
+            for (int i = 0; i < columns; i++)
+            {
+                from = ap[i];
+                to = ap[i + 1] - 1;
+
+                size = to - from + 1;
+
+                if (size > 16)
+                {
+                    // Quicksort
+                    Array.Sort(ai, ax, from, size);
+                }
+                else
+                {
+                    // Insertion sort
+                    for (p = from + 1; p <= to; p++)
+                    {
+                        idx = ai[p];
+                        val = ax[p];
+                        q = p - 1;
+                        while (q >= from && ai[q] > idx)
+                        {
+                            ai[q + 1] = ai[q];
+                            ax[q + 1] = ax[q];
+                            q--;
+                        }
+                        ai[q + 1] = idx;
+                        ax[q + 1] = val;
+                    }
+                }
+            }
         }
 
         #region Generic code helper

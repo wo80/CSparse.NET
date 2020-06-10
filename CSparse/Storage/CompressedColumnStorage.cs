@@ -584,7 +584,7 @@ namespace CSparse.Storage
 
             PermuteRows(Values, ColumnPointers, RowIndices, bx, bp, bi, perm);
 
-            target.SortIndices();
+            Helper.SortIndices(target);
         }
 
         /// <summary>
@@ -624,7 +624,7 @@ namespace CSparse.Storage
 
             PermuteColumns(Values, ColumnPointers, RowIndices, bx, bp, bi, perm);
 
-            target.SortIndices();
+            Helper.SortIndices(target);
         }
 
         /// <summary>
@@ -816,44 +816,6 @@ namespace CSparse.Storage
             Array.Resize<T>(ref this.Values, size);
 
             return true;
-        }
-
-        internal void SortIndices()
-        {
-            int from, size, to, p, q, idx;
-            T val;
-
-            for (int i = 0; i < columns; i++)
-            {
-                from = ColumnPointers[i];
-                to = ColumnPointers[i + 1] - 1;
-
-                size = to - from + 1;
-
-                if (size > 16)
-                {
-                    // Quicksort
-                    Array.Sort(RowIndices, Values, from, size);
-                }
-                else
-                {
-                    // Insertion sort
-                    for (p = from + 1; p <= to; p++)
-                    {
-                        idx = RowIndices[p];
-                        val = Values[p];
-                        q = p - 1;
-                        while (q >= from && RowIndices[q] > idx)
-                        {
-                            RowIndices[q + 1] = RowIndices[q];
-                            Values[q + 1] = Values[q];
-                            q--;
-                        }
-                        RowIndices[q + 1] = idx;
-                        Values[q + 1] = val;
-                    }
-                }
-            }
         }
 
         internal abstract void Cleanup();
