@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CSparse</PackageId>
     <Summary>A concise library for solving sparse linear systems with direct methods.</Summary>
     <Description>CSparse.NET provides numerical methods for sparse LU, Cholesky and QR decomposition of real and complex linear systems.</Description>
@@ -10,17 +11,21 @@
     <Company />
     <Copyright>Copyright Christian Woltering © 2012-2020</Copyright>
     <Authors>Christian Woltering</Authors>
-    <AssemblyVersion>3.4.4.0</AssemblyVersion>
-    <FileVersion>3.4.4.0</FileVersion>
+    <AssemblyVersion>3.4.5.0</AssemblyVersion>
+    <FileVersion>3.4.5.0</FileVersion>
     <PackageTags>math sparse matrix lu cholesky qr decomposition factorization </PackageTags>
-    <Version>3.4.4</Version>
+    <Version>3.4.5</Version>
     <AssemblyName>CSparse</AssemblyName>
     <RootNamespace>CSparse</RootNamespace>
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/wo80/CSparse.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/wo80/CSparse.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>This release introduces the static SparseMatrix.AutoTrimStorage option, which enables control over hidden memory allocations in matrix addition and multiplication. By default, the matrix storage will be resized to exactly fit the non-zeros count, which involves new memory allocations. If you want to avoid this, set AutoTrimStorage to false.</PackageReleaseNotes>
+    <PackageReleaseNotes>This release introduces the static SparseMatrix.AutoTrimStorage option, which enables control over hidden memory allocations in matrix addition and multiplication. By default, the matrix storage will be resized to exactly fit the non-zeros count, which involves new memory allocations. If you want to avoid this, set AutoTrimStorage to false.
+
+Additional changes:
+* Add public helper methods Helper.TrimStrorage(...) and Helper.SortIndices(...)
+* Add DenseMatrix.OfJaggedArray(...)</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
