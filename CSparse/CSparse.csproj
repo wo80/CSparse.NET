@@ -10,17 +10,17 @@
     <Company />
     <Copyright>Copyright Christian Woltering © 2012-2020</Copyright>
     <Authors>Christian Woltering</Authors>
-    <AssemblyVersion>3.4.3.0</AssemblyVersion>
-    <FileVersion>3.4.3.0</FileVersion>
+    <AssemblyVersion>3.4.4.0</AssemblyVersion>
+    <FileVersion>3.4.4.0</FileVersion>
     <PackageTags>math sparse matrix lu cholesky qr decomposition factorization </PackageTags>
-    <Version>3.4.3</Version>
+    <Version>3.4.4</Version>
     <AssemblyName>CSparse</AssemblyName>
     <RootNamespace>CSparse</RootNamespace>
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/wo80/CSparse.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/wo80/CSparse.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>* Add a sparse matrix multiplication overload that accepts the result matrix as a parameter.</PackageReleaseNotes>
+    <PackageReleaseNotes>This release introduces the static SparseMatrix.AutoTrimStorage option, which enables control over hidden memory allocations in matrix addition and multiplication. By default, the matrix storage will be resized to exactly fit the non-zeros count, which involves new memory allocations. If you want to avoid this, set AutoTrimStorage to false.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

@@ -23,12 +23,12 @@ namespace CSparse.Storage
         public static bool AutoTrimStorage { get; set; } = true;
 
         /// <summary>
-        /// Row pointers with last entry equal number of non-zeros (size = RowCount + 1)
+        /// Column pointers with last entry equal number of non-zeros (size = ColumnCount + 1)
         /// </summary>
         public int[] ColumnPointers;
 
         /// <summary>
-        /// Column indices (size >= NonZerosCount)
+        /// Row indices (size >= NonZerosCount)
         /// </summary>
         public int[] RowIndices;
 
