@@ -28,7 +28,7 @@ namespace CSparse.Complex.Factorization
         /// <summary>
         /// Creates a LU factorization.
         /// </summary>
-        /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
+        /// <param name="A">Column-compressed matrix, must be square.</param>
         /// <param name="order">Ordering method to use (natural or A+A').</param>
         /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
         public static SparseLU Create(CompressedColumnStorage<Complex> A, ColumnOrdering order,
@@ -40,7 +40,7 @@ namespace CSparse.Complex.Factorization
         /// <summary>
         /// Creates a LU factorization.
         /// </summary>
-        /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
+        /// <param name="A">Column-compressed matrix, must be square.</param>
         /// <param name="order">Ordering method to use (natural or A+A').</param>
         /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
         /// <param name="progress">Report progress (range from 0.0 to 1.0).</param>
@@ -53,8 +53,8 @@ namespace CSparse.Complex.Factorization
         /// <summary>
         /// Creates a LU factorization.
         /// </summary>
-        /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
-        /// <param name="p">Permutation.</param>
+        /// <param name="A">Column-compressed matrix, must be square.</param>
+        /// <param name="p">Fill-reducing column permutation.</param>
         /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
         public static SparseLU Create(CompressedColumnStorage<Complex> A, int[] p, double tol)
         {
@@ -64,8 +64,8 @@ namespace CSparse.Complex.Factorization
         /// <summary>
         /// Creates a LU factorization.
         /// </summary>
-        /// <param name="A">Column-compressed matrix, symmetric positive definite.</param>
-        /// <param name="p">Permutation.</param>
+        /// <param name="A">Column-compressed matrix, must be square.</param>
+        /// <param name="p">Fill-reducing column permutation.</param>
         /// <param name="tol">Partial pivoting tolerance (form 0.0 to 1.0).</param>
         /// <param name="progress">Report progress (range from 0.0 to 1.0).</param>
         public static SparseLU Create(CompressedColumnStorage<Complex> A, int[] p, double tol,
