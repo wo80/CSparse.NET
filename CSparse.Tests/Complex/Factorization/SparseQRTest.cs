@@ -24,10 +24,38 @@ namespace CSparse.Tests.Complex.Factorization
 
             var qr = SparseQR.Create(A, ColumnOrdering.MinimumDegreeAtA);
 
+            // Solve Ax = b.
             qr.Solve(b, x);
 
             // Compute residual r = b - Ax.
             A.Multiply(-1.0, x, 1.0, r);
+
+            Assert.IsTrue(Vector.Norm(r) < EPS);
+        }
+
+        [Test]
+        public void TestSolveTranspose()
+        {
+            // Load matrix from a file.
+            var A = ResourceLoader.Get<Complex>("general-40x40.mat");
+
+            Assert.AreEqual(A.RowCount, A.ColumnCount);
+
+            var AT = A.Transpose();
+
+            // Create test data.
+            var x = Helper.CreateTestVector(A.ColumnCount);
+            var b = Helper.Multiply(AT, x);
+            var r = Vector.Clone(b);
+
+            // Create LU factorization.
+            var qr = SparseQR.Create(A, ColumnOrdering.MinimumDegreeAtA);
+
+            // Solve A'x = b.
+            qr.SolveTranspose(b, x);
+
+            // Compute residual r = b - A'x.
+            AT.Multiply(-1.0, x, 1.0, r);
 
             Assert.IsTrue(Vector.Norm(r) < EPS);
         }
@@ -38,13 +66,10 @@ namespace CSparse.Tests.Complex.Factorization
             // Load matrix from a file.
             var A = ResourceLoader.Get<Complex>("general-40x20.mat");
 
-            int m = A.RowCount;
-            int n = A.ColumnCount;
-
-            Assert.IsTrue(m > n);
+            Assert.IsTrue(A.RowCount > A.ColumnCount);
 
             // Create test data.
-            var x = Helper.CreateTestVector(n);
+            var x = Helper.CreateTestVector(A.ColumnCount);
             var b = Helper.Multiply(A, x);
             var r = Vector.Clone(b);
 
@@ -60,18 +85,41 @@ namespace CSparse.Tests.Complex.Factorization
         }
 
         [Test]
+        public void TestSolveTransposeOverdetermined()
+        {
+            // Load matrix from a file.
+            var A = ResourceLoader.Get<Complex>("general-40x20.mat");
+
+            Assert.IsTrue(A.RowCount > A.ColumnCount);
+
+            var AT = A.Transpose();
+
+            // Create test data.
+            var x = Helper.CreateTestVector(A.RowCount);
+            var b = Helper.Multiply(AT, x);
+            var r = Vector.Clone(b);
+
+            var qr = SparseQR.Create(A, ColumnOrdering.MinimumDegreeAtA);
+
+            // Compute min norm(A'x - b).
+            qr.SolveTranspose(b, x);
+
+            // Compute residual r = b - A'x.
+            AT.Multiply(-1.0, x, 1.0, r);
+
+            Assert.IsTrue(Vector.Norm(r) < EPS);
+        }
+
+        [Test]
         public void TestSolveUnderdetermined()
         {
             // Load matrix from a file.
             var A = ResourceLoader.Get<Complex>("general-20x40.mat");
 
-            int m = A.RowCount;
-            int n = A.ColumnCount;
-
-            Assert.IsTrue(m < n);
+            Assert.IsTrue(A.RowCount < A.ColumnCount);
 
             // Create test data.
-            var x = Helper.CreateTestVector(n);
+            var x = Helper.CreateTestVector(A.ColumnCount);
             var b = Helper.Multiply(A, x);
             var r = Vector.Clone(b);
 
@@ -83,6 +131,31 @@ namespace CSparse.Tests.Complex.Factorization
 
             // Compute residuals.
             A.Multiply(-1.0, x, 1.0, r);
+
+            Assert.IsTrue(Vector.Norm(r) < EPS);
+        }
+
+        [Test]
+        public void TestSolveTransposeUnderdetermined()
+        {
+            // Load matrix from a file.
+            var A = ResourceLoader.Get<Complex>("general-20x40.mat");
+
+            Assert.IsTrue(A.RowCount < A.ColumnCount);
+
+            var AT = A.Transpose();
+
+            // Create test data.
+            var x = Helper.CreateTestVector(A.RowCount);
+            var b = Helper.Multiply(AT, x);
+            var r = Vector.Clone(b);
+
+            var qr = SparseQR.Create(A, ColumnOrdering.MinimumDegreeAtA);
+
+            qr.SolveTranspose(b, x);
+
+            // Compute residuals.
+            AT.Multiply(-1.0, x, 1.0, r);
 
             Assert.IsTrue(Vector.Norm(r) < EPS);
         }

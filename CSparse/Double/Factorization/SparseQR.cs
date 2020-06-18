@@ -127,6 +127,56 @@ namespace CSparse.Double.Factorization
             }
         }
 
+
+        /// <summary>
+        /// Solves a system of linear equations, <c>A'x = b</c>.
+        /// </summary>
+        /// <param name="input">The right hand side vector, <c>b</c>.</param>
+        /// <param name="result">The left hand side vector, <c>x</c>.</param>
+        public void SolveTranspose(double[] input, double[] result)
+        {
+            if (input == null) throw new ArgumentNullException(nameof(input));
+
+            if (result == null) throw new ArgumentNullException(nameof(result));
+
+            int m2 = S.m2;
+
+            var x = new double[m2];
+
+            if (m >= n)
+            {
+                // x(q(0:m-1)) = b(0:m-1)
+                Permutation.Apply(S.q, input, x, n);
+
+                SolverHelper.SolveUpperTranspose(R, x); // x = R'\x
+
+                // Apply Householder reflection to x.
+                for (int k = n - 1; k >= 0; k--)
+                {
+                    ApplyHouseholder(Q, k, beta[k], x);
+                }
+
+                // b(0:n-1) = x(p(0:n-1))
+                Permutation.Apply(S.pinv, x, result, m);
+            }
+            else
+            {
+                // x(0:m-1) = b(p(0:m-1)
+                Permutation.ApplyInverse(S.pinv, input, x, n);
+
+                // Apply Householder reflection to x.
+                for (int k = 0; k < m; k++)
+                {
+                    ApplyHouseholder(Q, k, beta[k], x);
+                }
+
+                SolverHelper.SolveUpper(R, x); // x = R\x
+
+                // b(q(0:n-1)) = x(0:n-1)
+                Permutation.ApplyInverse(S.q, x, result, m);
+            }
+        }
+
         /// <summary>
         /// Create a Householder reflection [v,beta,s]=house(x), overwrite x with v,
         /// where (I-beta*v*v')*x = s*e1 and e1 = [1 0 ... 0]'.
