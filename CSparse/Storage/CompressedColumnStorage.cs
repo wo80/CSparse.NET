@@ -586,7 +586,7 @@ namespace CSparse.Storage
                 throw new ArgumentException(Resources.InvalidDimensions, "target");
             }
 
-            if (perm.Length != rows)
+            if (perm.Length < rows)
             {
                 throw new ArgumentException("Invalid permutation length.", "perm");
             }
@@ -626,7 +626,7 @@ namespace CSparse.Storage
                 throw new ArgumentException(Resources.InvalidDimensions, "target");
             }
 
-            if (perm.Length != columns)
+            if (perm.Length < columns)
             {
                 throw new ArgumentException("Invalid permutation length.", "perm");
             }
