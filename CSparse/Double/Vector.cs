@@ -20,10 +20,10 @@ namespace CSparse.Double
         /// <summary>
         /// Copy one vector to another.
         /// </summary>
+        /// <param name="n">Number of values to copy.</param>
         /// <param name="src">The source array.</param>
         /// <param name="dst">The destination array.</param>
-        /// <param name="n">Number of values to copy.</param>
-        public static void Copy(double[] src, double[] dst, int n)
+        public static void Copy(int n, double[] src, double[] dst)
         {
             Buffer.BlockCopy(src, 0, dst, 0, n * Constants.SizeOfDouble);
         }
@@ -66,13 +66,20 @@ namespace CSparse.Double
         /// <summary>
         /// Computes the dot product of two vectors.
         /// </summary>
+        [Obsolete("Use DotProduct(n, x, y).")]
         public static double DotProduct(double[] x, double[] y)
         {
-            int length = x.Length;
+            return DotProduct(x.Length, x, y);
+        }
 
+        /// <summary>
+        /// Computes the dot product of two vectors.
+        /// </summary>
+        public static double DotProduct(int n, double[] x, double[] y)
+        {
             double result = 0.0;
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < n; i++)
             {
                 result += x[i] * y[i];
             }
@@ -83,26 +90,40 @@ namespace CSparse.Double
         /// <summary>
         /// Computes the pointwise product of two vectors.
         /// </summary>
-        public static void PointwiseMultiply(double[] x, double[] y, double[] z)
+        [Obsolete("Use PointwiseMultiply(n, x, y, target).")]
+        public static void PointwiseMultiply(double[] x, double[] y, double[] target)
         {
-            int length = x.Length;
+            PointwiseMultiply(x.Length, x, y, target);
+        }
 
-            for (int i = 0; i < length; i++)
+        /// <summary>
+        /// Computes the pointwise product of two vectors.
+        /// </summary>
+        public static void PointwiseMultiply(int n, double[] x, double[] y, double[] target)
+        {
+            for (int i = 0; i < n; i++)
             {
-                z[i] = x[i] * y[i];
+                target[i] = x[i] * y[i];
             }
         }
 
         /// <summary>
         /// Computes the norm of a vector, sqrt( x' * x ).
         /// </summary>
+        [Obsolete("Use Norm(n, x).")]
         public static double Norm(double[] x)
         {
-            int length = x.Length;
+            return Norm(x.Length, x);
+        }
 
+        /// <summary>
+        /// Computes the norm of a vector, sqrt( x' * x ).
+        /// </summary>
+        public static double Norm(int n, double[] x)
+        {
             double result = 0.0;
 
-            for (int i = 0; i < length; ++i)
+            for (int i = 0; i < n; ++i)
             {
                 result += x[i] * x[i];
             }
@@ -113,13 +134,20 @@ namespace CSparse.Double
         /// <summary>
         /// Computes the norm of a vector avoiding overflow, sqrt( x' * x ).
         /// </summary>
+        [Obsolete("Use NormRobust(n, x).")]
         public static double NormRobust(double[] x)
         {
-            int length = x.Length;
+            return NormRobust(x.Length, x);
+        }
 
+        /// <summary>
+        /// Computes the norm of a vector avoiding overflow, sqrt( x' * x ).
+        /// </summary>
+        public static double NormRobust(int n, double[] x)
+        {
             double scale = 0.0, ssq = 1.0;
 
-            for (int i = 0; i < length; ++i)
+            for (int i = 0; i < n; ++i)
             {
                 if (x[i] != 0.0)
                 {
@@ -140,41 +168,96 @@ namespace CSparse.Double
         }
 
         /// <summary>
-        /// Scales a vector by a given factor, x = alpha * x.
+        /// Scales a vector by a given factor, x = a * x.
         /// </summary>
-        public static void Scale(double alpha, double[] x)
+        public static void Scale(double a, double[] x)
         {
             int length = x.Length;
 
             for (int i = 0; i < length; i++)
             {
-                x[i] *= alpha;
+                x[i] *= a;
             }
         }
 
         /// <summary>
-        /// Add a scaled vector to another vector, y = y + alpha * x.
+        /// Scales a vector by a given factor, target = a * x.
         /// </summary>
-        public static void Axpy(double alpha, double[] x, double[] y)
+        public static void Scale(int n, double a, double[] x, double[] target)
         {
-            int length = x.Length;
-
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < n; i++)
             {
-                y[i] += alpha * x[i];
+                target[i] = a * x[i];
             }
         }
 
         /// <summary>
-        /// Add two scaled vectors, z = alpha * x + beta * y.
+        /// Add a scaled vector to another vector, y = a * x + y.
         /// </summary>
-        public static void Add(double alpha, double[] x, double beta, double[] y, double[] z)
+        public static void Axpy(double a, double[] x, double[] y)
         {
             int length = x.Length;
 
             for (int i = 0; i < length; i++)
             {
-                z[i] = alpha * x[i] + beta * y[i];
+                y[i] += a * x[i];
+            }
+        }
+
+        /// <summary>
+        /// Add two vectors, z = a * x + b * y.
+        /// </summary>
+        public static void Add(double a, double[] x, double b, double[] y, double[] target)
+        {
+            int length = x.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                target[i] = a * x[i] + b * y[i];
+            }
+        }
+
+        /// <summary>
+        /// Add two vectors, target = a * x + y.
+        /// </summary>
+        public static void Add(int n, double a, double[] x, double[] y, double[] target)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                target[i] = a * x[i] + y[i];
+            }
+        }
+
+        /// <summary>
+        /// Add two vectors, target = a * x + b * y.
+        /// </summary>
+        public static void Add(int n, double a, double[] x, double b, double[] y, double[] target)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                target[i] = a * x[i] + b * y[i];
+            }
+        }
+
+        /// <summary>
+        /// Add three vectors, target = a * x + b * y + z.
+        /// </summary>
+        public static void Add(int n, double a, double[] x, double b, double[] y, double[] z, double[] target)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                target[i] = a * x[i] + b * y[i] + z[i];
+            }
+        }
+
+        /// <summary>
+        /// Add three vectors, target = a * x + b * y + c * z.
+        /// </summary>
+        public static void Add(int n, double a, double[] x, double b, double[] y, double c, double[] z, double[] target)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                target[i] = a * x[i] + b * y[i] + c * z[i];
             }
         }
     }

@@ -21,10 +21,10 @@ namespace CSparse.Complex
         /// <summary>
         /// Copy one vector to another.
         /// </summary>
+        /// <param name="n">Number of values to copy.</param>
         /// <param name="src">The source array.</param>
         /// <param name="dst">The destination array.</param>
-        /// <param name="n">Number of values to copy.</param>
-        public static void Copy(Complex[] src, Complex[] dst, int n)
+        public static void Copy(int n, Complex[] src, Complex[] dst)
         {
             Array.Copy(src, dst, n);
         }
@@ -67,13 +67,20 @@ namespace CSparse.Complex
         /// <summary>
         /// Computes the dot product of two vectors.
         /// </summary>
+        [Obsolete("Use DotProduct(n, x, y).")]
         public static Complex DotProduct(Complex[] x, Complex[] y)
         {
-            int length = x.Length;
+            return DotProduct(x.Length, x, y);
+        }
 
+        /// <summary>
+        /// Computes the dot product of two vectors.
+        /// </summary>
+        public static Complex DotProduct(int n, Complex[] x, Complex[] y)
+        {
             Complex result = 0.0;
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < n; i++)
             {
                 result += Complex.Conjugate(x[i]) * y[i];
             }
@@ -84,26 +91,40 @@ namespace CSparse.Complex
         /// <summary>
         /// Computes the pointwise product of two vectors.
         /// </summary>
-        public static void PointwiseMultiply(Complex[] x, Complex[] y, Complex[] z)
+        [Obsolete("Use PointwiseMultiply(n, x, y, target).")]
+        public static void PointwiseMultiply(Complex[] x, Complex[] y, Complex[] target)
         {
-            int length = x.Length;
+            PointwiseMultiply(x.Length, x, y, target);
+        }
 
-            for (int i = 0; i < length; i++)
+        /// <summary>
+        /// Computes the pointwise product of two vectors.
+        /// </summary>
+        public static void PointwiseMultiply(int n, Complex[] x, Complex[] y, Complex[] z)
+        {
+            for (int i = 0; i < n; i++)
             {
                 z[i] = x[i] * y[i];
             }
         }
 
         /// <summary>
+        /// Computes the norm of a vector, sqrt( x' * x ).
+        /// </summary>
+        [Obsolete("Use Norm(n, x).")]
+        public static double Norm(Complex[] x)
+        {
+            return Norm(x.Length, x);
+        }
+
+        /// <summary>
         /// Computes the norm of a vector.
         /// </summary>
-        public static double Norm(Complex[] x)
+        public static double Norm(int n, Complex[] x)
         {
             double re, im, sum = 0.0;
 
-            int length = x.Length;
-
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < n; i++)
             {
                 re = x[i].Real;
                 im = x[i].Imaginary;
@@ -116,13 +137,20 @@ namespace CSparse.Complex
         /// <summary>
         /// Computes the norm of a vector avoiding overflow, sqrt( x' * x ).
         /// </summary>
+        [Obsolete("Use NormRobust(n, x).")]
         public static double NormRobust(Complex[] x)
         {
-            int length = x.Length;
+            return NormRobust(x.Length, x);
+        }
 
+        /// <summary>
+        /// Computes the norm of a vector avoiding overflow, sqrt( x' * x ).
+        /// </summary>
+        public static double NormRobust(int n, Complex[] x)
+        {
             double scale = 0.0, ssq = 1.0;
 
-            for (int i = 0; i < length; ++i)
+            for (int i = 0; i < n; ++i)
             {
                 if (x[i] != 0.0)
                 {
@@ -143,41 +171,96 @@ namespace CSparse.Complex
         }
 
         /// <summary>
-        /// Scales a vector by a given factor, x = alpha * x.
+        /// Scales a vector by a given factor, x = a * x.
         /// </summary>
-        public static void Scale(Complex alpha, Complex[] x)
+        public static void Scale(Complex a, Complex[] x)
         {
             int length = x.Length;
 
             for (int i = 0; i < length; i++)
             {
-                x[i] *= alpha;
+                x[i] *= a;
             }
         }
 
         /// <summary>
-        /// Add a scaled vector to another vector, y = y + alpha * x.
+        /// Scales a vector by a given factor, target = a * x.
         /// </summary>
-        public static void Axpy(Complex alpha, Complex[] x, Complex[] y)
+        public static void Scale(int n, Complex a, Complex[] x, Complex[] target)
         {
-            int length = x.Length;
-
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < n; i++)
             {
-                y[i] += alpha * x[i];
+                target[i] = a * x[i];
             }
         }
 
         /// <summary>
-        /// Add two scaled vectors, z = alpha * x + beta * y.
+        /// Add a scaled vector to another vector, y = a * x + y.
         /// </summary>
-        public static void Add(Complex alpha, Complex[] x, Complex beta, Complex[] y, Complex[] z)
+        public static void Axpy(Complex a, Complex[] x, Complex[] y)
         {
             int length = x.Length;
 
             for (int i = 0; i < length; i++)
             {
-                z[i] = alpha * x[i] + beta * y[i];
+                y[i] += a * x[i];
+            }
+        }
+
+        /// <summary>
+        /// Add two scaled vectors, z = a * x + b * y.
+        /// </summary>
+        public static void Add(Complex a, Complex[] x, Complex b, Complex[] y, Complex[] target)
+        {
+            int length = x.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                target[i] = a * x[i] + b * y[i];
+            }
+        }
+
+        /// <summary>
+        /// Add two vectors, target = a * x + y.
+        /// </summary>
+        public static void Add(int n, Complex a, Complex[] x, Complex[] y, Complex[] target)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                target[i] = a * x[i] + y[i];
+            }
+        }
+
+        /// <summary>
+        /// Add two vectors, target = a * x + b * y.
+        /// </summary>
+        public static void Add(int n, Complex a, Complex[] x, Complex b, Complex[] y, Complex[] target)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                target[i] = a * x[i] + b * y[i];
+            }
+        }
+
+        /// <summary>
+        /// Add three vectors, target = a * x + b * y + z.
+        /// </summary>
+        public static void Add(int n, Complex a, Complex[] x, Complex b, Complex[] y, Complex[] z, Complex[] target)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                target[i] = a * x[i] + b * y[i] + z[i];
+            }
+        }
+
+        /// <summary>
+        /// Add three vectors, target = a * x + b * y + c * z.
+        /// </summary>
+        public static void Add(int n, Complex a, Complex[] x, Complex b, Complex[] y, Complex c, Complex[] z, Complex[] target)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                target[i] = a * x[i] + b * y[i] + c * z[i];
             }
         }
     }
