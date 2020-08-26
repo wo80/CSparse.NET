@@ -96,7 +96,7 @@ namespace CSparse
         /// </summary>
         /// <typeparam name="T">The type to return the value of 1.0 of.</typeparam>
         /// <returns>The value of <c>1.0</c> for type T.</returns>
-        public static T OneOf<T>()
+        public static T OneOf<T>() where T : struct
         {
             if (typeof(T) == typeof(double))
             {
@@ -116,7 +116,7 @@ namespace CSparse
         /// </summary>
         /// <typeparam name="T">The type to return the value of 0.0 of.</typeparam>
         /// <returns>The value of <c>0.0</c> for type T.</returns>
-        public static T ZeroOf<T>()
+        public static T ZeroOf<T>() where T : struct
         {
             return default;
         }
