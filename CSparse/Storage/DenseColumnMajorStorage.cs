@@ -566,6 +566,18 @@ namespace CSparse.Storage
             }
         }
 
+        /// <inheritdoc />
+        public override void EnumerateIndexed(Action<int, int, T> action)
+        {
+            for (int row = 0; row < rows; row++)
+            {
+                for (int column = 0; column < columns; column++)
+                {
+                    action(row, column, Values[(column * rows) + row]);
+                }
+            }
+        }
+
         private void CopySubMatrixTo(DenseColumnMajorStorage<T> target,
             int sourceRowIndex, int targetRowIndex, int rowCount,
             int sourceColumnIndex, int targetColumnIndex, int columnCount)

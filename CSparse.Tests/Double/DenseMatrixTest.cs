@@ -70,6 +70,21 @@ namespace CSparse.Tests.Double
 
         [TestCase(2, 2)]
         [TestCase(2, 3)]
+        public void TestEnumerateIndexed(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadDense(rows, columns);
+
+            var A = data.A;
+
+            double sum = 0;
+
+            A.EnumerateIndexed((i, j, a) => sum += a * a);
+
+            Assert.AreEqual(A.FrobeniusNorm(), Math.Sqrt(sum));
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
         public void TestGetRow(int rows, int columns)
         {
             var data = MatrixHelper.LoadDense(rows, columns);
@@ -290,6 +305,86 @@ namespace CSparse.Tests.Double
             CollectionAssert.AreEqual(A.Multiply(A).Values, A.ParallelMultiply(A).Values);
         }
 
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestUpperTrianlge(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadDense(rows, columns);
+
+            var A = data.A;
+            var L = A.UpperTriangle();
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    if (i <= j)
+                    {
+                        Assert.AreEqual(A.At(i, j), L.At(i, j));
+                    }
+                    else
+                    {
+                        Assert.AreEqual(0.0, L.At(i, j));
+                    }
+                }
+            }
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestLowerTrianlge(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadDense(rows, columns);
+
+            var A = data.A;
+            var L = A.LowerTriangle();
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    if (i >= j)
+                    {
+                        Assert.AreEqual(A.At(i, j), L.At(i, j));
+                    }
+                    else
+                    {
+                        Assert.AreEqual(0.0, L.At(i, j));
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void TestSubMatrix()
+        {
+            var A = DenseMatrix.OfRowMajor(3, 3, new double[]
+            {
+                1, 2, 3,
+                1, 2, 3,
+                1, 2, 3,
+            });
+
+            var B = A.SubMatrix(1, 2, 1, 2);
+
+            Assert.AreEqual(2, B.RowCount);
+            Assert.AreEqual(2, B.ColumnCount);
+
+            Assert.AreEqual(2.0, B.At(0, 0));
+            Assert.AreEqual(2.0, B.At(1, 0));
+            Assert.AreEqual(3.0, B.At(0, 1));
+            Assert.AreEqual(3.0, B.At(1, 1));
+
+            var C = A.SubMatrix(0, 3, 0, 1);
+
+            Assert.AreEqual(3, C.RowCount);
+            Assert.AreEqual(1, C.ColumnCount);
+
+            Assert.AreEqual(1.0, C.At(0, 0));
+            Assert.AreEqual(1.0, C.At(1, 0));
+            Assert.AreEqual(1.0, C.At(2, 0));
+        }
+
         #region Matrix creation
 
         [TestCase(2, 2)]
@@ -370,6 +465,18 @@ namespace CSparse.Tests.Double
             var denseData = MatrixHelper.LoadDense(rows, columns);
             var denseA = denseData.A;
             var denseB = DenseMatrix.OfColumnMajor(rows, columns, denseA.Values);
+
+            Assert.IsTrue(denseA.Equals(denseB));
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestOfRowMajor(int rows, int columns)
+        {
+            var denseData = MatrixHelper.LoadDense(rows, columns);
+            var denseA = denseData.A;
+            var denseAT = denseA.Transpose();
+            var denseB = DenseMatrix.OfRowMajor(rows, columns, denseAT.Values);
 
             Assert.IsTrue(denseA.Equals(denseB));
         }

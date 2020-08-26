@@ -204,6 +204,21 @@ namespace CSparse.Tests.Double
 
         [TestCase(2, 2)]
         [TestCase(2, 3)]
+        public void TestEnumerateIndexed(int rows, int columns)
+        {
+            var data = MatrixHelper.LoadSparse(rows, columns);
+
+            var A = data.A;
+
+            double sum = 0;
+
+            A.EnumerateIndexed((i, j, a) => sum += a * a);
+
+            Assert.AreEqual(A.FrobeniusNorm(), Math.Sqrt(sum));
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
         public void TestGetRow(int rows, int columns)
         {
             var data = MatrixHelper.LoadSparse(rows, columns);

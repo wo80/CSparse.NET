@@ -124,6 +124,12 @@ namespace CSparse
         /// <returns>Enumeration of tuples (i, j, a[i, j]).</returns>
         public abstract IEnumerable<Tuple<int, int, T>> EnumerateIndexed();
 
+        /// <summary>
+        /// Enumerates all values of the matrix.
+        /// </summary>
+        /// <param name="action">Action called for each entry (i, j, a[i, j]).</param>
+        public abstract void EnumerateIndexed(Action<int, int, T> action);
+
         /// <inheritdoc />
         public abstract void Multiply(T[] x, T[] y);
 

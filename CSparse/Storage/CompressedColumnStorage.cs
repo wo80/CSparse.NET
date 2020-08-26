@@ -535,6 +535,25 @@ namespace CSparse.Storage
             }
         }
 
+        /// <inheritdoc />
+        public override void EnumerateIndexed(Action<int, int, T> action)
+        {
+            int n = this.ColumnCount;
+
+            var ax = this.Values;
+            var ap = this.ColumnPointers;
+            var ai = this.RowIndices;
+
+            for (int i = 0; i < n; i++)
+            {
+                var end = ap[i + 1];
+                for (var j = ap[i]; j < end; j++)
+                {
+                    action(ai[j], i, ax[j]);
+                }
+            }
+        }
+
         /// <summary>
         /// Evaluates whether this matrix is symmetric.
         /// </summary>
