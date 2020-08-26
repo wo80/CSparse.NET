@@ -81,7 +81,7 @@ namespace CSparse.Tests.Complex
 
             A.Multiply(x, y);
 
-            Assert.IsTrue(Vector.Norm(y) == 0.0);
+            Assert.IsTrue(Vector.Norm(y.Length, y) == 0.0);
         }
 
         [TestCase(0, 0)]
@@ -90,7 +90,6 @@ namespace CSparse.Tests.Complex
         public void TestEmptyNorm(int rows, int columns)
         {
             var A = new SparseMatrix(rows, columns, 0);
-            var B = new SparseMatrix(rows, columns, 0);
 
             var l0 = A.InfinityNorm();
             var l1 = A.L1Norm();

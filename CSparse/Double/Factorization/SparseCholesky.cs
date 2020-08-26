@@ -20,7 +20,7 @@ namespace CSparse.Double.Factorization
         SymbolicFactorization S;
         CompressedColumnStorage<double> L;
 
-        double[] temp; // workspace
+        readonly double[] temp; // workspace
 
         #region Static methods
 

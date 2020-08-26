@@ -3,6 +3,9 @@ namespace CSparse.Complex
     using CSparse.Storage;
     using System.Numerics;
 
+    /// <summary>
+    /// Helper methods for solving triangular systems.
+    /// </summary>
     public static class SolverHelper
     {
         /// <summary>

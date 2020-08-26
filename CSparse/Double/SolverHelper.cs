@@ -2,6 +2,9 @@ namespace CSparse.Double
 {
     using CSparse.Storage;
 
+    /// <summary>
+    /// Helper methods for solving triangular systems.
+    /// </summary>
     public static class SolverHelper
     {
         /// <summary>

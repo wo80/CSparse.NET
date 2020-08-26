@@ -5,13 +5,44 @@ namespace CSparse.Factorization
     /// </summary>
     public class SymbolicFactorization
     {
-        public int[] pinv;     // inverse row perm. for QR, fill red. perm for Chol
-        public int[] q;        // fill-reducing column permutation for LU and QR
-        public int[] parent;   // elimination tree for Cholesky and QR
-        public int[] cp;       // column pointers for Cholesky, row counts for QR
-        public int[] leftmost; // leftmost[i] = min(find(A(i,:))), for QR
-        public int m2;         // # of rows for QR, after adding fictitious rows
-        public int lnz;    // # entries in L for LU or Cholesky; in V for QR
-        public int unz;    // # entries in U for LU; in R for QR
+        /// <summary>
+        /// inverse row perm. for QR, fill red. perm for Chol
+        /// </summary>
+        public int[] pinv;
+
+        /// <summary>
+        /// fill-reducing column permutation for LU and QR
+        /// </summary>
+        public int[] q;
+
+        /// <summary>
+        /// elimination tree for Cholesky and QR
+        /// </summary>
+        public int[] parent;
+
+        /// <summary>
+        /// column pointers for Cholesky, row counts for QR
+        /// </summary>
+        public int[] cp;
+
+        /// <summary>
+        /// leftmost[i] = min(find(A(i,:))), for QR
+        /// </summary>
+        public int[] leftmost;
+
+        /// <summary>
+        /// # of rows for QR, after adding fictitious rows
+        /// </summary>
+        public int m2;
+
+        /// <summary>
+        /// # entries in L for LU or Cholesky; in V for QR
+        /// </summary>
+        public int lnz;
+
+        /// <summary>
+        /// # entries in U for LU; in R for QR
+        /// </summary>
+        public int unz;
     }
 }

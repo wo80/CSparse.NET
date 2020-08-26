@@ -294,7 +294,6 @@ namespace CSparse.Factorization
         {
             int t, j, k, nz = 0;
 
-            int m = A.RowCount;
             int n = A.ColumnCount;
 
             var ap = A.ColumnPointers;

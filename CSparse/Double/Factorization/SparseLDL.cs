@@ -24,13 +24,18 @@ namespace CSparse.Double.Factorization
         CompressedColumnStorage<double> L;
         double[] D;
 
-        int n;
+        readonly int n;
 
+        /// <summary>
+        /// Creates a sparse LDL' factorization.
+        /// </summary>
+        /// <param name="A">Column-compressed symmetric matrix.</param>
+        /// <param name="order">Ordering method to use (natural or A+A').</param>
         public SparseLDL(CompressedColumnStorage<double> A, ColumnOrdering order)
         {
             if ((int)order > 1) // AtA ordering not allowed
             {
-                throw new ArgumentException("order");
+                throw new ArgumentException(nameof(order));
             }
 
             this.n = A.ColumnCount;

@@ -24,20 +24,17 @@ namespace CSparse
         /// </summary>
         protected static readonly T One = Helper.OneOf<T>();
 
+        /// <summary>The number of rows.</summary>
         protected readonly int rows;
+
+        /// <summary>The number of columns.</summary>
         protected readonly int columns;
 
         /// <inheritdoc />
-        public int RowCount
-        {
-            get { return rows; }
-        }
+        public int RowCount => rows;
 
         /// <inheritdoc />
-        public int ColumnCount
-        {
-            get { return columns; }
-        }
+        public int ColumnCount => columns;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix{T}"/> class.

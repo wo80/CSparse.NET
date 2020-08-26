@@ -3,6 +3,9 @@ namespace CSparse
     using CSparse.Storage;
     using System;
 
+    /// <summary>
+    /// Public helper methods.
+    /// </summary>
     public static class Helper
     {
         /// <summary>
