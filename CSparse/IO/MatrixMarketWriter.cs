@@ -4,6 +4,7 @@ namespace CSparse.IO
     using System.Globalization;
     using System.IO;
     using System.Numerics;
+    using System.Text;
     using CSparse.Storage;
 
     /// <summary>
@@ -18,12 +19,13 @@ namespace CSparse.IO
         /// </summary>
         /// <param name="filePath">The file path.</param>
         /// <param name="matrix">The matrix to write.</param>
-        public static void WriteMatrix<T>(string filePath, Matrix<T> matrix)
+        /// <param name="symmetric">A value indicating whether the matrix is symmetric.</param>
+        public static void WriteMatrix<T>(string filePath, Matrix<T> matrix, bool symmetric = false)
             where T : struct, IEquatable<T>, IFormattable
         {
             using (var stream = File.Create(filePath))
             {
-                using (var writer = new StreamWriter(stream))
+                using (var writer = new StreamWriter(stream, Encoding.ASCII))
                 {
                     WriteMatrix(writer, matrix);
                 }
@@ -35,10 +37,11 @@ namespace CSparse.IO
         /// </summary>
         /// <param name="stream">The stream to write to.</param>
         /// <param name="matrix">The matrix to write.</param>
-        public static void WriteMatrix<T>(Stream stream, Matrix<T> matrix)
+        /// <param name="symmetric">A value indicating whether the matrix is symmetric.</param>
+        public static void WriteMatrix<T>(Stream stream, Matrix<T> matrix, bool symmetric = false)
             where T : struct, IEquatable<T>, IFormattable
         {
-            using (var writer = new StreamWriter(stream))
+            using (var writer = new StreamWriter(stream, Encoding.ASCII))
             {
                 WriteMatrix(writer, matrix);
             }
@@ -49,7 +52,8 @@ namespace CSparse.IO
         /// </summary>
         /// <param name="writer">The stream to write to.</param>
         /// <param name="matrix">The matrix to write.</param>
-        public static void WriteMatrix<T>(StreamWriter writer, Matrix<T> matrix)
+        /// <param name="symmetric">A value indicating whether the matrix is symmetric.</param>
+        public static void WriteMatrix<T>(StreamWriter writer, Matrix<T> matrix, bool symmetric = false)
             where T : struct, IEquatable<T>, IFormattable
         {
             var complex = typeof(T) == typeof(Complex);
@@ -58,16 +62,27 @@ namespace CSparse.IO
             var sparse = matrix as CompressedColumnStorage<T>;
             if (sparse != null)
             {
-                writer.WriteLine("%%MatrixMarket matrix coordinate {0} general", complex ? "complex" : "real");
+                string sym = symmetric ? (complex ? "hermitian" : "symmetric") : "general";
+
+                writer.WriteLine("%%MatrixMarket matrix coordinate {0} {1}", complex ? "complex" : "real", sym);
                 writer.WriteLine("{0} {1} {2}", sparse.RowCount, sparse.ColumnCount, sparse.NonZerosCount);
                 for (int column = 0; column < sparse.ColumnCount; column++)
                 {
                     var endIndex = sparse.ColumnPointers[column + 1];
                     for (var j = sparse.ColumnPointers[column]; j < endIndex; j++)
                     {
-                        writer.WriteLine("{0} {1} {2}", sparse.RowIndices[j] + 1, column + 1, format(sparse.Values[j]));
+                        int row = sparse.RowIndices[j];
+
+                        if (symmetric && row < column)
+                        {
+                            // Skip upper part.
+                            continue;
+                        }
+
+                        writer.WriteLine("{0} {1} {2}", row + 1, column + 1, format(sparse.Values[j]));
                     }
                 }
+                writer.Flush();
 
                 return;
             }
@@ -81,6 +96,7 @@ namespace CSparse.IO
                 {
                     writer.WriteLine(format(value));
                 }
+                writer.Flush();
 
                 return;
             }

@@ -12,9 +12,11 @@
     <None Remove="Complex\Data\general-40x40.mat" />
     <None Remove="Complex\Data\hermitian-40-spd.mat" />
     <None Remove="Complex\Data\hermitian-40.mat" />
+    <None Remove="Double\Data\bcspwr01.mtx" />
     <None Remove="Double\Data\general-20x40.mat" />
     <None Remove="Double\Data\general-40x20.mat" />
     <None Remove="Double\Data\general-40x40.mat" />
+    <None Remove="Double\Data\LFAT5.mtx" />
     <None Remove="Double\Data\symmetric-40-spd.mat" />
     <None Remove="Double\Data\symmetric-40.mat" />
     <None Remove="Double\Data\test-data-dense-2x2.txt" />
@@ -27,9 +29,11 @@
     <EmbeddedResource Include="Complex\Data\general-40x40.mat" />
     <EmbeddedResource Include="Complex\Data\hermitian-40-spd.mat" />
     <EmbeddedResource Include="Complex\Data\hermitian-40.mat" />
+    <EmbeddedResource Include="Double\Data\bcspwr01.mtx" />
     <EmbeddedResource Include="Double\Data\general-20x40.mat" />
     <EmbeddedResource Include="Double\Data\general-40x20.mat" />
     <EmbeddedResource Include="Double\Data\general-40x40.mat" />
+    <EmbeddedResource Include="Double\Data\LFAT5.mtx" />
     <EmbeddedResource Include="Double\Data\symmetric-40-spd.mat" />
     <EmbeddedResource Include="Double\Data\symmetric-40.mat" />
     <EmbeddedResource Include="Double\Data\test-data-dense-2x2.txt" />
