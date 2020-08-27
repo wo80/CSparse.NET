@@ -22,6 +22,12 @@ namespace CSparse
         /// </summary>
         public const double EqualsThreshold = 1e-12;
 
+
+        /// <summary>
+        /// Machine epsilon for double precision.
+        /// </summary>
+        public const double MachineEpsilon = 2.2204460492503131e-16;
+
         /// <summary>
         /// The size of a Complex in bytes (should be 2 * SizeOfDouble).
         /// </summary>
