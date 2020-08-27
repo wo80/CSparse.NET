@@ -3,6 +3,7 @@ namespace CSparse.Double.Factorization
 {
     using CSparse.Factorization;
     using CSparse.Ordering;
+    using CSparse.Properties;
     using CSparse.Storage;
     using System;
 
@@ -25,26 +26,81 @@ namespace CSparse.Double.Factorization
         double[] D;
 
         readonly int n;
+        readonly double[] temp; // solve workspace
+
+        #region Static methods
 
         /// <summary>
         /// Creates a sparse LDL' factorization.
         /// </summary>
-        /// <param name="A">Column-compressed symmetric matrix.</param>
+        /// <param name="A">Column-compressed, symmetric matrix (may be indefinite).</param>
         /// <param name="order">Ordering method to use (natural or A+A').</param>
-        public SparseLDL(CompressedColumnStorage<double> A, ColumnOrdering order)
+        public static SparseLDL Create(CompressedColumnStorage<double> A, ColumnOrdering order)
         {
-            if ((int)order > 1) // AtA ordering not allowed
+            return Create(A, order, null);
+        }
+
+        /// <summary>
+        /// Creates a sparse LDL' factorization.
+        /// </summary>
+        /// <param name="A">Column-compressed, symmetric matrix (may be indefinite).</param>
+        /// <param name="order">Ordering method to use (natural or A+A').</param>
+        /// <param name="progress">Report progress (range from 0.0 to 1.0).</param>
+        public static SparseLDL Create(CompressedColumnStorage<double> A, ColumnOrdering order,
+            IProgress<double> progress)
+        {
+            if ((int)order > 1)
             {
-                throw new ArgumentException(nameof(order));
+                throw new ArgumentException(Resources.InvalidColumnOrdering, "order");
             }
 
-            this.n = A.ColumnCount;
+            return Create(A, AMD.Generate(A, order), progress);
+        }
+
+        /// <summary>
+        /// Creates a sparse LDL' factorization.
+        /// </summary>
+        /// <param name="A">Column-compressed, symmetric matrix (may be indefinite).</param>
+        /// <param name="p">Permutation.</param>
+        public static SparseLDL Create(CompressedColumnStorage<double> A, int[] p)
+        {
+            return Create(A, p, null);
+        }
+
+        /// <summary>
+        /// Creates a sparse LDL' factorization.
+        /// </summary>
+        /// <param name="A">Column-compressed, symmetric matrix (may be indefinite).</param>
+        /// <param name="p">Permutation.</param>
+        /// <param name="progress">Report progress (range from 0.0 to 1.0).</param>
+        public static SparseLDL Create(CompressedColumnStorage<double> A, int[] p,
+            IProgress<double> progress)
+        {
+            Check.NotNull(A, "A");
+            Check.NotNull(p, "p");
+
+            int n = A.ColumnCount;
+
+            Check.SquareMatrix(A, "A");
+            Check.Permutation(p, n, "p");
+
+            var C = new SparseLDL(n);
 
             // Ordering and symbolic analysis
-            SymbolicAnalysis(order, A);
-            
-            // Numeric Cholesky factorization
-            Factorize(A);
+            C.SymbolicAnalysis(A, p);
+
+            // Numeric LDL' factorization
+            C.Factorize(A, progress);
+
+            return C;
+        }
+
+        #endregion
+
+        private SparseLDL(int n)
+        {
+            this.n = n;
+            this.temp = new double[n];
         }
 
         /// <summary>
@@ -66,7 +122,7 @@ namespace CSparse.Double.Factorization
 
             if (result == null) throw new ArgumentNullException(nameof(result));
 
-            double[] x = new double[n];
+            var x = temp;
 
             Permutation.ApplyInverse(S.pinv, input, x, n); // x = P*b
 
@@ -110,9 +166,9 @@ namespace CSparse.Double.Factorization
         /// <summary>
         /// Ordering and symbolic analysis for a LDL' factorization.
         /// </summary>
-        /// <param name="order">Column ordering.</param>
         /// <param name="A">Matrix to factorize.</param>
-        private void SymbolicAnalysis(ColumnOrdering order, CompressedColumnStorage<double> A)
+        /// <param name="P">Permutation.</param>
+        private void SymbolicAnalysis(CompressedColumnStorage<double> A, int[] P)
         {
             int n = A.ColumnCount;
 
@@ -121,8 +177,6 @@ namespace CSparse.Double.Factorization
             var ap = A.ColumnPointers;
             var ai = A.RowIndices;
 
-            // P = amd(A+A') or natural
-            var P = AMD.Generate(A, order);
             var Pinv = Permutation.Invert(P);
 
             // Output: column pointers and elimination tree.
@@ -177,7 +231,7 @@ namespace CSparse.Double.Factorization
         /// <summary>
         /// Compute the numeric LDL' factorization of PAP'.
         /// </summary>
-        void Factorize(CompressedColumnStorage<double> A)
+        void Factorize(CompressedColumnStorage<double> A, IProgress<double> progress)
         {
             int n = A.ColumnCount;
 
@@ -207,8 +261,22 @@ namespace CSparse.Double.Factorization
             double yi, l_ki;
             int i, k, p, kk, p2, len, top;
 
+            double current = 0.0;
+            double step = n / 100.0;
+
             for (k = 0; k < n; k++)
             {
+                // Progress reporting.
+                if (k >= current)
+                {
+                    current += step;
+
+                    if (progress != null)
+                    {
+                        progress.Report(k / (double)n);
+                    }
+                }
+
                 // compute nonzero Pattern of kth row of L, in topological order
                 y[k] = 0.0; // Y(0:k) is now all zero
                 top = n; // stack for pattern is empty

@@ -21,7 +21,7 @@
             var b = Helper.Multiply(A, x);
             var r = Vector.Clone(b);
 
-            var ldl = new SparseLDL(A, ColumnOrdering.MinimumDegreeAtPlusA);
+            var ldl = SparseLDL.Create(A, ColumnOrdering.MinimumDegreeAtPlusA);
 
             // Solve Ax = b.
             ldl.Solve(b, x);
@@ -43,7 +43,7 @@
             var b = Helper.Multiply(A, x);
             var r = Vector.Clone(b);
 
-            var ldl = new SparseLDL(A, ColumnOrdering.MinimumDegreeAtPlusA);
+            var ldl = SparseLDL.Create(A, ColumnOrdering.MinimumDegreeAtPlusA);
 
             // Solve Ax = b.
             ldl.Solve(b, x);
