@@ -22,8 +22,15 @@ namespace CSparse
             return ToCompressedColumnStorage_(storage, cleanup);
         }
 
+        /// <summary>
+        /// Convert a coordinate storage to compressed sparse column (CSC) format.
+        /// </summary>
+        /// <param name="storage">Coordinate storage.</param>
+        /// <param name="cleanup">Remove and sum duplicate entries.</param>
+        /// <param name="inplace">Do the conversion in place (re-using the coordinate storage arrays).</param>
+        /// <returns>Compressed sparse column storage.</returns>
         internal static CompressedColumnStorage<T> ToCompressedColumnStorage_<T>(CoordinateStorage<T> storage,
-                bool cleanup = true) where T : struct, IEquatable<T>, IFormattable
+                bool cleanup = true, bool inplace = false) where T : struct, IEquatable<T>, IFormattable
         {
             int nrows = storage.RowCount;
             int ncols = storage.ColumnCount;
@@ -32,35 +39,53 @@ namespace CSparse
             var rowind = storage.RowIndices;
             var colind = storage.ColumnIndices;
 
-            int p, k, nz = storage.NonZerosCount;
-
-            var columnPointers = new int[ncols + 1];
-            var columnCounts = new int[ncols];
-
-            for (k = 0; k < nz; k++)
-            {
-                // Count columns
-                columnCounts[colind[k]]++;
-            }
-
-            // Get row pointers
-            int valueCount = Helper.CumulativeSum(columnPointers, columnCounts, ncols);
-
             var result = CompressedColumnStorage<T>.Create(nrows, ncols);
 
-            var rowIndices = new int[valueCount];
-            var storageValues = new T[valueCount];
+            int nz = storage.NonZerosCount;
 
-            for (k = 0; k < nz; k++)
+            if (inplace)
             {
-                p = columnCounts[colind[k]]++;
-                rowIndices[p] = rowind[k];
-                storageValues[p] = values[k];
-            }
+                var work = new int[ncols + 1];
 
-            result.RowIndices = rowIndices;
-            result.ColumnPointers = columnPointers;
-            result.Values = storageValues;
+                ConvertInPlace(ncols, nz, values, rowind, colind, work);
+
+                Array.Copy(colind, work, ncols + 1);
+
+                result.ColumnPointers = work;
+                result.RowIndices = rowind;
+                result.Values = values;
+
+                // Make sure the data can't be accessed through the coordinate storage.
+                storage.Invalidate();
+            }
+            else
+            {
+                var columnPointers = new int[ncols + 1];
+                var columnCounts = new int[ncols];
+
+                for (int k = 0; k < nz; k++)
+                {
+                    // Count columns
+                    columnCounts[colind[k]]++;
+                }
+
+                // Get column pointers
+                int valueCount = Helper.CumulativeSum(columnPointers, columnCounts, ncols);
+
+                var rowIndices = new int[valueCount];
+                var storageValues = new T[valueCount];
+
+                for (int k = 0; k < nz; k++)
+                {
+                    int p = columnCounts[colind[k]]++;
+                    rowIndices[p] = rowind[k];
+                    storageValues[p] = values[k];
+                }
+
+                result.RowIndices = rowIndices;
+                result.ColumnPointers = columnPointers;
+                result.Values = storageValues;
+            }
 
             Helper.SortIndices(result);
 
@@ -70,6 +95,97 @@ namespace CSparse
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Converts a matrix stored in coordinate format into the compressed sparse
+        /// column (CSC) format. The conversion is done in place.
+        /// </summary>
+        /// <param name="columns">Number of columns.</param>
+        /// <param name="nz">Number of nonzero elements.</param>
+        /// <param name="values">Nonzero elements (size nz).</param>
+        /// <param name="colind">Column indices (size nz).</param>
+        /// <param name="rowind">Row indices (size nz).</param>
+        /// <param name="work">Work array (size n+1).</param>
+        /// <remarks>
+        /// On return, the coordinate storage input arrays contain the compressed sparse
+        /// column data structure for the resulting matrix. The <paramref name="work"/>
+        /// array contains a copy of the column pointer.
+        /// 
+        /// The entries of the output matrix are not sorted (the row indices in each
+        /// column are not in increasing order).
+        /// </remarks>
+        private static void ConvertInPlace<T>(int columns, int nz, T[] values, int[] rowind, int[] colind, int[] work)
+            where T : struct, IEquatable<T>, IFormattable
+        {
+            int i, j;
+            int pos, inext, jnext;
+            T t = default;
+            T tnext = default;
+
+            // Count column entries.
+            for (i = 0; i < nz; i++)
+            {
+                work[colind[i] + 1]++;
+            }
+
+            // Cumulative sum.
+            work[0] = 0;
+            for (i = 1; i < columns + 1; i++)
+            {
+                work[i] = work[i - 1] + work[i];
+            }
+
+            int init = 0;
+            int k = 0;
+
+            // Start chasing process.
+            while (init < nz)
+            {
+                t = values[init];
+                i = rowind[init];
+                j = colind[init];
+
+                colind[init] = -1;
+
+                while (k < nz)
+                {
+                    k++;
+
+                    // Current column number is j. Determine where to go.
+                    pos = work[j];
+
+                    // Save the chased element.
+                    tnext = values[pos];
+                    inext = rowind[pos];
+                    jnext = colind[pos];
+
+                    // Then occupy its location.
+                    values[pos] = t;
+                    rowind[pos] = i;
+
+                    // Update pointer information for next element to come in column j.
+                    work[j] = pos + 1;
+
+                    if (colind[pos] < 0) break;
+
+                    // Determine next element to be chased.
+                    t = tnext;
+                    i = inext;
+                    j = jnext;
+
+                    colind[pos] = -1;
+                }
+
+                while (++init < nz && colind[init] < 0) ;
+
+                // Restart chasing.
+            }
+
+            colind[0] = 0;
+
+            // Copy column pointers.
+            Array.Copy(work, 0, colind, 1, columns);
         }
 
         /// <summary>

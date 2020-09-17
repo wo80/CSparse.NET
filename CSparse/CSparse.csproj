@@ -11,17 +11,19 @@
     <Company />
     <Copyright>Copyright Christian Woltering © 2012-2020</Copyright>
     <Authors>Christian Woltering</Authors>
-    <AssemblyVersion>3.4.6.0</AssemblyVersion>
-    <FileVersion>3.4.6.0</FileVersion>
+    <AssemblyVersion>3.4.7.0</AssemblyVersion>
+    <FileVersion>3.4.7.0</FileVersion>
     <PackageTags>math sparse matrix lu cholesky qr decomposition factorization </PackageTags>
-    <Version>3.4.6</Version>
+    <Version>3.4.7</Version>
     <AssemblyName>CSparse</AssemblyName>
     <RootNamespace>CSparse</RootNamespace>
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/wo80/CSparse.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/wo80/CSparse.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Add SolveTranspose method for SparseQR.</PackageReleaseNotes>
+    <PackageReleaseNotes>* BREAKING: make SparseLDL constructor private (use static create methods instead).
+* Add complex version of SparseLDL.
+* Add matrix.EnumerateIndexed(action) overload.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

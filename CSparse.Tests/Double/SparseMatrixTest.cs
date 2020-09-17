@@ -481,6 +481,33 @@ namespace CSparse.Tests.Double
 
         [TestCase(2, 2)]
         [TestCase(2, 3)]
+        public void TestOfIndexed_Coo(int rows, int columns)
+        {
+            var sparseData = MatrixHelper.LoadSparse(rows, columns);
+
+            var sparseA = sparseData.A;
+
+            var coo = new CoordinateStorage<double>(rows, columns, sparseA.NonZerosCount);
+
+            foreach (var a in sparseA.EnumerateIndexed())
+            {
+                coo.At(a.Item1, a.Item2, a.Item3);
+            }
+
+            var sparseB = SparseMatrix.OfIndexed(coo);
+
+            Assert.IsTrue(sparseA.Equals(sparseB));
+
+            var sparseC = SparseMatrix.OfIndexed(coo, true);
+
+            Assert.IsTrue(sparseA.Equals(sparseC));
+            Assert.IsNull(coo.Values);
+            Assert.IsNull(coo.RowIndices);
+            Assert.IsNull(coo.ColumnIndices);
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
         public void TestOfColumnMajor(int rows, int columns)
         {
             var denseData = MatrixHelper.LoadDense(rows, columns);
@@ -490,6 +517,53 @@ namespace CSparse.Tests.Double
             var sparseA = sparseData.A;
 
             var sparseB = SparseMatrix.OfColumnMajor(rows, columns, denseA.Values);
+
+            Assert.IsTrue(sparseA.Equals(sparseB));
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestOfArray(int rows, int columns)
+        {
+            var sparseData = MatrixHelper.LoadSparse(rows, columns);
+
+            var sparseA = sparseData.A;
+
+            var array = new double[rows, columns];
+
+            foreach (var a in sparseA.EnumerateIndexed())
+            {
+                array[a.Item1, a.Item2] = a.Item3;
+            }
+
+            var sparseB = SparseMatrix.OfArray(array);
+
+            Assert.IsTrue(sparseA.Equals(sparseB));
+        }
+
+        [TestCase(2, 2)]
+        [TestCase(2, 3)]
+        public void TestOfJaggedArray(int rows, int columns)
+        {
+            var sparseData = MatrixHelper.LoadSparse(rows, columns);
+
+            var sparseA = sparseData.A;
+
+            var array = new double[rows][];
+
+            for (int i = 0; i < rows; i++)
+            {
+                var values = new double[columns];
+
+                for (int j = 0; j < columns; j++)
+                {
+                    values[j] = sparseA.At(i, j);
+                }
+
+                array[i] = values;
+            }
+
+            var sparseB = SparseMatrix.OfJaggedArray(array);
 
             Assert.IsTrue(sparseA.Equals(sparseB));
         }

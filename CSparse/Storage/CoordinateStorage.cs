@@ -211,5 +211,12 @@ namespace CSparse.Storage
 
             return true;
         }
+
+        internal void Invalidate()
+        {
+            rowind = null;
+            colind = null;
+            values = null;
+        }
     }
 }

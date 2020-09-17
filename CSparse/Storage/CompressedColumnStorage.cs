@@ -138,9 +138,9 @@ namespace CSparse.Storage
         /// <summary>
         /// Create a new sparse matrix as a copy of the given coordinate storage.
         /// </summary>
-        public static CompressedColumnStorage<T> OfIndexed(CoordinateStorage<T> coordinateStorage)
+        public static CompressedColumnStorage<T> OfIndexed(CoordinateStorage<T> coordinateStorage, bool inplace = false)
         {
-            return Converter.ToCompressedColumnStorage_(coordinateStorage);
+            return Converter.ToCompressedColumnStorage_(coordinateStorage, true, inplace);
         }
 
         /// <summary>
