@@ -22,52 +22,34 @@ namespace CSparse.Storage
         private T[] values; // Numerical values (size nzmax)
 
         /// <summary>
-        /// Row indices (size = NonZerosCount)
+        /// Row indices (size = nzmax, may be larger than non-zeros count).
         /// </summary>
-        public int[] RowIndices
-        {
-            get { return rowind; }
-        }
+        public int[] RowIndices => rowind;
 
         /// <summary>
-        /// Column indices (size = NonZerosCount)
+        /// Column indices (size = nzmax, may be larger than non-zeros count).
         /// </summary>
-        public int[] ColumnIndices
-        {
-            get { return colind; }
-        }
+        public int[] ColumnIndices => colind;
 
         /// <summary>
-        /// Numerical values (size = NonZerosCount)
+        /// Numerical values (size = nzmax, may be larger than non-zeros count).
         /// </summary>
-        public T[] Values
-        {
-            get { return values; }
-        }
+        public T[] Values => values;
 
         /// <summary>
         /// Gets the number of rows.
         /// </summary>
-        public int RowCount
-        {
-            get { return nrows; }
-        }
+        public int RowCount => nrows;
 
         /// <summary>
         /// Gets the number of columns.
         /// </summary>
-        public int ColumnCount
-        {
-            get { return ncols; }
-        }
+        public int ColumnCount => ncols;
 
         /// <summary>
         /// Gets the number of non-zero entries.
         /// </summary>
-        public int NonZerosCount
-        {
-            get { return nz; }
-        }
+        public int NonZerosCount => nz;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CoordinateStorage{T}"/> class.
@@ -78,6 +60,26 @@ namespace CSparse.Storage
         public CoordinateStorage(int rowCount, int columnCount, int nzmax)
             : this(rowCount, columnCount, nzmax, nzmax >= 0)
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CoordinateStorage{T}"/> class.
+        /// </summary>
+        /// <param name="rowCount">The number of rows.</param>
+        /// <param name="columnCount">The number of columns.</param>
+        /// <param name="rowind">The row indices array.</param>
+        /// <param name="colind">The column indices array.</param>
+        /// <param name="values">The values array.</param>
+        public CoordinateStorage(int rowCount, int columnCount, int[] rowind, int[] colind, T[] values)
+            : this(rowCount, columnCount, 0, false)
+        {
+            this.rowind = rowind;
+            this.colind = colind;
+            this.values = values;
+
+            // Allow arrays to have different sizes.
+            nzmax = Math.Min(values.Length, Math.Min(rowind.Length, colind.Length));
+            nz = 0;
         }
 
         private CoordinateStorage(int rowCount, int columnCount, int nzmax, bool alloc)
@@ -154,7 +156,57 @@ namespace CSparse.Storage
             colind[nz] = j;
             values[nz] = value;
 
-            nz += 1;
+            nz++;
+        }
+
+        /// <summary>
+        /// Filter storage values.
+        /// </summary>
+        /// <param name="func">Filter function returning true if value should be kept,
+        /// false if value should be discarded.</param>
+        /// <returns>New number of non-zeros.</returns>
+        /// <remarks>
+        /// Filter function arguments:
+        /// 
+        /// 1 = Row index i
+        /// 2 = Column index j
+        /// 3 = Value of entry (i,j)
+        /// 
+        /// Element a_{i,j} is dropped, if func(i, j, aij) returns false.
+        /// </remarks>
+        public int Keep(Func<int, int, T, bool> func)
+        {
+            int k = 0;
+
+            for (int i = 0; i < nz; i++)
+            {
+                int ai = rowind[i];
+                int aj = colind[i];
+                var ax = values[i];
+
+                if (func(ai, aj, ax))
+                {
+                    // Keep A(i,j).
+                    rowind[k] = ai;
+                    colind[k] = aj;
+                    values[k] = ax;
+                    k++;
+                }
+            }
+
+            return nz = k;
+        }
+
+        /// <summary>
+        /// Remove all values from the storage (without freeing the memory).
+        /// </summary>
+        public void Clear()
+        {
+            Array.Clear(rowind, 0, nzmax);
+            Array.Clear(colind, 0, nzmax);
+            Array.Clear(values, 0, nzmax);
+
+            nz = 0;
         }
 
         /// <summary>

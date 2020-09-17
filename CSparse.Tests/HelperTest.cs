@@ -24,7 +24,7 @@ namespace CSparse.Tests
         {
             var data = Double.MatrixHelper.LoadSparse(2, 2);
 
-            var A = data.A;
+            var A = data.A.Clone();
 
             A.ColumnPointers[A.ColumnCount] = 0; // Set non-zero count to 0.
 
