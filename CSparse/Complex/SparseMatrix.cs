@@ -568,8 +568,11 @@ namespace CSparse.Complex
 
             this.ColumnPointers[columns] = nnz;
 
-            // Remove extra space from arrays
-            this.Resize(0);
+            if (AutoTrimStorage)
+            {
+                // Remove extra space from arrays
+                this.Resize(0);
+            }
         }
 
         /// <summary>
