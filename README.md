@@ -22,6 +22,11 @@ All methods are described in detail in the excellent textbook _Direct Methods fo
 * Creating a [sparse QR factorization](https://github.com/wo80/CSparse.NET/wiki/Sparse-QR-example)
 * Using [Math.NET Numerics and CSparse.NET](https://github.com/wo80/CSparse.NET/wiki/Math.NET-Numerics-and-CSparse)
 
+## Related projects
+
+* [CSparse.Interop](https://github.com/wo80/csparse-interop) - Bindings to native solvers like MKL, Suitesparse, SuperLU and ARPACK.
+* [CSparse.Extensions](https://github.com/wo80/csparse-extensions) - Extension methods, dense direct factorizations and iterative solvers.
+
 ## License
 
     CSparse: a Concise Sparse Matrix package.
