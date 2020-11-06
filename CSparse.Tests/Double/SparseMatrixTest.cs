@@ -506,6 +506,17 @@ namespace CSparse.Tests.Double
             Assert.IsNull(coo.ColumnIndices);
         }
 
+        [Test]
+        public void TestOfIndexed_Empty()
+        {
+            var coord = new CoordinateStorage<double>(0, 0, 0);
+
+            var sparseA = new SparseMatrix(0, 0, 0);
+            var sparseB = SparseMatrix.OfIndexed(coord);
+
+            Assert.IsTrue(sparseA.Equals(sparseB));
+        }
+
         [TestCase(2, 2)]
         [TestCase(2, 3)]
         public void TestOfColumnMajor(int rows, int columns)

@@ -385,6 +385,51 @@ namespace CSparse.Tests.Double
             Assert.AreEqual(1.0, C.At(2, 0));
         }
 
+        [Test]
+        public void TestSetSubMatrix()
+        {
+            var A = DenseMatrix.OfRowMajor(3, 4, new double[]
+            {
+                0, 1, 2, 3,
+                0, 1, 2, 3,
+                0, 1, 2, 3
+            });
+
+            var B = DenseMatrix.OfRowMajor(2, 3, new double[]
+            {
+                4, 5, 6,
+                7, 8, 9
+            });
+
+            A.SetSubMatrix(1, 1, B);
+
+            var expected = new double[3][]
+            {
+                new double[4] { 0, 1, 2, 3 },
+                new double[4] { 0, 4, 5, 6 },
+                new double[4] { 0, 7, 8, 9 }
+            };
+
+            for (int i = 0; i < 3; i++)
+            {
+                CollectionAssert.AreEqual(expected[i], A.Row(i));
+            }
+
+            A.SetSubMatrix(0, 0, B);
+
+            expected = new double[3][]
+            {
+                new double[4] { 4, 5, 6, 3 },
+                new double[4] { 7, 8, 9, 6 },
+                new double[4] { 0, 7, 8, 9 }
+            };
+
+            for (int i = 0; i < 3; i++)
+            {
+                CollectionAssert.AreEqual(expected[i], A.Row(i));
+            }
+        }
+
         #region Matrix creation
 
         [TestCase(2, 2)]
