@@ -507,6 +507,34 @@ namespace CSparse.Tests.Double
         }
 
         [Test]
+        public void TestOfIndexed_Coo_InPlace()
+        {
+            // rows > columns
+
+            var coo = new CoordinateStorage<double>(10, 5, 3);
+
+            coo.At(0, 0, 1.0);
+            coo.At(1, 1, 1.0);
+            coo.At(4, 4, 1.0);
+
+            var A = SparseMatrix.OfIndexed(coo, true);
+
+            Assert.AreEqual(3, A.NonZerosCount);
+
+            // rows < columns
+
+            coo = new CoordinateStorage<double>(5, 10, 3);
+
+            coo.At(0, 0, 1.0);
+            coo.At(1, 1, 1.0);
+            coo.At(4, 4, 1.0);
+
+            A = SparseMatrix.OfIndexed(coo, true);
+
+            Assert.AreEqual(3, A.NonZerosCount);
+        }
+
+        [Test]
         public void TestOfIndexed_Empty()
         {
             var coord = new CoordinateStorage<double>(0, 0, 0);

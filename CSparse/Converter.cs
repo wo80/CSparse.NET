@@ -35,23 +35,25 @@ namespace CSparse
             int nrows = storage.RowCount;
             int ncols = storage.ColumnCount;
 
+            int nz = storage.NonZerosCount;
+
+            var result = CompressedColumnStorage<T>.Create(nrows, ncols);
+
+            var ap = result.ColumnPointers = new int[ncols + 1];
+
+            if (nz == 0)
+            {
+                return result;
+            }
+
             var values = storage.Values;
             var rowind = storage.RowIndices;
             var colind = storage.ColumnIndices;
 
-            var result = CompressedColumnStorage<T>.Create(nrows, ncols);
-
-            int nz = storage.NonZerosCount;
-
             if (inplace)
             {
-                var work = new int[ncols + 1];
+                ConvertInPlace(ncols, nz, values, rowind, colind, ap);
 
-                ConvertInPlace(ncols, nz, values, rowind, colind, work);
-
-                Array.Copy(colind, work, ncols + 1);
-
-                result.ColumnPointers = work;
                 result.RowIndices = rowind;
                 result.Values = values;
 
@@ -60,7 +62,6 @@ namespace CSparse
             }
             else
             {
-                var columnPointers = new int[ncols + 1];
                 var columnCounts = new int[ncols];
 
                 for (int k = 0; k < nz; k++)
@@ -70,21 +71,20 @@ namespace CSparse
                 }
 
                 // Get column pointers
-                int valueCount = Helper.CumulativeSum(columnPointers, columnCounts, ncols);
+                int valueCount = Helper.CumulativeSum(ap, columnCounts, ncols);
 
-                var rowIndices = new int[valueCount];
-                var storageValues = new T[valueCount];
+                var ai = new int[valueCount];
+                var ax = new T[valueCount];
 
                 for (int k = 0; k < nz; k++)
                 {
                     int p = columnCounts[colind[k]]++;
-                    rowIndices[p] = rowind[k];
-                    storageValues[p] = values[k];
+                    ai[p] = rowind[k];
+                    ax[p] = values[k];
                 }
 
-                result.RowIndices = rowIndices;
-                result.ColumnPointers = columnPointers;
-                result.Values = storageValues;
+                result.RowIndices = ai;
+                result.Values = ax;
             }
 
             Helper.SortIndices(result);
@@ -182,10 +182,13 @@ namespace CSparse
                 // Restart chasing.
             }
 
-            colind[0] = 0;
+            // Fix column pointers.
+            for (i = columns - 1; i > 0; i--)
+            {
+                work[i] = work[i - 1];
+            }
 
-            // Copy column pointers.
-            Array.Copy(work, 0, colind, 1, columns);
+            work[0] = 0;
         }
 
         /// <summary>
