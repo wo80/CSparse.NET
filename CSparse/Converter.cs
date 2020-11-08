@@ -183,10 +183,7 @@ namespace CSparse
             }
 
             // Fix column pointers.
-            for (i = columns - 1; i > 0; i--)
-            {
-                work[i] = work[i - 1];
-            }
+            Buffer.BlockCopy(work, 0, work, Constants.SizeOfInt, columns * Constants.SizeOfInt);
 
             work[0] = 0;
         }

@@ -525,13 +525,18 @@ namespace CSparse.Tests.Double
 
             coo = new CoordinateStorage<double>(5, 10, 3);
 
-            coo.At(0, 0, 1.0);
-            coo.At(1, 1, 1.0);
             coo.At(4, 4, 1.0);
+            coo.At(1, 1, 1.0);
+            coo.At(0, 0, 1.0);
+            coo.At(4, 4, -1.0); // Results in one explicit zero entry.
 
             A = SparseMatrix.OfIndexed(coo, true);
 
             Assert.AreEqual(3, A.NonZerosCount);
+
+            A.DropZeros();
+
+            Assert.AreEqual(2, A.NonZerosCount);
         }
 
         [Test]
