@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;net5.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;net5.0;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CSparse</PackageId>
@@ -9,26 +9,23 @@
     <Description>CSparse.NET provides numerical methods for sparse LU, Cholesky and QR decomposition of real and complex linear systems.</Description>
     <Product>CSparse.NET</Product>
     <Company />
-    <Copyright>Copyright Christian Woltering © 2012-2020</Copyright>
+    <Copyright>Copyright Christian Woltering © 2012-2021</Copyright>
     <Authors>Christian Woltering</Authors>
-    <AssemblyVersion>3.4.9.0</AssemblyVersion>
-    <FileVersion>3.4.9.0</FileVersion>
+    <AssemblyVersion>3.5.0.0</AssemblyVersion>
+    <FileVersion>3.5.0.0</FileVersion>
     <PackageTags>math sparse matrix lu cholesky qr decomposition factorization </PackageTags>
-    <Version>3.4.9</Version>
+    <Version>3.5.0</Version>
     <AssemblyName>CSparse</AssemblyName>
     <RootNamespace>CSparse</RootNamespace>
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/wo80/CSparse.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/wo80/CSparse.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Coordinate storage improvements:
-* Add constructor that uses existing arrays for storage.
-* Convert to sparse matrix in place.</PackageReleaseNotes>
+    <PackageReleaseNotes>Target frameworks:
+* Removed .NET 4.0.
+* Added .NET 5.0.
+    </PackageReleaseNotes>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="IProgress.cs" Condition="'$(TargetFramework)' != 'net40'" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
