@@ -285,6 +285,44 @@ namespace CSparse.Tests.Double
         }
 
         [Test]
+        public void TestMatrixPointwiseMultiply()
+        {
+            var A = DenseMatrix.OfRowMajor(2, 3, new double[]
+            {
+                1.0, 2.0, 3.0,
+                4.0, 5.0, 6.0
+            });
+
+            var B = DenseMatrix.OfRowMajor(2, 3, new double[]
+            {
+                2.0, 0.5, 2.0,
+                0.5, 0.1, 0.5
+            });
+
+            var expected = DenseMatrix.OfRowMajor(2, 3, new double[]
+            {
+                2.0, 1.0, 6.0,
+                2.0, 0.5, 3.0
+            });
+
+            var actual = new DenseMatrix(2, 3);
+
+            A.PointwiseMultiply(B, actual);
+
+            CollectionAssert.AreEqual(expected.Values, actual.Values);
+
+            // Test exceptions:
+
+            actual = new DenseMatrix(2, 2);
+
+            Assert.Throws<ArgumentException>(() => A.PointwiseMultiply(B, actual));
+
+            B = new DenseMatrix(2, 2);
+
+            Assert.Throws<ArgumentException>(() => A.PointwiseMultiply(B, actual));
+        }
+
+        [Test]
         public void TestMatrixParallelMultiply()
         {
             var data = ResourceLoader.Get<double>("general-40x40.mat");

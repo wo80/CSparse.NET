@@ -44,9 +44,9 @@ namespace CSparse.Tests
 
                 return matrix;
             }
-            catch (Exception e)
+            catch
             {
-                throw e;
+                throw;
             }
         }
     }

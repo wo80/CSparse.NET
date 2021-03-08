@@ -602,12 +602,12 @@ namespace CSparse.Storage
 
             if (target.rows != rows || target.columns != columns)
             {
-                throw new ArgumentException(Resources.InvalidDimensions, "target");
+                throw new ArgumentException(Resources.InvalidDimensions, nameof(target));
             }
 
             if (perm.Length < rows)
             {
-                throw new ArgumentException("Invalid permutation length.", "perm");
+                throw new ArgumentException("Invalid permutation length.", nameof(perm));
             }
 
             PermuteRows(Values, ColumnPointers, RowIndices, bx, bp, bi, perm);
@@ -637,17 +637,17 @@ namespace CSparse.Storage
 
             if (ReferenceEquals(this, target))
             {
-                throw new ArgumentException("Cannot use this instance as target.", "target");
+                throw new ArgumentException("Cannot use this instance as target.", nameof(target));
             }
 
             if (target.rows != rows || target.columns != columns)
             {
-                throw new ArgumentException(Resources.InvalidDimensions, "target");
+                throw new ArgumentException(Resources.InvalidDimensions, nameof(target));
             }
 
             if (perm.Length < columns)
             {
-                throw new ArgumentException("Invalid permutation length.", "perm");
+                throw new ArgumentException("Invalid permutation length.", nameof(perm));
             }
 
             PermuteColumns(Values, ColumnPointers, RowIndices, bx, bp, bi, perm);

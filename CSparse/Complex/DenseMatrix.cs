@@ -242,12 +242,12 @@ namespace CSparse.Complex
         {
             if (RowCount != other.RowCount || ColumnCount != other.ColumnCount)
             {
-                throw new ArgumentException(Resources.MatrixDimensions);
+                throw new ArgumentException(Resources.MatrixDimensions, nameof(other));
             }
 
             if (RowCount != result.RowCount || ColumnCount != result.ColumnCount)
             {
-                throw new ArgumentException(Resources.MatrixDimensions);
+                throw new ArgumentException(Resources.MatrixDimensions, nameof(result));
             }
 
             var x = Values;

@@ -469,7 +469,7 @@ namespace CSparse.Storage
 
             if (result.RowCount != RowCount || result.ColumnCount != ColumnCount)
             {
-                throw new ArgumentException(Resources.MatrixDimensions, "result");
+                throw new ArgumentException(Resources.MatrixDimensions, nameof(result));
             }
 
             for (var row = 0; row < RowCount; row++)
@@ -496,7 +496,7 @@ namespace CSparse.Storage
 
             if (result.RowCount != RowCount || result.ColumnCount != ColumnCount)
             {
-                throw new ArgumentException(Resources.MatrixDimensions, "result");
+                throw new ArgumentException(Resources.MatrixDimensions, nameof(result));
             }
 
             for (var row = 0; row < RowCount; row++)
