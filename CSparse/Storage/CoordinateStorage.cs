@@ -70,7 +70,25 @@ namespace CSparse.Storage
         /// <param name="rowind">The row indices array.</param>
         /// <param name="colind">The column indices array.</param>
         /// <param name="values">The values array.</param>
+        /// <remarks>
+        /// The storage arrays are considered to be empty (non-zeros count is <c>0</c>). If the arrays are
+        /// already filled, the constructor taking the explicit <c>nonZerosCount</c> has to be used.
+        /// </remarks>
         public CoordinateStorage(int rowCount, int columnCount, int[] rowind, int[] colind, T[] values)
+            : this(rowCount, columnCount, 0, rowind, colind, values)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CoordinateStorage{T}"/> class.
+        /// </summary>
+        /// <param name="rowCount">The number of rows.</param>
+        /// <param name="columnCount">The number of columns.</param>
+        /// <param name="nonZerosCount">The number of non-zeros in the given arrays.</param>
+        /// <param name="rowind">The row indices array.</param>
+        /// <param name="colind">The column indices array.</param>
+        /// <param name="values">The values array.</param>
+        public CoordinateStorage(int rowCount, int columnCount, int nonZerosCount, int[] rowind, int[] colind, T[] values)
             : this(rowCount, columnCount, 0, false)
         {
             this.rowind = rowind;
@@ -79,7 +97,9 @@ namespace CSparse.Storage
 
             // Allow arrays to have different sizes.
             nzmax = Math.Min(values.Length, Math.Min(rowind.Length, colind.Length));
-            nz = 0;
+
+            // Cannot have more non-zeros than smallest array length.
+            nz = Math.Min(nzmax, nonZerosCount);
         }
 
         private CoordinateStorage(int rowCount, int columnCount, int nzmax, bool alloc)

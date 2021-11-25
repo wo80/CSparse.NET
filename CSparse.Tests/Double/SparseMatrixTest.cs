@@ -4,6 +4,7 @@ namespace CSparse.Tests.Double
     using CSparse.Storage;
     using NUnit.Framework;
     using System;
+    using System.Linq;
 
     [DefaultFloatingPointTolerance(1e-8)]
     public class SparseMatrixTest
@@ -548,6 +549,56 @@ namespace CSparse.Tests.Double
             var sparseB = SparseMatrix.OfIndexed(coord);
 
             Assert.IsTrue(sparseA.Equals(sparseB));
+        }
+
+        [Test]
+        public void TestOfIndexed_NoValues()
+        {
+            int n = 10;
+
+            var ik = new int[n];
+            var jk = new int[n];
+            var sk = new double[n];
+
+            var coo = new CoordinateStorage<double>(n, n, ik, jk, sk);
+
+            var A = (SparseMatrix)SparseMatrix.OfIndexed(coo);
+
+            Assert.AreEqual(coo.RowCount, A.RowCount);
+            Assert.AreEqual(coo.ColumnCount, A.ColumnCount);
+            Assert.AreEqual(0, A.NonZerosCount);
+
+            Assert.IsNotNull(A.ColumnPointers);
+            Assert.IsNull(A.RowIndices);
+            Assert.IsNull(A.Values);
+
+            Assert.AreEqual(A.ColumnCount + 1, A.ColumnPointers.Length);
+        }
+
+        [Test]
+        public void TestOfIndexed_WithValues()
+        {
+            int n = 10;
+
+            var ik = Enumerable.Range(0, n).ToArray();
+            var jk = Enumerable.Range(0, n).ToArray();
+            var sk = Enumerable.Repeat(1.0, n).ToArray();
+
+            var coo = new CoordinateStorage<double>(n, n, n, ik, jk, sk);
+
+            var A = (SparseMatrix)SparseMatrix.OfIndexed(coo);
+
+            Assert.AreEqual(coo.RowCount, A.RowCount);
+            Assert.AreEqual(coo.ColumnCount, A.ColumnCount);
+            Assert.AreEqual(coo.NonZerosCount, A.NonZerosCount);
+
+            Assert.IsNotNull(A.ColumnPointers);
+            Assert.IsNotNull(A.RowIndices);
+            Assert.IsNotNull(A.Values);
+
+            Assert.AreEqual(A.ColumnCount + 1, A.ColumnPointers.Length);
+            Assert.AreEqual(coo.NonZerosCount, A.RowIndices.Length);
+            Assert.AreEqual(coo.NonZerosCount, A.Values.Length);
         }
 
         [TestCase(2, 2)]
