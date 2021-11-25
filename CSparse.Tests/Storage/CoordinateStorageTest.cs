@@ -30,6 +30,10 @@ namespace CSparse.Tests.Storage
             Assert.Throws<ArgumentOutOfRangeException>(() => new CoordinateStorage<double>(-1,  1,  1));
             Assert.Throws<ArgumentOutOfRangeException>(() => new CoordinateStorage<double>( 1, -1,  1));
             Assert.Throws<ArgumentOutOfRangeException>(() => new CoordinateStorage<double>( 1,  1, -1));
+
+            // With storage arrays.
+
+            Assert.Throws<ArgumentException>(() => new CoordinateStorage<double>(2, 2, 2, new int[2], new int[2], new double[1]));
         }
 
         [TestCase(2, 2)]

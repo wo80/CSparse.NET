@@ -91,6 +91,21 @@ namespace CSparse.Storage
         public CoordinateStorage(int rowCount, int columnCount, int nonZerosCount, int[] rowind, int[] colind, T[] values)
             : this(rowCount, columnCount, 0, false)
         {
+            if (rowind == null)
+            {
+                throw new ArgumentNullException(nameof(rowind));
+            }
+
+            if (colind == null)
+            {
+                throw new ArgumentNullException(nameof(colind));
+            }
+
+            if (values == null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
             this.rowind = rowind;
             this.colind = colind;
             this.values = values;
@@ -98,8 +113,12 @@ namespace CSparse.Storage
             // Allow arrays to have different sizes.
             nzmax = Math.Min(values.Length, Math.Min(rowind.Length, colind.Length));
 
-            // Cannot have more non-zeros than smallest array length.
-            nz = Math.Min(nzmax, nonZerosCount);
+            if (nzmax < nonZerosCount)
+            {
+                throw new ArgumentException("Invalid array storage (all arrays must be at least of size nonZerosCount).");
+            }
+
+            nz = nonZerosCount;
         }
 
         private CoordinateStorage(int rowCount, int columnCount, int nzmax, bool alloc)
