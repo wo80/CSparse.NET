@@ -199,6 +199,63 @@ namespace CSparse.Storage
         }
 
         /// <summary>
+        /// Create a sparse matrix from given diagonals.
+        /// </summary>
+        /// <param name="A">The input diagonals stored column-wise.</param>
+        /// <param name="diags">The diagonal offsets.</param>
+        /// <param name="rowCount">The target matrix row count.</param>
+        /// <param name="columnCount">The target matrix column count.</param>
+        /// <returns>Sparse matrix with given diagonals.</returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static CompressedColumnStorage<T> OfDiagonals(DenseColumnMajorStorage<T> A, int[] diags, int rowCount, int columnCount)
+        {
+            int k = diags.Length;
+
+            if (A.ColumnCount != k)
+            {
+                throw new ArgumentException("Columns of A must correspond to diagonals.");
+            }
+
+            // Upper limit for storage size.
+            int size = k * Math.Min(rowCount, columnCount);
+
+            var result = Create(rowCount, columnCount, size);
+
+            var ap = result.ColumnPointers;
+            var ai = result.RowIndices;
+            var ax = result.Values;
+
+            // Current non-zeros count.
+            int nz = 0;
+
+            // Fill each column of the result matrix.
+            for (int col = 0; col < columnCount; col++)
+            {
+                ap[col] = nz;
+
+                // Add diagonals at specified offsets.
+                for (int j = 0; j < k; j++)
+                {
+                    int row = col - diags[j];
+
+                    if (row >= 0 && row < rowCount)
+                    {
+                        ai[nz] = row;
+                        ax[nz] = A.At(col, j);
+
+                        nz++;
+                    }
+                }
+            }
+
+            ap[columnCount] = nz;
+
+            Helper.SortIndices(result);
+
+            return result;
+        }
+
+        /// <summary>
         /// Create a new square sparse matrix and initialize each diagonal value to the same provided value.
         /// </summary>
         public static CompressedColumnStorage<T> CreateDiagonal(int order, T value)

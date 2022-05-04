@@ -680,6 +680,58 @@ namespace CSparse.Tests.Double
         }
 
         [Test]
+        public void TestOfDiagonals()
+        {
+            var diags = DenseMatrix.OfColumnMajor(4, 3, new double[]
+            {
+                -1.0, -2.0, -3.0, -4.0,
+                 1.1,  1.2,  1.3,  1.4,
+                 1.0,  2.0,  3.0,  4.0
+            });
+
+            // Test: square matrix.
+
+            var actual = SparseMatrix.OfDiagonals(diags, new int[] { -3, 0, 2 }, 4, 4);
+
+            var expected = SparseMatrix.OfRowMajor(4, 4, new double[]
+            {
+                1.1, 0.0, 3.0, 0.0,
+                0.0, 1.2, 0.0, 4.0,
+                0.0, 0.0, 1.3, 0.0,
+               -1.0, 0.0, 0.0, 1.4
+            });
+
+            Assert.IsTrue(actual.Equals(expected));
+
+            // Test: 3x4 matrix.
+
+            actual = SparseMatrix.OfDiagonals(diags, new int[] { -1, 0, 2 }, 3, 4);
+
+            expected = SparseMatrix.OfRowMajor(3, 4, new double[]
+            {
+                1.1,  0.0, 3.0, 0.0,
+               -1.0,  1.2, 0.0, 4.0,
+                0.0, -2.0, 1.3, 0.0
+            });
+
+            Assert.IsTrue(actual.Equals(expected));
+
+            // Test: 4x3 matrix.
+
+            actual = SparseMatrix.OfDiagonals(diags, new int[] { -1, 0, 2 }, 4, 3);
+
+            expected = SparseMatrix.OfRowMajor(4, 3, new double[]
+            {
+                1.1,  0.0,  3.0,
+               -1.0,  1.2,  0.0,
+                0.0, -2.0,  1.3,
+                0.0,  0.0, -3.0
+            });
+
+            Assert.IsTrue(actual.Equals(expected));
+        }
+
+        [Test]
         public void TestCreateIdentity()
         {
             int order = 3;
