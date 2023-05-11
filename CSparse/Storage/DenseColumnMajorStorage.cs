@@ -41,7 +41,7 @@ namespace CSparse.Storage
         public DenseColumnMajorStorage(int rows, int columns)
             : base(rows, columns)
         {
-            this.Values = new T[rows * columns];
+            Values = new T[rows * columns];
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace CSparse.Storage
                 throw new ArgumentException("Invalid values array size.", nameof(values));
             }
 
-            this.Values = values;
+            Values = values;
         }
 
         #region Public static functions
@@ -256,7 +256,7 @@ namespace CSparse.Storage
         /// <param name="values">The new values.</param>
         public void SetRow(int row, T[] values)
         {
-            var target = this.Values;
+            var target = Values;
 
             for (int i = 0; i < columns; i++)
             {
@@ -271,7 +271,7 @@ namespace CSparse.Storage
         /// <param name="values">The new values.</param>
         public void SetColumn(int column, T[] values)
         {
-            var target = this.Values;
+            var target = Values;
 
             Array.Copy(values, 0, target, column * rows, rows);
         }
@@ -287,8 +287,8 @@ namespace CSparse.Storage
         /// </summary>
         public virtual DenseColumnMajorStorage<T> Transpose()
         {
-            var result = DenseColumnMajorStorage<T>.Create(columns, rows);
-            this.Transpose(result);
+            var result = Create(columns, rows);
+            Transpose(result);
             return result;
         }
 
@@ -299,12 +299,12 @@ namespace CSparse.Storage
         {
             var target = result.Values;
 
-            for (int j = 0; j < ColumnCount; j++)
+            for (int j = 0; j < columns; j++)
             {
-                var index = j * RowCount;
-                for (int i = 0; i < RowCount; i++)
+                var index = j * rows;
+                for (int i = 0; i < rows; i++)
                 {
-                    target[(i * ColumnCount) + j] = Values[index + i];
+                    target[(i * columns) + j] = Values[index + i];
                 }
             }
         }
@@ -314,16 +314,13 @@ namespace CSparse.Storage
         /// </summary>
         public DenseColumnMajorStorage<T> Add(DenseColumnMajorStorage<T> other)
         {
-            int m = this.rows;
-            int n = this.columns;
-
             // check inputs
-            if (m != other.RowCount || n != other.ColumnCount)
+            if (rows != other.rows || columns != other.columns)
             {
                 throw new ArgumentException(Resources.MatrixDimensions, "other");
             }
 
-            var result = DenseColumnMajorStorage<T>.Create(m, n);
+            var result = Create(rows, columns);
 
             Add(other, result);
 
@@ -344,16 +341,13 @@ namespace CSparse.Storage
         /// <returns>C = A*B</returns>
         public DenseColumnMajorStorage<T> Multiply(DenseColumnMajorStorage<T> other)
         {
-            int m = this.rows;
-            int n = other.columns;
-
             // check inputs
-            if (this.columns != other.RowCount)
+            if (columns != other.rows)
             {
                 throw new ArgumentException(Resources.MatrixDimensions, "other");
             }
 
-            var result = DenseColumnMajorStorage<T>.Create(m, n);
+            var result = Create(rows, other.columns);
 
             Multiply(other, result);
 
@@ -375,16 +369,13 @@ namespace CSparse.Storage
         /// <returns>C = A*B</returns>
         public DenseColumnMajorStorage<T> ParallelMultiply(DenseColumnMajorStorage<T> other, System.Threading.Tasks.ParallelOptions options = null)
         {
-            int m = this.rows;
-            int n = other.columns;
-
             // check inputs
-            if (this.columns != other.RowCount)
+            if (columns != other.rows)
             {
                 throw new ArgumentException(Resources.MatrixDimensions, "other");
             }
 
-            var result = DenseColumnMajorStorage<T>.Create(m, n);
+            var result = Create(rows, other.columns);
 
             ParallelMultiply(other, result, options);
 
@@ -422,11 +413,11 @@ namespace CSparse.Storage
         /// <returns>The upper triangle of this matrix.</returns>
         public virtual DenseColumnMajorStorage<T> UpperTriangle()
         {
-            var result = Create(RowCount, ColumnCount);
+            var result = Create(rows, columns);
 
-            for (var row = 0; row < RowCount; row++)
+            for (var row = 0; row < rows; row++)
             {
-                for (var column = row; column < ColumnCount; column++)
+                for (var column = row; column < columns; column++)
                 {
                     result.At(row, column, At(row, column));
                 }
@@ -441,11 +432,11 @@ namespace CSparse.Storage
         /// <returns>The lower triangle of this matrix.</returns>
         public virtual DenseColumnMajorStorage<T> LowerTriangle()
         {
-            var result = Create(RowCount, ColumnCount);
+            var result = Create(rows, columns);
 
-            for (var row = 0; row < RowCount; row++)
+            for (var row = 0; row < rows; row++)
             {
-                for (var column = 0; column <= row && column < ColumnCount; column++)
+                for (var column = 0; column <= row && column < columns; column++)
                 {
                     result.At(row, column, At(row, column));
                 }
@@ -467,14 +458,14 @@ namespace CSparse.Storage
                 throw new ArgumentNullException(nameof(result));
             }
 
-            if (result.RowCount != RowCount || result.ColumnCount != ColumnCount)
+            if (result.rows != rows || result.columns != columns)
             {
                 throw new ArgumentException(Resources.MatrixDimensions, nameof(result));
             }
 
-            for (var row = 0; row < RowCount; row++)
+            for (var row = 0; row < rows; row++)
             {
-                for (var column = 0; column < ColumnCount; column++)
+                for (var column = 0; column < columns; column++)
                 {
                     result.At(row, column, row >= column ? At(row, column) : Zero);
                 }
@@ -494,14 +485,14 @@ namespace CSparse.Storage
                 throw new ArgumentNullException(nameof(result));
             }
 
-            if (result.RowCount != RowCount || result.ColumnCount != ColumnCount)
+            if (result.rows != rows || result.columns != columns)
             {
                 throw new ArgumentException(Resources.MatrixDimensions, nameof(result));
             }
 
-            for (var row = 0; row < RowCount; row++)
+            for (var row = 0; row < rows; row++)
             {
-                for (var column = 0; column < ColumnCount; column++)
+                for (var column = 0; column < columns; column++)
                 {
                     result.At(row, column, row <= column ? At(row, column) : Zero);
                 }
@@ -517,7 +508,7 @@ namespace CSparse.Storage
         /// <param name="columnCount">The number of columns to copy. Must be positive.</param>
         public DenseColumnMajorStorage<T> SubMatrix(int rowIndex, int rowCount, int columnIndex, int columnCount)
         {
-            var result = DenseColumnMajorStorage<T>.Create(rowCount, columnCount);
+            var result = Create(rowCount, columnCount);
 
             CopySubMatrixTo(result, rowIndex, 0, rowCount, columnIndex, 0, columnCount);
 
@@ -532,7 +523,7 @@ namespace CSparse.Storage
         /// <param name="subMatrix">The sub-matrix to copy from.</param>
         public void SetSubMatrix(int rowIndex, int columnIndex, DenseColumnMajorStorage<T> subMatrix)
         {
-            subMatrix.CopySubMatrixTo(this, 0, rowIndex, subMatrix.RowCount, 0, columnIndex, subMatrix.ColumnCount);
+            subMatrix.CopySubMatrixTo(this, 0, rowIndex, subMatrix.rows, 0, columnIndex, subMatrix.columns);
         }
 
         /// <summary>

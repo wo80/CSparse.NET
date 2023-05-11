@@ -51,8 +51,8 @@ namespace CSparse
                 throw new ArgumentOutOfRangeException(nameof(columnCount), Resources.MatrixDimensionNonNegative);
             }
 
-            this.rows = rowCount;
-            this.columns = columnCount;
+            rows = rowCount;
+            columns = columnCount;
         }
 
         /// <summary>

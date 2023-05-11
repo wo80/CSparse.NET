@@ -11,8 +11,17 @@ namespace CSparse.Double
     /// </summary>
     [DebuggerDisplay("DenseMatrix {RowCount}x{ColumnCount}")]
     [Serializable]
-    public class DenseMatrix : DenseColumnMajorStorage<Double>
+    public class DenseMatrix : DenseColumnMajorStorage<double>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DenseMatrix"/> class.
+        /// </summary>
+        /// <param name="size">The size of the square matrix.</param>
+        public DenseMatrix(int size)
+            : base(size, size)
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DenseMatrix"/> class.
         /// </summary>

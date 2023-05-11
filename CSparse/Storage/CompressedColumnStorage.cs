@@ -71,9 +71,9 @@ namespace CSparse.Storage
                 throw new ArgumentOutOfRangeException(nameof(valueCount), Resources.ValueNonNegative);
             }
 
-            this.ColumnPointers = new int[columnCount + 1];
-            this.RowIndices = new int[valueCount];
-            this.Values = new T[valueCount];
+            ColumnPointers = new int[columnCount + 1];
+            RowIndices = new int[valueCount];
+            Values = new T[valueCount];
         }
 
         /// <summary>
@@ -98,9 +98,9 @@ namespace CSparse.Storage
                 throw new ArgumentException("rowIndices.Length must equal values.Length");
             }
 
-            this.ColumnPointers = columnPointers;
-            this.RowIndices = rowIndices;
-            this.Values = values;
+            ColumnPointers = columnPointers;
+            RowIndices = rowIndices;
+            Values = values;
         }
 
         #region Public static functions
@@ -317,21 +317,19 @@ namespace CSparse.Storage
         /// <inheritdoc />
         public override void Row(int rowIndex, T[] target)
         {
-            if (target.Length != ColumnCount)
+            if (target.Length != columns)
             {
                 throw new Exception();
             }
-
-            int i, n = ColumnCount;
 
             var ap = ColumnPointers;
             var ai = RowIndices;
             var ax = Values;
 
-            for (int k = 0; k < n; k++)
+            for (int k = 0; k < columns; k++)
             {
                 // Check if columns contain row index.
-                i = Array.BinarySearch(ai, ap[k], ap[k + 1] - ap[k], rowIndex);
+                int i = Array.BinarySearch(ai, ap[k], ap[k + 1] - ap[k], rowIndex);
 
                 if (i >= 0)
                 {
@@ -377,7 +375,7 @@ namespace CSparse.Storage
         /// </summary>
         public CompressedColumnStorage<T> Transpose()
         {
-            return this.Transpose(false);
+            return Transpose(false);
         }
 
         /// <summary>
@@ -386,7 +384,7 @@ namespace CSparse.Storage
         /// <param name="result">Storage for the tranposed matrix.</param>
         public void Transpose(CompressedColumnStorage<T> result)
         {
-            this.Transpose(result, false);
+            Transpose(result, false);
         }
 
         /// <summary>
@@ -395,8 +393,8 @@ namespace CSparse.Storage
         /// <param name="storage">A value indicating, whether the transpose should be done on storage level (without complex conjugation).</param>
         public CompressedColumnStorage<T> Transpose(bool storage)
         {
-            var result = CompressedColumnStorage<T>.Create(columns, rows, this.NonZerosCount);
-            this.Transpose(result, storage);
+            var result = Create(columns, rows, NonZerosCount);
+            Transpose(result, storage);
             return result;
         }
 
@@ -442,16 +440,13 @@ namespace CSparse.Storage
         /// </summary>
         public CompressedColumnStorage<T> Add(CompressedColumnStorage<T> other)
         {
-            int m = this.rows;
-            int n = this.columns;
-
             // check inputs
-            if (m != other.RowCount || n != other.ColumnCount)
+            if (rows != other.RowCount || columns != other.ColumnCount)
             {
                 throw new ArgumentException(Resources.MatrixDimensions);
             }
 
-            var result = CompressedColumnStorage<T>.Create(m, n, this.NonZerosCount + other.NonZerosCount);
+            var result = Create(rows, columns, NonZerosCount + other.NonZerosCount);
 
             var one = Helper.OneOf<T>();
 
@@ -482,10 +477,7 @@ namespace CSparse.Storage
         /// <returns>C = A*B</returns>
         public CompressedColumnStorage<T> Multiply(CompressedColumnStorage<T> other)
         {
-            int m = this.rows;
-            int n = other.ColumnCount;
-
-            var result = CompressedColumnStorage<T>.Create(m, n, this.NonZerosCount + other.NonZerosCount);
+            var result = Create(rows, other.columns, NonZerosCount + other.NonZerosCount);
 
             Multiply(other, result);
 
@@ -547,19 +539,16 @@ namespace CSparse.Storage
         /// <param name="values">If true (default), the values are copied.</param>
         public CompressedColumnStorage<T> Clone(bool values = true)
         {
-            int rows = this.RowCount;
-            int columns = this.ColumnCount;
+            int nnz = NonZerosCount;
 
-            int nnz = this.NonZerosCount;
-
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
+            var ap = ColumnPointers;
+            var ai = RowIndices;
 
             var result = Create(rows, columns, values ? nnz : 0);
 
             if (values)
             {
-                Array.Copy(this.Values, 0, result.Values, 0, nnz);
+                Array.Copy(Values, 0, result.Values, 0, nnz);
             }
             else if (nnz > 0)
             {
@@ -576,13 +565,11 @@ namespace CSparse.Storage
         /// <inheritdoc />
         public override IEnumerable<Tuple<int, int, T>> EnumerateIndexed()
         {
-            int n = this.ColumnCount;
+            var ax = Values;
+            var ap = ColumnPointers;
+            var ai = RowIndices;
 
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
-
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < columns; i++)
             {
                 var end = ap[i + 1];
                 for (var j = ap[i]; j < end; j++)
@@ -595,13 +582,11 @@ namespace CSparse.Storage
         /// <inheritdoc />
         public override void EnumerateIndexed(Action<int, int, T> action)
         {
-            int n = this.ColumnCount;
+            var ax = Values;
+            var ap = ColumnPointers;
+            var ai = RowIndices;
 
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
-
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < columns; i++)
             {
                 var end = ap[i + 1];
                 for (var j = ap[i]; j < end; j++)
@@ -616,21 +601,19 @@ namespace CSparse.Storage
         /// </summary>
         public virtual bool IsSymmetric()
         {
-            int n = this.ColumnCount;
-
-            if (this.RowCount != n)
+            if (RowCount != columns)
             {
                 return false;
             }
 
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
+            var ax = Values;
+            var ap = ColumnPointers;
+            var ai = RowIndices;
 
             // If we assume that columns are sorted, the symmetry check can be
             // made more efficient, checking only entries above the diagonal.
 
-            for (var i = 0; i < n; i++)
+            for (var i = 0; i < columns; i++)
             {
                 int end = ap[i + 1];
 
@@ -733,14 +716,12 @@ namespace CSparse.Storage
         /// <returns></returns>
         public int[] FindDiagonalIndices(bool throwOnMissingDiag = false)
         {
-            int n = this.ColumnCount;
+            var ap = ColumnPointers;
+            var ai = RowIndices;
 
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
+            int[] diag = new int[columns];
 
-            int[] diag = new int[n];
-
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < columns; i++)
             {
                 diag[i] = Array.BinarySearch(ai, ap[i], ap[i + 1] - ap[i], i);
 
