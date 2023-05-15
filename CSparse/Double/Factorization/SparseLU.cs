@@ -114,7 +114,14 @@ namespace CSparse.Double.Factorization
         /// </summary>
         /// <param name="input">The right hand side vector, <c>b</c>.</param>
         /// <param name="result">The left hand side vector, <c>x</c>.</param>
-        public void Solve(double[] input, double[] result)
+        public void Solve(double[] input, double[] result) => Solve(input.AsSpan(), result.AsSpan());
+
+        /// <summary>
+        /// Solves a system of linear equations, <c>Ax = b</c>.
+        /// </summary>
+        /// <param name="input">The right hand side vector, <c>b</c>.</param>
+        /// <param name="result">The left hand side vector, <c>x</c>.</param>
+        public void Solve(ReadOnlySpan<double> input, Span<double> result)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 
@@ -136,7 +143,14 @@ namespace CSparse.Double.Factorization
         /// </summary>
         /// <param name="input">The right hand side vector, <c>b</c>.</param>
         /// <param name="result">The left hand side vector, <c>x</c>.</param>
-        public void SolveTranspose(double[] input, double[] result)
+        public void SolveTranspose(double[] input, double[] result)=>SolveTranspose(input.AsSpan(), result.AsSpan());
+
+        /// <summary>
+        /// Solves a system of linear equations, <c>A'x = b</c>.
+        /// </summary>
+        /// <param name="input">The right hand side vector, <c>b</c>.</param>
+        /// <param name="result">The left hand side vector, <c>x</c>.</param>
+        public void SolveTranspose(ReadOnlySpan<double> input, Span<double> result)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 

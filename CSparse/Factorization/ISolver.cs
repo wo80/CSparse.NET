@@ -14,5 +14,12 @@ namespace CSparse.Factorization
         /// <param name="input">Right hand side b</param>
         /// <param name="result">Solution vector x.</param>
         void Solve(T[] input, T[] result);
+
+        /// <summary>
+        /// Solves a system of linear equations, Ax = b.
+        /// </summary>
+        /// <param name="input">Right hand side b</param>
+        /// <param name="result">Solution vector x.</param>
+        void Solve(ReadOnlySpan<T> input, Span<T> result);
     }
 }

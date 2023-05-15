@@ -19,9 +19,24 @@ namespace CSparse
         /// </remarks>
         public static void Apply<T>(int[] p, T[] b, T[] x, int n)
         {
+            Apply(p, b, x, n);
+        }
+
+        /// <summary>
+        /// Permutes a vector, x=P*b.
+        /// </summary>
+        /// <param name="p">Permutation vector.</param>
+        /// <param name="b">Input vector.</param>
+        /// <param name="x">Output vector, x=P*b.</param>
+        /// <param name="n">Length of p, b and x.</param>
+        /// <remarks>
+        /// p = null denotes identity.
+        /// </remarks>
+        public static void Apply<T>(int[] p, ReadOnlySpan<T> b, Span<T> x, int n)
+        {
             if (p == null)
             {
-                Array.Copy(b, x, n);
+                b.Slice(0, n).CopyTo(x);
             }
             else
             {
@@ -44,9 +59,24 @@ namespace CSparse
         /// </remarks>
         public static void ApplyInverse<T>(int[] p, T[] b, T[] x, int n)
         {
+            ApplyInverse(p, b, x, n);
+        }
+
+        /// <summary>
+        /// Permutes a vector, x = P'b.
+        /// </summary>
+        /// <param name="p">Permutation vector.</param>
+        /// <param name="b">Input vector.</param>
+        /// <param name="x">Output vector, x = P'b.</param>
+        /// <param name="n">Length of p, b, and x.</param>
+        /// <remarks>
+        /// p = null denotes identity.
+        /// </remarks>
+        public static void ApplyInverse<T>(int[] p, ReadOnlySpan<T> b, Span<T> x, int n)
+        {
             if (p == null)
             {
-                Array.Copy(b, x, n);
+                b.Slice(0, n).CopyTo(x);
             }
             else
             {

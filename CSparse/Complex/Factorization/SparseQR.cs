@@ -86,7 +86,18 @@ namespace CSparse.Complex.Factorization
         /// Let A be a m-by-n matrix. If m >= n a least-squares problem (min |Ax-b|)
         /// is solved. If m &lt; n the underdetermined system is solved.
         /// </remarks>
-        public override void Solve(Complex[] input, Complex[] result)
+        public override void Solve(Complex[] input, Complex[] result) => Solve(input.AsSpan(), result.AsSpan());
+
+        /// <summary>
+        /// Solves a system of linear equations, <c>Ax = b</c>.
+        /// </summary>
+        /// <param name="input">The right hand side vector, <c>b</c>.</param>
+        /// <param name="result">The left hand side vector, <c>x</c>.</param>
+        /// <remarks>
+        /// Let A be a m-by-n matrix. If m >= n a least-squares problem (min |Ax-b|)
+        /// is solved. If m &lt; n the underdetermined system is solved.
+        /// </remarks>
+        public override void Solve(ReadOnlySpan<Complex> input, Span<Complex> result)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 
@@ -134,7 +145,14 @@ namespace CSparse.Complex.Factorization
         /// </summary>
         /// <param name="input">The right hand side vector, <c>b</c>.</param>
         /// <param name="result">The left hand side vector, <c>x</c>.</param>
-        public void SolveTranspose(Complex[] input, Complex[] result)
+        public void SolveTranspose(Complex[] input, Complex[] result) => SolveTranspose(input.AsSpan(), result.AsSpan());
+
+        /// <summary>
+        /// Solves a system of linear equations, <c>A'x = b</c>.
+        /// </summary>
+        /// <param name="input">The right hand side vector, <c>b</c>.</param>
+        /// <param name="result">The left hand side vector, <c>x</c>.</param>
+        public void SolveTranspose(ReadOnlySpan<Complex> input, Span<Complex> result)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 

@@ -235,7 +235,7 @@ namespace CSparse.Storage
         }
 
         /// <inheritdoc />
-        public override void Row(int row, T[] target)
+        public override void Row(int row, Span<T> target)
         {
             for (int i = 0; i < columns; i++)
             {
@@ -244,9 +244,9 @@ namespace CSparse.Storage
         }
 
         /// <inheritdoc />
-        public override void Column(int column, T[] target)
+        public override void Column(int column, Span<T> target)
         {
-            Array.Copy(Values, column * rows, target, 0, rows);
+            Values.AsSpan().Slice(column * rows, rows).CopyTo(target);
         }
 
         /// <summary>

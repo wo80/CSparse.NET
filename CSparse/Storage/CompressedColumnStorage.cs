@@ -315,7 +315,7 @@ namespace CSparse.Storage
         }
 
         /// <inheritdoc />
-        public override void Row(int rowIndex, T[] target)
+        public override void Row(int rowIndex, Span<T> target)
         {
             if (target.Length != columns)
             {
@@ -349,7 +349,7 @@ namespace CSparse.Storage
         }
 
         /// <inheritdoc />
-        public override void Column(int columnIndex, T[] target)
+        public override void Column(int columnIndex, Span<T> target)
         {
             if (target.Length != RowCount)
             {
