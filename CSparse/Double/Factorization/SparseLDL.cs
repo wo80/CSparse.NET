@@ -116,7 +116,14 @@ namespace CSparse.Double.Factorization
         /// </summary>
         /// <param name="input">Right hand side b.</param>
         /// <param name="result">Solution vector x.</param>
-        public void Solve(double[] input, double[] result)
+        public void Solve(double[] input, double[] result) => Solve(input.AsSpan(), result.AsSpan());
+
+        /// <summary>
+        /// Solves a linear system Ax=b, where A is symmetric positive definite.
+        /// </summary>
+        /// <param name="input">Right hand side b.</param>
+        /// <param name="result">Solution vector x.</param>
+        public void Solve(ReadOnlySpan<double> input, Span<double> result)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 

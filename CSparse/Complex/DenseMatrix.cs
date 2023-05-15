@@ -107,7 +107,7 @@ namespace CSparse.Complex
         }
 
         /// <inheritdoc />
-        public override void Multiply(Complex[] x, Complex[] y)
+        public override void Multiply(ReadOnlySpan<Complex> x, Span<Complex> y)
         {
             var A = Values;
 
@@ -128,7 +128,7 @@ namespace CSparse.Complex
         }
 
         /// <inheritdoc />
-        public override void Multiply(Complex alpha, Complex[] x, Complex beta, Complex[] y)
+        public override void Multiply(Complex alpha, ReadOnlySpan<Complex> x, Complex beta, Span<Complex> y)
         {
             var A = Values;
 
@@ -149,7 +149,7 @@ namespace CSparse.Complex
         }
 
         /// <inheritdoc />
-        public override void TransposeMultiply(Complex[] x, Complex[] y)
+        public override void TransposeMultiply(ReadOnlySpan<Complex> x, Span<Complex> y)
         {
             var A = Values;
 
@@ -172,7 +172,7 @@ namespace CSparse.Complex
         }
 
         /// <inheritdoc />
-        public override void TransposeMultiply(Complex alpha, Complex[] x, Complex beta, Complex[] y)
+        public override void TransposeMultiply(Complex alpha, ReadOnlySpan<Complex> x, Complex beta, Span<Complex> y)
         {
             var A = Values;
 

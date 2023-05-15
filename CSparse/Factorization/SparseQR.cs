@@ -40,6 +40,13 @@ namespace CSparse.Factorization
         public abstract void Solve(T[] input, T[] result);
 
         /// <summary>
+        /// Solves a linear system Ax=b.
+        /// </summary>
+        /// <param name="input">Right hand side b.</param>
+        /// <param name="result">Solution vector x.</param>
+        public abstract void Solve(ReadOnlySpan<T> input, Span<T> result);
+
+        /// <summary>
         /// Create a Householder reflection.
         /// </summary>
         protected abstract T CreateHouseholder(T[] x, int offset, ref double beta, int n);

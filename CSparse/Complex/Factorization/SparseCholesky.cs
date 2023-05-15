@@ -111,7 +111,14 @@ namespace CSparse.Complex.Factorization
         /// </summary>
         /// <param name="input">The right hand side vector, <c>b</c>.</param>
         /// <param name="result">The left hand side vector, <c>x</c>.</param>
-        public void Solve(Complex[] input, Complex[] result)
+        public void Solve(Complex[] input, Complex[] result) => Solve(input.AsSpan(), result.AsSpan());
+
+        /// <summary>
+        /// Solves a system of linear equations, <c>Ax = b</c>.
+        /// </summary>
+        /// <param name="input">The right hand side vector, <c>b</c>.</param>
+        /// <param name="result">The left hand side vector, <c>x</c>.</param>
+        public void Solve(ReadOnlySpan<Complex> input, Span<Complex> result)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 

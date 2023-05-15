@@ -162,7 +162,7 @@ namespace CSparse.Double
         #region Linear Algebra (Vector)
 
         /// <inheritdoc />
-        public override void Multiply(double[] x, double[] y)
+        public override void Multiply(ReadOnlySpan<double> x, Span<double> y)
         {
             var ax = this.Values;
             var ap = this.ColumnPointers;
@@ -189,7 +189,7 @@ namespace CSparse.Double
         }
 
         /// <inheritdoc />
-        public override void Multiply(double alpha, double[] x, double beta, double[] y)
+        public override void Multiply(double alpha, ReadOnlySpan<double> x, double beta, Span<double> y)
         {
             var ax = this.Values;
             var ap = this.ColumnPointers;
@@ -218,7 +218,7 @@ namespace CSparse.Double
         }
 
         /// <inheritdoc />
-        public override void TransposeMultiply(double[] x, double[] y)
+        public override void TransposeMultiply(ReadOnlySpan<double> x, Span<double> y)
         {
             var ax = this.Values;
             var ap = this.ColumnPointers;
@@ -242,7 +242,7 @@ namespace CSparse.Double
         }
 
         /// <inheritdoc />
-        public override void TransposeMultiply(double alpha, double[] x, double beta, double[] y)
+        public override void TransposeMultiply(double alpha, ReadOnlySpan<double> x, double beta, Span<double> y)
         {
             var ax = this.Values;
             var ap = this.ColumnPointers;

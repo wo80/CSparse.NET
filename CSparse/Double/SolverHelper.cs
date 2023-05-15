@@ -1,6 +1,7 @@
 namespace CSparse.Double
 {
     using CSparse.Storage;
+    using System;
 
     /// <summary>
     /// Helper methods for solving triangular systems.
@@ -13,7 +14,15 @@ namespace CSparse.Double
         /// <param name="L"></param>
         /// <param name="x"></param>
         /// <returns></returns>
-        public static void SolveLower(CompressedColumnStorage<double> L, double[] x)
+        public static void SolveLower(CompressedColumnStorage<double> L, double[] x) => SolveLower(L, x.AsSpan());
+
+        /// <summary>
+        /// Solve a lower triangular system by forward elimination, Lx=b.
+        /// </summary>
+        /// <param name="L"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static void SolveLower(CompressedColumnStorage<double> L, Span<double> x)
         {
             int p, j, k, n = L.ColumnCount;
 
@@ -40,7 +49,15 @@ namespace CSparse.Double
         /// <param name="L"></param>
         /// <param name="x"></param>
         /// <returns></returns>
-        public static void SolveLowerTranspose(CompressedColumnStorage<double> L, double[] x)
+        public static void SolveLowerTranspose(CompressedColumnStorage<double> L, double[] x) => SolveLowerTranspose(L, x.AsSpan());
+
+        /// <summary>
+        /// Solve L'x=b where x and b are dense.
+        /// </summary>
+        /// <param name="L"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static void SolveLowerTranspose(CompressedColumnStorage<double> L, Span<double> x)
         {
             int p, j, k, n = L.ColumnCount;
 
@@ -67,7 +84,15 @@ namespace CSparse.Double
         /// <param name="U"></param>
         /// <param name="x"></param>
         /// <returns></returns>
-        public static void SolveUpper(CompressedColumnStorage<double> U, double[] x)
+        public static void SolveUpper(CompressedColumnStorage<double> U, double[] x) => SolveUpper(U, x.AsSpan());
+
+        /// <summary>
+        /// Solve an upper triangular system by backward elimination, Ux=b.
+        /// </summary>
+        /// <param name="U"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static void SolveUpper(CompressedColumnStorage<double> U, Span<double> x)
         {
             int p, j, k, n = U.ColumnCount;
 
@@ -94,7 +119,15 @@ namespace CSparse.Double
         /// <param name="U"></param>
         /// <param name="x"></param>
         /// <returns></returns>
-        public static void SolveUpperTranspose(CompressedColumnStorage<double> U, double[] x)
+        public static void SolveUpperTranspose(CompressedColumnStorage<double> U, double[] x) => SolveUpperTranspose(U, x.AsSpan());
+
+        /// <summary>
+        /// Solve U'x=b where x and b are dense.
+        /// </summary>
+        /// <param name="U"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static void SolveUpperTranspose(CompressedColumnStorage<double> U, Span<double> x)
         {
             int p, j, k, n = U.ColumnCount;
 
