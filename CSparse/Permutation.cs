@@ -19,7 +19,7 @@ namespace CSparse
         /// </remarks>
         public static void Apply<T>(int[] p, T[] b, T[] x, int n)
         {
-            Apply(p, b, x, n);
+            Apply(p, b.AsSpan(), x.AsSpan(), n);
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace CSparse
         /// </remarks>
         public static void ApplyInverse<T>(int[] p, T[] b, T[] x, int n)
         {
-            ApplyInverse(p, b, x, n);
+            ApplyInverse(p, b.AsSpan(), x.AsSpan(), n);
         }
 
         /// <summary>
