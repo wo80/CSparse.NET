@@ -219,7 +219,7 @@ namespace CSparse.Storage
         {
             var target = new T[columns];
 
-            Row(row, target);
+            Row(row, target.AsSpan());
 
             return target;
         }
@@ -229,7 +229,7 @@ namespace CSparse.Storage
         {
             var target = new T[rows];
 
-            Column(column, target);
+            Column(column, target.AsSpan());
 
             return target;
         }

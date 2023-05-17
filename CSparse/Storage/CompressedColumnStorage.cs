@@ -309,7 +309,7 @@ namespace CSparse.Storage
         {
             var target = new T[ColumnCount];
 
-            Row(rowIndex, target);
+            Row(rowIndex, target.AsSpan());
 
             return target;
         }
@@ -343,7 +343,7 @@ namespace CSparse.Storage
         {
             var target = new T[RowCount];
 
-            Column(columnIndex, target);
+            Column(columnIndex, target.AsSpan());
 
             return target;
         }
