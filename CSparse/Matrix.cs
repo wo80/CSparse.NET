@@ -82,7 +82,14 @@ namespace CSparse
         /// </summary>
         /// <param name="rowIndex">The column index to extract.</param>
         /// <param name="target">Dense array.</param>
-        public abstract void Row(int rowIndex, T[] target);
+        public void Row(int rowIndex, T[] target) => Row(rowIndex, target.AsSpan());
+
+        /// <summary>
+        /// Extract row from matrix.
+        /// </summary>
+        /// <param name="rowIndex">The column index to extract.</param>
+        /// <param name="target">Dense array.</param>
+        public abstract void Row(int rowIndex, Span<T> target);
 
         /// <summary>
         /// Extract column from matrix.
@@ -95,7 +102,14 @@ namespace CSparse
         /// </summary>
         /// <param name="columnIndex">The column index to extract.</param>
         /// <param name="target">Dense array.</param>
-        public abstract void Column(int columnIndex, T[] target);
+        public void Column(int columnIndex, T[] target) => Column(columnIndex, target.AsSpan());
+
+        /// <summary>
+        /// Extract column from matrix.
+        /// </summary>
+        /// <param name="columnIndex">The column index to extract.</param>
+        /// <param name="target">Dense array.</param>
+        public abstract void Column(int columnIndex, Span<T> target);
 
         /// <summary>
         /// Calculates the induced L1 norm of this matrix.
@@ -128,16 +142,28 @@ namespace CSparse
         public abstract void EnumerateIndexed(Action<int, int, T> action);
 
         /// <inheritdoc />
-        public abstract void Multiply(T[] x, T[] y);
+        public void Multiply(T[] x, T[] y) => Multiply(x.AsSpan(), y.AsSpan());
 
         /// <inheritdoc />
-        public abstract void Multiply(T alpha, T[] x, T beta, T[] y);
+        public abstract void Multiply(ReadOnlySpan<T> x, Span<T> y);
 
         /// <inheritdoc />
-        public abstract void TransposeMultiply(T[] x, T[] y);
+        public void Multiply(T alpha, T[] x, T beta, T[] y) => Multiply(alpha, x.AsSpan(), beta, y.AsSpan());
 
         /// <inheritdoc />
-        public abstract void TransposeMultiply(T alpha, T[] x, T beta, T[] y);
+        public abstract void Multiply(T alpha, ReadOnlySpan<T> x, T beta, Span<T> y);
+
+        /// <inheritdoc />
+        public void TransposeMultiply(T[] x, T[] y) => TransposeMultiply(x.AsSpan(), y.AsSpan());
+
+        /// <inheritdoc />
+        public abstract void TransposeMultiply(ReadOnlySpan<T> x, Span<T> y);
+
+        /// <inheritdoc />
+        public void TransposeMultiply(T alpha, T[] x, T beta, T[] y) => TransposeMultiply(alpha, x.AsSpan(), beta, y.AsSpan());
+
+        /// <inheritdoc />
+        public abstract void TransposeMultiply(T alpha, ReadOnlySpan<T> x, T beta, Span<T> y);
 
         #region Storage equality
 
@@ -205,6 +231,7 @@ namespace CSparse
             }
             return hash;
         }
+
 
         #endregion
     }

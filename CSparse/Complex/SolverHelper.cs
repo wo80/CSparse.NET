@@ -1,6 +1,7 @@
 namespace CSparse.Complex
 {
     using CSparse.Storage;
+    using System;
     using System.Numerics;
 
     /// <summary>
@@ -14,7 +15,15 @@ namespace CSparse.Complex
         /// <param name="L"></param>
         /// <param name="x"></param>
         /// <returns></returns>
-        public static void SolveLower(CompressedColumnStorage<Complex> L, Complex[] x)
+        public static void SolveLower(CompressedColumnStorage<Complex> L, Complex[] x) => SolveLower(L, x.AsSpan());
+
+        /// <summary>
+        /// Solve a lower triangular system by forward elimination, Lx=b.
+        /// </summary>
+        /// <param name="L"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static void SolveLower(CompressedColumnStorage<Complex> L, Span<Complex> x)
         {
             int p, j, k, n = L.ColumnCount;
 
@@ -41,7 +50,15 @@ namespace CSparse.Complex
         /// <param name="L"></param>
         /// <param name="x"></param>
         /// <returns></returns>
-        public static void SolveLowerTranspose(CompressedColumnStorage<Complex> L, Complex[] x)
+        public static void SolveLowerTranspose(CompressedColumnStorage<Complex> L, Complex[] x) => SolveLowerTranspose(L, x.AsSpan());
+
+        /// <summary>
+        /// Solve L'x=b where x and b are dense.
+        /// </summary>
+        /// <param name="L"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static void SolveLowerTranspose(CompressedColumnStorage<Complex> L, Span<Complex> x)
         {
             int p, j, k, n = L.ColumnCount;
 
@@ -68,7 +85,15 @@ namespace CSparse.Complex
         /// <param name="U"></param>
         /// <param name="x"></param>
         /// <returns></returns>
-        public static void SolveUpper(CompressedColumnStorage<Complex> U, Complex[] x)
+        public static void SolveUpper(CompressedColumnStorage<Complex> U, Complex[] x)=>SolveUpper(U, x.AsSpan());
+
+        /// <summary>
+        /// Solve an upper triangular system by backward elimination, Ux=b.
+        /// </summary>
+        /// <param name="U"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static void SolveUpper(CompressedColumnStorage<Complex> U, Span<Complex> x)
         {
             int p, j, k, n = U.ColumnCount;
 
@@ -95,7 +120,15 @@ namespace CSparse.Complex
         /// <param name="U"></param>
         /// <param name="x"></param>
         /// <returns></returns>
-        public static void SolveUpperTranspose(CompressedColumnStorage<Complex> U, Complex[] x)
+        public static void SolveUpperTranspose(CompressedColumnStorage<Complex> U, Complex[] x) => SolveUpperTranspose(U, x.AsSpan());
+
+        /// <summary>
+        /// Solve U'x=b where x and b are dense.
+        /// </summary>
+        /// <param name="U"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static void SolveUpperTranspose(CompressedColumnStorage<Complex> U, Span<Complex> x)
         {
             int p, j, k, n = U.ColumnCount;
 

@@ -117,7 +117,14 @@ namespace CSparse.Complex.Factorization
         /// </summary>
         /// <param name="input">Right hand side b.</param>
         /// <param name="result">Solution vector x.</param>
-        public void Solve(Complex[] input, Complex[] result)
+        public void Solve(Complex[] input, Complex[] result) => Solve(input.AsSpan(), result.AsSpan());
+
+        /// <summary>
+        /// Solves a linear system Ax=b, where A is symmetric positive definite.
+        /// </summary>
+        /// <param name="input">Right hand side b.</param>
+        /// <param name="result">Solution vector x.</param>
+        public void Solve(ReadOnlySpan<Complex> input, Span<Complex> result)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
 
