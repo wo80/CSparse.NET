@@ -22,5 +22,14 @@ namespace CSparse.Tests.Double
 
             return b;
         }
+
+        public static double[] TransposeMultiply(ILinearOperator<double> A, double[] x)
+        {
+            var b = new double[A.RowCount];
+
+            A.TransposeMultiply(1.0, x, 0.0, b);
+
+            return b;
+        }
     }
 }
