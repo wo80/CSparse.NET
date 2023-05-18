@@ -85,7 +85,7 @@ namespace CSparse.Double
         /// <inheritdoc />
         public override double FrobeniusNorm()
         {
-            double sum = 0.0, norm = 0.0;
+            double sum, norm = 0.0;
 
             int length = rows * columns;
 
@@ -213,7 +213,7 @@ namespace CSparse.Double
 
             var target = result.Values;
 
-            var a = this.Values;
+            var a = Values;
             var b = other.Values;
 
             int length = rows * columns;

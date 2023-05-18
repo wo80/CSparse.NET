@@ -85,7 +85,7 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override double FrobeniusNorm()
         {
-            double sum = 0.0, norm = 0.0;
+            double sum, norm = 0.0;
 
             int length = rows * columns;
 
@@ -208,7 +208,7 @@ namespace CSparse.Complex
 
             var target = result.Values;
 
-            var a = this.Values;
+            var a = Values;
             var b = other.Values;
 
             int length = m * n;

@@ -90,7 +90,7 @@ namespace CSparse.Complex
             if (AutoTrimStorage)
             {
                 // Remove extra space.
-                this.Resize(0);
+                Resize(0);
             }
 
             return nz;
@@ -99,8 +99,6 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override double L1Norm()
         {
-            int nz = this.NonZerosCount;
-
             double sum, norm = 0.0;
 
             for (int j = 0; j < columns; j++)
@@ -119,8 +117,6 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override double InfinityNorm()
         {
-            int nz = this.NonZerosCount;
-
             var work = new double[rows];
 
             for (int j = 0; j < columns; j++)
@@ -144,9 +140,9 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override double FrobeniusNorm()
         {
-            int nz = this.NonZerosCount;
+            int nz = NonZerosCount;
 
-            double sum = 0.0, norm = 0.0;
+            double sum, norm = 0.0;
             
             for (int i = 0; i < nz; i++)
             {
@@ -164,9 +160,9 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override void Multiply(ReadOnlySpan<Complex> x, Span<Complex> y)
         {
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
+            var ax = Values;
+            var ap = ColumnPointers;
+            var ai = RowIndices;
             
             // Clear y.
             for (int i = 0; i < rows; i++)
@@ -191,9 +187,9 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override void Multiply(Complex alpha, ReadOnlySpan<Complex> x, Complex beta, Span<Complex> y)
         {
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
+            var ax = Values;
+            var ap = ColumnPointers;
+            var ai = RowIndices;
 
             // Scale y by beta
             for (int j = 0; j < rows; j++)
@@ -220,9 +216,9 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override void TransposeMultiply(ReadOnlySpan<Complex> x, Span<Complex> y)
         {
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
+            var ax = Values;
+            var ap = ColumnPointers;
+            var ai = RowIndices;
 
             Complex yi;
 
@@ -244,9 +240,9 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override void TransposeMultiply(Complex alpha, ReadOnlySpan<Complex> x, Complex beta, Span<Complex> y)
         {
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
+            var ax = Values;
+            var ap = ColumnPointers;
+            var ai = RowIndices;
 
             Complex yi;
 
@@ -334,8 +330,8 @@ namespace CSparse.Complex
 
             int p, j, nz = 0;
 
-            int m = this.rows;
-            int n = this.columns;
+            int m = rows;
+            int n = columns;
 
             // check inputs
             if (m != other.RowCount || n != other.ColumnCount)
@@ -356,7 +352,7 @@ namespace CSparse.Complex
             for (j = 0; j < n; j++)
             {
                 ci[j] = nz; // column j of C starts here
-                nz = this.Scatter(j, alpha, w, x, j + 1, result, nz); // alpha*A(:,j)
+                nz = Scatter(j, alpha, w, x, j + 1, result, nz); // alpha*A(:,j)
                 nz = other.Scatter(j, beta, w, x, j + 1, result, nz); // beta*B(:,j)
 
                 for (p = ci[j]; p < nz; p++)
@@ -394,18 +390,18 @@ namespace CSparse.Complex
             int[] cp, ci;
             Complex[] cx;
 
-            int m = this.rows;
+            int m = rows;
             int n = other.ColumnCount;
 
-            int anz = this.NonZerosCount;
+            int anz = NonZerosCount;
             int bnz = other.NonZerosCount;
             
-            if (this.ColumnCount != other.RowCount)
+            if (ColumnCount != other.RowCount)
             {
                 throw new ArgumentException(Resources.MatrixDimensions, nameof(other));
             }
 
-            if ((m > 0 && this.ColumnCount == 0) || (other.RowCount == 0 && n > 0))
+            if ((m > 0 && ColumnCount == 0) || (other.RowCount == 0 && n > 0))
             {
                 throw new Exception(Resources.InvalidDimensions);
             }
@@ -436,7 +432,7 @@ namespace CSparse.Complex
                 cp[j] = nz; // column j of C starts here
                 for (p = bp[j]; p < bp[j + 1]; p++)
                 {
-                    nz = this.Scatter(bi[p], bx[p], w, x, j + 1, result, nz);
+                    nz = Scatter(bi[p], bx[p], w, x, j + 1, result, nz);
                 }
 
                 for (p = cp[j]; p < nz; p++)
@@ -461,16 +457,16 @@ namespace CSparse.Complex
         /// </summary>
         public override bool IsSymmetric()
         {
-            int n = this.ColumnCount;
+            int n = ColumnCount;
 
-            if (this.RowCount != n)
+            if (RowCount != n)
             {
                 return false;
             }
 
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
+            var ax = Values;
+            var ap = ColumnPointers;
+            var ai = RowIndices;
 
             for (var i = 0; i < n; i++)
             {
@@ -500,16 +496,16 @@ namespace CSparse.Complex
                 return false;
             }
 
-            int nz = this.NonZerosCount;
+            int nz = NonZerosCount;
 
-            if (this.columns != o.ColumnCount || this.rows != o.RowCount || nz != o.NonZerosCount)
+            if (columns != o.ColumnCount || rows != o.RowCount || nz != o.NonZerosCount)
             {
                 return false;
             }
 
-            for (int i = 0; i < this.columns; i++)
+            for (int i = 0; i < columns; i++)
             {
-                if (this.ColumnPointers[i] != o.ColumnPointers[i])
+                if (ColumnPointers[i] != o.ColumnPointers[i])
                 {
                     return false;
                 }
@@ -517,13 +513,13 @@ namespace CSparse.Complex
 
             for (int i = 0; i < nz; i++)
             {
-                if (this.RowIndices[i] != o.RowIndices[i])
+                if (RowIndices[i] != o.RowIndices[i])
                 {
                     return false;
                 }
 
-                if (Math.Abs(this.Values[i].Real - o.Values[i].Real) > tolerance ||
-                    Math.Abs(this.Values[i].Imaginary - o.Values[i].Imaginary) > tolerance)
+                if (Math.Abs(Values[i].Real - o.Values[i].Real) > tolerance ||
+                    Math.Abs(Values[i].Imaginary - o.Values[i].Imaginary) > tolerance)
                 {
                     return false;
                 }
@@ -566,12 +562,12 @@ namespace CSparse.Complex
                 ColumnPointers[i] = q; // Record start of row i
             }
 
-            this.ColumnPointers[columns] = nnz;
+            ColumnPointers[columns] = nnz;
 
             if (AutoTrimStorage)
             {
                 // Remove extra space from arrays
-                this.Resize(0);
+                Resize(0);
             }
         }
 

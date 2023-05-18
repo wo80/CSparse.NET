@@ -21,33 +21,24 @@ namespace CSparse.Ordering
         /// </summary>
         private StronglyConnectedComponents(int m, int n)
         {
-            this.p = new int[m];
-            this.r = new int[m + 6];
+            p = new int[m];
+            r = new int[m + 6];
         }
 
         /// <summary>
         /// Gets the number of strongly connected components.
         /// </summary>
-        public int Blocks
-        {
-            get { return nb; }
-        }
+        public int Blocks => nb;
 
         /// <summary>
         /// Gets the block pointers (block k is nodes r[k] to r[k+1]-1).
         /// </summary>
-        public int[] BlockPointers
-        {
-            get { return r; }
-        }
+        public int[] BlockPointers => r;
 
         /// <summary>
         /// Gets the node indices.
         /// </summary>
-        public int[] Indices
-        {
-            get { return p; }
-        }
+        public int[] Indices => p;
 
         /// <summary>
         /// Compute strongly connected components of a matrix.

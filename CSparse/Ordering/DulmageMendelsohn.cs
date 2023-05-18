@@ -26,30 +26,24 @@ namespace CSparse.Ordering
         /// </summary>
         private DulmageMendelsohn(int m, int n)
         {
-            this.p = new int[m];
-            this.r = new int[m + 6];
-            this.q = new int[n];
-            this.s = new int[n + 6];
+            p = new int[m];
+            r = new int[m + 6];
+            q = new int[n];
+            s = new int[n + 6];
 
-            this.rr = new int[5];  // coarse row decomposition
-            this.cc = new int[5];  // coarse column decomposition
+            rr = new int[5];  // coarse row decomposition
+            cc = new int[5];  // coarse column decomposition
         }
 
         /// <summary>
         /// Gets the number of blocks in the fine decomposition.
         /// </summary>
-        public int Blocks
-        {
-            get { return nb; }
-        }
+        public int Blocks => nb;
 
         /// <summary>
         /// Gets the number structural rank of the matrix.
         /// </summary>
-        public int StructuralRank
-        {
-            get { return rr[3]; }
-        }
+        public int StructuralRank => rr[3];
 
         /// <summary>
         /// Gets the number of singletons.
@@ -75,50 +69,32 @@ namespace CSparse.Ordering
         /// <summary>
         /// Gets the row permutation.
         /// </summary>
-        public int[] RowPermutation
-        {
-            get { return p; }
-        }
+        public int[] RowPermutation => p;
 
         /// <summary>
         /// Gets the column permutation.
         /// </summary>
-        public int[] ColumnPermutation
-        {
-            get { return q; }
-        }
+        public int[] ColumnPermutation => q;
 
         /// <summary>
         /// Gets the block row pointers (block k is rows r[k] to r[k+1]-1 in A(p,q)).
         /// </summary>
-        public int[] BlockRowPointers
-        {
-            get { return r; }
-        }
+        public int[] BlockRowPointers => r;
 
         /// <summary>
         /// Gets the block column pointers (block k is cols s[k] to s[k+1]-1 in A(p,q)).
         /// </summary>
-        public int[] BlockColumnPointers
-        {
-            get { return s; }
-        }
+        public int[] BlockColumnPointers => s;
 
         /// <summary>
         /// Gets the coarse row decomposition
         /// </summary>
-        public int[] CoarseRowDecomposition
-        {
-            get { return rr; }
-        }
+        public int[] CoarseRowDecomposition => rr;
 
         /// <summary>
         /// Gets the coarse column decomposition.
         /// </summary>
-        public int[] CoarseColumnDecomposition
-        {
-            get { return cc; }
-        }
+        public int[] CoarseColumnDecomposition => cc;
 
         /// <summary>
         /// Compute coarse and then fine Dulmage-Mendelsohn decomposition. seed
