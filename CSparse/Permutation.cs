@@ -142,11 +142,20 @@ namespace CSparse
         /// <returns>Returns pinv[i] = k if p[k] = i on input.</returns>
         public static int[] Invert(int[] p)
         {
-            int k, n = p.Length;
+            return Invert(p, p.Length);
+        }
 
+        /// <summary>
+        /// Inverts a permutation vector.
+        /// </summary>
+        /// <param name="p">A permutation vector.</param>
+        /// <param name="n">Length of the permutation.</param>
+        /// <returns>Returns pinv[i] = k if p[k] = i on input.</returns>
+        public static int[] Invert(int[] p, int n)
+        {
             int[] pinv = new int[n];
 
-            for (k = 0; k < n; k++)
+            for (int k = 0; k < n; k++)
             {
                 // Invert the permutation.
                 pinv[p[k]] = k;
@@ -162,13 +171,23 @@ namespace CSparse
         /// <returns>True if <paramref name="p"/> represents a proper permutation, <c>false</c> otherwise.</returns>
         public static bool IsValid(int[] p)
         {
-            int length = p.Length;
+            return IsValid(p, p.Length);
+        }
 
-            var check = new bool[length];
+        /// <summary>
+        /// Checks whether the <paramref name="p"/> array represents a proper permutation.
+        /// </summary>
+        /// <param name="p">An array which represents where each integer is permuted too: indices[i]
+        /// represents that integer i is permuted to location indices[i].</param>
+        /// <param name="n">Length of the permutation.</param>
+        /// <returns>True if <paramref name="p"/> represents a proper permutation, <c>false</c> otherwise.</returns>
+        public static bool IsValid(int[] p, int n)
+        {
+            var check = new bool[n];
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < n; i++)
             {
-                if (p[i] >= length || p[i] < 0)
+                if (p[i] >= n || p[i] < 0)
                 {
                     return false;
                 }
@@ -176,7 +195,7 @@ namespace CSparse
                 check[p[i]] = true;
             }
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < n; i++)
             {
                 if (check[i] == false)
                 {

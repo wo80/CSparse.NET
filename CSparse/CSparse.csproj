@@ -1,32 +1,39 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageId>CSparse</PackageId>
     <Summary>A concise library for solving sparse linear systems with direct methods.</Summary>
     <Description>CSparse.NET provides numerical methods for sparse LU, Cholesky and QR decomposition of real and complex linear systems.</Description>
     <Product>CSparse.NET</Product>
     <Company />
-    <Copyright>Copyright Christian Woltering © 2012-2022</Copyright>
+    <Copyright>Copyright Christian Woltering © 2012-2023</Copyright>
     <Authors>Christian Woltering</Authors>
-    <AssemblyVersion>3.7.0.0</AssemblyVersion>
-    <FileVersion>3.7.0.0</FileVersion>
+    <AssemblyVersion>3.8.1.0</AssemblyVersion>
+    <FileVersion>3.8.1.0</FileVersion>
     <PackageTags>math sparse matrix lu cholesky qr decomposition factorization </PackageTags>
-    <Version>3.7.0</Version>
+    <Version>3.8.1</Version>
     <AssemblyName>CSparse</AssemblyName>
     <RootNamespace>CSparse</RootNamespace>
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/wo80/CSparse.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/wo80/CSparse.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>Add sparse matrix OfDiagonals static method (similar to MATLAB spdiags).
-</PackageReleaseNotes>
+    <PackageReleaseNotes>
+Changes in version 3.8.1:
+
+* Add overloads for permutation Invert() and IsValid() methods taking the permutation length as argument.
+
+Changes in version 3.8.0:
+
+* Add overloads for the factorization Solve() methods taking Span&lt;T&gt; as argument. Note that this introduces a dependency on System.Memory for the netstandard2.0 assembly.
+    </PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
-      <PackageReference Include="System.Memory" Version="4.5.5" Condition="'$(TargetFramework)' == 'netstandard2.0'"/>
+    <PackageReference Include="System.Memory" Version="4.5.5" Condition="'$(TargetFramework)' == 'netstandard2.0'"/>
   </ItemGroup>
 
   <ItemGroup>
