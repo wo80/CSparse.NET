@@ -44,9 +44,9 @@ namespace CSparse.Tests.Ordering
             var r = new int[] { 0, 3, 6, 8 };
             var p = new int[] { 0, 1, 4, 2, 3, 7, 5, 6 };
 
-            Assert.AreEqual(scc.Blocks, 3);
-            CollectionAssert.AreEqual(scc.BlockPointers, r);
-            CollectionAssert.AreEqual(scc.Indices, p);
+            Assert.That(3, Is.EqualTo(scc.Blocks));
+            Assert.That(r, Is.EqualTo(scc.BlockPointers).AsCollection);
+            Assert.That(p, Is.EqualTo(scc.Indices).AsCollection);
         }
     }
 }

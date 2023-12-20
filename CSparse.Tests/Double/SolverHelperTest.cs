@@ -31,7 +31,7 @@ namespace CSparse.Tests.Double
 
             SolverHelper.SolveLower(L, b);
 
-            CollectionAssert.AreEqual(x, b);
+            Assert.That(b, Is.EqualTo(x).AsCollection);
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace CSparse.Tests.Double
 
             SolverHelper.SolveLowerTranspose(L, b);
 
-            CollectionAssert.AreEqual(x, b);
+            Assert.That(b, Is.EqualTo(x).AsCollection);
         }
 
         [Test]
@@ -53,7 +53,7 @@ namespace CSparse.Tests.Double
 
             SolverHelper.SolveUpper(U, b);
 
-            CollectionAssert.AreEqual(x, b);
+            Assert.That(b, Is.EqualTo(x).AsCollection);
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace CSparse.Tests.Double
 
             SolverHelper.SolveUpperTranspose(U, b);
 
-            CollectionAssert.AreEqual(x, b);
+            Assert.That(b, Is.EqualTo(x).AsCollection);
         }
     }
 }

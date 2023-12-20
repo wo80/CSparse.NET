@@ -51,8 +51,8 @@ namespace CSparse.Tests.Complex
         {
             for (int i = 0; i < length; i++)
             {
-                Assert.AreEqual(x[i].Real, y[i].Real);
-                Assert.AreEqual(x[i].Imaginary, y[i].Imaginary);
+                Assert.That(y[i].Real, Is.EqualTo(x[i].Real));
+                Assert.That(y[i].Imaginary, Is.EqualTo(x[i].Imaginary));
             }
         }
     }

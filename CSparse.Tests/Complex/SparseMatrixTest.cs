@@ -19,7 +19,7 @@ namespace CSparse.Tests.Complex
         {
             var A = new SparseMatrix(rows, columns, 0);
 
-            Assert.IsNotNull(A);
+            Assert.That(A, Is.Not.Null);
         }
 
         [TestCase(0, 0)]
@@ -30,7 +30,7 @@ namespace CSparse.Tests.Complex
             var A = new SparseMatrix(rows, columns, 0);
             var B = A.Transpose();
 
-            Assert.IsNotNull(B);
+            Assert.That(B, Is.Not.Null);
         }
 
         [TestCase(0, 0)]
@@ -43,7 +43,7 @@ namespace CSparse.Tests.Complex
 
             var C = A.Add(B);
 
-            Assert.IsNotNull(C);
+            Assert.That(C, Is.Not.Null);
         }
 
         [TestCase(0, 0)]
@@ -55,7 +55,7 @@ namespace CSparse.Tests.Complex
 
             var C = A.Multiply(B);
 
-            Assert.IsNotNull(C);
+            Assert.That(C, Is.Not.Null);
         }
 
         [TestCase(5, 0)]
@@ -81,7 +81,7 @@ namespace CSparse.Tests.Complex
 
             A.Multiply(x, y);
 
-            Assert.IsTrue(Vector.Norm(y.Length, y) == 0.0);
+            Assert.That(Vector.Norm(y.Length, y), Is.EqualTo(0.0));
         }
 
         [TestCase(0, 0)]
@@ -95,9 +95,9 @@ namespace CSparse.Tests.Complex
             var l1 = A.L1Norm();
             var l2 = A.FrobeniusNorm();
 
-            Assert.IsTrue(l0 == 0.0);
-            Assert.IsTrue(l1 == 0.0);
-            Assert.IsTrue(l2 == 0.0);
+            Assert.That(l0, Is.EqualTo(0.0));
+            Assert.That(l1, Is.EqualTo(0.0));
+            Assert.That(l2, Is.EqualTo(0.0));
         }
 
         [Test]
@@ -107,7 +107,7 @@ namespace CSparse.Tests.Complex
             var B = SparseMatrix.OfColumnMajor(2, 4, new Complex[8]);
             var C = A.Multiply(B);
 
-            Assert.IsTrue(C.NonZerosCount == 0);
+            Assert.That(C.NonZerosCount, Is.EqualTo(0));
         }
 
         #endregion
@@ -131,8 +131,8 @@ namespace CSparse.Tests.Complex
 
             int nnz = A.DropZeros();
 
-            Assert.AreEqual(nnz, 3);
-            Assert.AreEqual(A.NonZerosCount, 3);
+            Assert.That(3, Is.EqualTo(nnz));
+            Assert.That(3, Is.EqualTo(A.NonZerosCount));
         }
 
         [Test]
@@ -145,8 +145,8 @@ namespace CSparse.Tests.Complex
             // Keep strict upper part of the matrix.
             int nnz = A.Keep((i, j, a) => i < j);
 
-            Assert.AreEqual(nnz, 1);
-            Assert.AreEqual(A.NonZerosCount, 1);
+            Assert.That(1, Is.EqualTo(nnz));
+            Assert.That(1, Is.EqualTo(A.NonZerosCount));
         }
 
         [Test]
@@ -157,14 +157,14 @@ namespace CSparse.Tests.Complex
             var actual = A.L1Norm();
             var expected = 2.0;
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
 
             var data = MatrixHelper.LoadSparse(2, 2);
 
             actual = data.A.L1Norm();
             expected = 6.0;
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -175,14 +175,14 @@ namespace CSparse.Tests.Complex
             var actual = A.InfinityNorm();
             var expected = 2.0;
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
 
             var data = MatrixHelper.LoadSparse(2, 2);
 
             actual = data.A.InfinityNorm();
             expected = 7.0;
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -193,14 +193,14 @@ namespace CSparse.Tests.Complex
             var actual = A.FrobeniusNorm();
             var expected = 6.0;
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
 
             var data = MatrixHelper.LoadSparse(2, 2);
 
             actual = data.A.FrobeniusNorm();
             expected = 5.477225575;
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCase(2, 2)]
@@ -215,7 +215,7 @@ namespace CSparse.Tests.Complex
 
             A.EnumerateIndexed((i, j, a) => sum += a.Real * a.Real + a.Imaginary * a.Imaginary);
 
-            Assert.AreEqual(A.FrobeniusNorm(), Math.Sqrt(sum));
+            Assert.That(Math.Sqrt(sum), Is.EqualTo(A.FrobeniusNorm()));
         }
 
         [TestCase(2, 2)]
@@ -232,7 +232,7 @@ namespace CSparse.Tests.Complex
 
                 for (int j = 0; j < columns; j++)
                 {
-                    Assert.AreEqual(A.At(i, j), y[j]);
+                    Assert.That(y[j], Is.EqualTo(A.At(i, j)));
                 }
             }
         }
@@ -251,7 +251,7 @@ namespace CSparse.Tests.Complex
 
                 for (int i = 0; i < rows; i++)
                 {
-                    Assert.AreEqual(A.At(i, j), y[i]);
+                    Assert.That(y[i], Is.EqualTo(A.At(i, j)));
                 }
             }
         }
@@ -269,7 +269,7 @@ namespace CSparse.Tests.Complex
 
             A.Multiply(x, actual);
 
-            CollectionAssert.AreEqual(data.Ax, actual);
+            Assert.That(actual, Is.EqualTo(data.Ax).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -285,7 +285,7 @@ namespace CSparse.Tests.Complex
 
             A.TransposeMultiply(y, actual);
 
-            CollectionAssert.AreEqual(data.ATy, actual);
+            Assert.That(actual, Is.EqualTo(data.ATy).AsCollection);
 
             Vector.Clear(actual);
 
@@ -293,7 +293,7 @@ namespace CSparse.Tests.Complex
 
             AT.Multiply(y, actual);
 
-            CollectionAssert.AreEqual(data.ATy, actual);
+            Assert.That(actual, Is.EqualTo(data.ATy).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -309,7 +309,7 @@ namespace CSparse.Tests.Complex
 
             A.Multiply(1.0, x, 0.0, actual);
 
-            CollectionAssert.AreEqual(data.Ax, actual);
+            Assert.That(actual, Is.EqualTo(data.Ax).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -325,7 +325,7 @@ namespace CSparse.Tests.Complex
 
             A.TransposeMultiply(1.0, y, 0.0, actual);
 
-            CollectionAssert.AreEqual(data.ATy, actual);
+            Assert.That(actual, Is.EqualTo(data.ATy).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -340,8 +340,8 @@ namespace CSparse.Tests.Complex
             var actualA = A.Transpose();
             var actualB = B.Transpose();
 
-            CollectionAssert.AreEqual(data.AT.Values, actualA.Values);
-            CollectionAssert.AreEqual(data.BT.Values, actualB.Values);
+            Assert.That(actualA.Values, Is.EqualTo(data.AT.Values).AsCollection);
+            Assert.That(actualB.Values, Is.EqualTo(data.BT.Values).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -355,7 +355,7 @@ namespace CSparse.Tests.Complex
 
             var actual = A.Add(B);
 
-            CollectionAssert.AreEqual(data.ApB.Values, actual.Values);
+            Assert.That(actual.Values, Is.EqualTo(data.ApB.Values).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -372,11 +372,11 @@ namespace CSparse.Tests.Complex
 
             var actual = AT.Multiply(B);
 
-            CollectionAssert.AreEqual(data.ATmB.Values, actual.Values, ComplexNumberComparer.Default);
+            Assert.That(actual.Values, Is.EqualTo(data.ATmB.Values).Using<Complex>(ComplexNumberComparer.Default));
 
             actual = A.Multiply(BT);
 
-            CollectionAssert.AreEqual(data.AmBT.Values, actual.Values, ComplexNumberComparer.Default);
+            Assert.That(actual.Values, Is.EqualTo(data.AmBT.Values).Using<Complex>(ComplexNumberComparer.Default));
         }
 
         [Test]
@@ -402,7 +402,7 @@ namespace CSparse.Tests.Complex
             var sResult = A.Multiply(B);
             var pResult = A.ParallelMultiply(B);
 
-            CollectionAssert.AreEqual(sResult.Values, pResult.Values);
+            Assert.That(pResult.Values, Is.EqualTo(sResult.Values).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -424,7 +424,7 @@ namespace CSparse.Tests.Complex
                 A.Column(p[i], expectedColumn);
                 Ap.Column(i, actualColumn);
 
-                CollectionAssert.AreEqual(expectedColumn, actualColumn);
+                Assert.That(actualColumn, Is.EqualTo(expectedColumn).AsCollection);
             }
         }
 
@@ -449,7 +449,7 @@ namespace CSparse.Tests.Complex
                 A.Row(p[i], expectedRow);
                 Ap.Row(i, actualRow);
 
-                CollectionAssert.AreEqual(expectedRow, actualRow);
+                Assert.That(actualRow, Is.EqualTo(expectedRow).AsCollection);
             }
         }
 
@@ -464,13 +464,13 @@ namespace CSparse.Tests.Complex
             var sparseA = sparseData.A;
             var sparseB = SparseMatrix.OfMatrix(sparseA);
 
-            Assert.IsTrue(sparseA.Equals(sparseB));
+            Assert.That(sparseA.Equals(sparseB), Is.True);
 
             var denseData = MatrixHelper.LoadDense(rows, columns);
 
             sparseB = SparseMatrix.OfMatrix(denseData.A);
 
-            Assert.IsTrue(sparseA.Equals(sparseB));
+            Assert.That(sparseA.Equals(sparseB), Is.True);
         }
 
         [TestCase(2, 2)]
@@ -482,7 +482,7 @@ namespace CSparse.Tests.Complex
             var sparseA = sparseData.A;
             var sparseB = SparseMatrix.OfIndexed(rows, columns, sparseA.EnumerateIndexed());
 
-            Assert.IsTrue(sparseA.Equals(sparseB));
+            Assert.That(sparseA.Equals(sparseB), Is.True);
         }
 
         [TestCase(2, 2)]
@@ -502,14 +502,14 @@ namespace CSparse.Tests.Complex
 
             var sparseB = SparseMatrix.OfIndexed(coo);
 
-            Assert.IsTrue(sparseA.Equals(sparseB));
+            Assert.That(sparseA.Equals(sparseB), Is.True);
 
             var sparseC = SparseMatrix.OfIndexed(coo, true);
 
-            Assert.IsTrue(sparseA.Equals(sparseC));
-            Assert.IsNull(coo.Values);
-            Assert.IsNull(coo.RowIndices);
-            Assert.IsNull(coo.ColumnIndices);
+            Assert.That(sparseA.Equals(sparseC), Is.True);
+            Assert.That(coo.Values, Is.Null);
+            Assert.That(coo.RowIndices, Is.Null);
+            Assert.That(coo.ColumnIndices, Is.Null);
         }
 
         [TestCase(2, 2)]
@@ -524,7 +524,7 @@ namespace CSparse.Tests.Complex
 
             var sparseB = SparseMatrix.OfColumnMajor(rows, columns, denseA.Values);
 
-            Assert.IsTrue(sparseA.Equals(sparseB));
+            Assert.That(sparseA.Equals(sparseB), Is.True);
         }
 
         [TestCase(2, 2)]
@@ -544,7 +544,7 @@ namespace CSparse.Tests.Complex
 
             var sparseB = SparseMatrix.OfArray(array);
 
-            Assert.IsTrue(sparseA.Equals(sparseB));
+            Assert.That(sparseA.Equals(sparseB), Is.True);
         }
 
         [TestCase(2, 2)]
@@ -571,7 +571,7 @@ namespace CSparse.Tests.Complex
 
             var sparseB = SparseMatrix.OfJaggedArray(array);
 
-            Assert.IsTrue(sparseA.Equals(sparseB));
+            Assert.That(sparseA.Equals(sparseB), Is.True);
         }
 
         [Test]
@@ -586,7 +586,7 @@ namespace CSparse.Tests.Complex
 
             for (int i = 0; i < order; i++)
             {
-                Assert.AreEqual(A.At(i, i), a);
+                Assert.That(a, Is.EqualTo(A.At(i, i)));
             }
         }
 
@@ -599,7 +599,7 @@ namespace CSparse.Tests.Complex
 
             for (int i = 0; i < order; i++)
             {
-                Assert.AreEqual(A.At(i, i), Complex.One);
+                Assert.That(Complex.One, Is.EqualTo(A.At(i, i)));
             }
         }
 

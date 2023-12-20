@@ -11,12 +11,12 @@ namespace CSparse.Tests
             var expected = new[] { 0, 1, 2 };
             var actual = Permutation.Create(3, 0);
 
-            CollectionAssert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected).AsCollection);
 
             expected = new[] { 2, 1, 0 };
             actual = Permutation.Create(3, -1);
 
-            CollectionAssert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected).AsCollection);
         }
 
         [Test]
@@ -30,7 +30,7 @@ namespace CSparse.Tests
             
             Permutation.Apply(p, vector, actual, 3);
 
-            CollectionAssert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected).AsCollection);
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace CSparse.Tests
 
             Permutation.ApplyInverse(p, vector, actual, 3);
 
-            CollectionAssert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected).AsCollection);
         }
 
         [Test]
@@ -55,7 +55,7 @@ namespace CSparse.Tests
             var expected = new[] { 1, 2, 0 };
             var actual = Permutation.Invert(p);
 
-            CollectionAssert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected).AsCollection);
         }
 
         [Test]
@@ -63,11 +63,11 @@ namespace CSparse.Tests
         {
             var p_valid = new[] { 2, 0, 1 };
 
-            Assert.IsTrue(Permutation.IsValid(p_valid));
+            Assert.That(Permutation.IsValid(p_valid), Is.True);
 
             var p_invalid = new[] { 2, 1, 1 };
 
-            Assert.IsFalse(Permutation.IsValid(p_invalid));
+            Assert.That(Permutation.IsValid(p_invalid), Is.False);
         }
     }
 }

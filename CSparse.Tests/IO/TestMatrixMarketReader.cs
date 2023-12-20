@@ -16,11 +16,11 @@ namespace CSparse.Tests.IO
             {
                 var A = MatrixMarketReader.ReadStorage<double>(reader);
 
-                Assert.AreEqual(A.RowCount, 14);
-                Assert.AreEqual(A.ColumnCount, 14);
+                Assert.That(14, Is.EqualTo(A.RowCount));
+                Assert.That(14, Is.EqualTo(A.ColumnCount));
 
                 // Symmetric mtx file has 30 entries -> auto expand = 2 * 30 - 14 = 46.
-                Assert.AreEqual(A.NonZerosCount, 46);
+                Assert.That(46, Is.EqualTo(A.NonZerosCount));
             }
         }
 
@@ -33,11 +33,11 @@ namespace CSparse.Tests.IO
             {
                 var A = MatrixMarketReader.ReadStorage<double>(reader, false);
 
-                Assert.AreEqual(A.RowCount, 39);
-                Assert.AreEqual(A.ColumnCount, 39);
+                Assert.That(39, Is.EqualTo(A.RowCount));
+                Assert.That(39, Is.EqualTo(A.ColumnCount));
 
                 // Symmetric mtx file has 85 entries, no auto expand.
-                Assert.AreEqual(A.NonZerosCount, 85);
+                Assert.That(85, Is.EqualTo(A.NonZerosCount));
             }
         }
     }

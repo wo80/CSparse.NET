@@ -10,13 +10,13 @@ namespace CSparse.Tests
         [Test]
         public void TestZeroOfDouble()
         {
-            Assert.AreEqual(0.0, Helper.ZeroOf<double>());
+            Assert.That(Helper.ZeroOf<double>(), Is.EqualTo(0.0));
         }
 
         [Test]
         public void TestZeroOfComplex()
         {
-            Assert.AreEqual(C.Zero, Helper.ZeroOf<C>());
+            Assert.That(Helper.ZeroOf<C>(), Is.EqualTo(C.Zero));
         }
 
         [Test]
@@ -30,8 +30,8 @@ namespace CSparse.Tests
 
             Helper.TrimStorage(A);
 
-            Assert.AreEqual(0, A.RowIndices.Length);
-            Assert.AreEqual(0, A.Values.Length);
+            Assert.That(A.RowIndices.Length, Is.EqualTo(0));
+            Assert.That(A.Values.Length, Is.EqualTo(0));
         }
     }
 }

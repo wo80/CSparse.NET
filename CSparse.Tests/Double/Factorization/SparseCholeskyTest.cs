@@ -28,7 +28,7 @@ namespace CSparse.Tests.Double.Factorization
             // Compute residual r = b - Ax.
             A.Multiply(-1.0, x, 1.0, r);
 
-            Assert.IsTrue(Vector.Norm(r.Length, r) < EPS);
+            Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
         }
 
         [Test]
@@ -50,8 +50,8 @@ namespace CSparse.Tests.Double.Factorization
 
             var chol = SparseCholesky.Create(A, ColumnOrdering.MinimumDegreeAtPlusA);
 
-            Assert.NotNull(chol);
-            Assert.IsTrue(chol.NonZerosCount == 0);
+            Assert.That(chol, Is.Not.Null);
+            Assert.That(chol.NonZerosCount == 0, Is.True);
         }
     }
 }

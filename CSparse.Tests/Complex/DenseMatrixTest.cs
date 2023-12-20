@@ -24,14 +24,14 @@ namespace CSparse.Tests.Complex
             var actual = A.L1Norm();
             var expected = 2.0;
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
 
             var data = MatrixHelper.LoadDense(2, 2);
 
             actual = data.A.L1Norm();
             expected = 6.0;
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -42,14 +42,14 @@ namespace CSparse.Tests.Complex
             var actual = A.InfinityNorm();
             var expected = 2.0;
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
 
             var data = MatrixHelper.LoadDense(2, 2);
 
             actual = data.A.InfinityNorm();
             expected = 7.0;
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [Test]
@@ -60,14 +60,14 @@ namespace CSparse.Tests.Complex
             var actual = A.FrobeniusNorm();
             var expected = 6.0;
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
 
             var data = MatrixHelper.LoadDense(2, 2);
 
             actual = data.A.FrobeniusNorm();
             expected = 5.477225575;
 
-            Assert.AreEqual(expected, actual);
+            Assert.That(actual, Is.EqualTo(expected));
         }
 
         [TestCase(2, 2)]
@@ -84,7 +84,7 @@ namespace CSparse.Tests.Complex
 
                 for (int j = 0; j < columns; j++)
                 {
-                    Assert.AreEqual(A.At(i, j), y[j]);
+                    Assert.That(y[j], Is.EqualTo(A.At(i, j)));
                 }
             }
         }
@@ -103,7 +103,7 @@ namespace CSparse.Tests.Complex
 
                 for (int i = 0; i < rows; i++)
                 {
-                    Assert.AreEqual(A.At(i, j), y[i]);
+                    Assert.That(y[i], Is.EqualTo(A.At(i, j)));
                 }
             }
         }
@@ -125,7 +125,7 @@ namespace CSparse.Tests.Complex
 
                 for (int j = 0; j < columns; j++)
                 {
-                    Assert.AreEqual(x, A.At(i, j));
+                    Assert.That(A.At(i, j), Is.EqualTo(x));
                 }
             }
         }
@@ -147,7 +147,7 @@ namespace CSparse.Tests.Complex
 
                 for (int i = 0; i < rows; i++)
                 {
-                    Assert.AreEqual(x, A.At(i, j));
+                    Assert.That(A.At(i, j), Is.EqualTo(x));
                 }
             }
         }
@@ -165,7 +165,7 @@ namespace CSparse.Tests.Complex
 
             A.Multiply(x, actual);
 
-            CollectionAssert.AreEqual(data.Ax, actual);
+            Assert.That(actual, Is.EqualTo(data.Ax).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -181,13 +181,13 @@ namespace CSparse.Tests.Complex
 
             A.TransposeMultiply(y, actual);
 
-            CollectionAssert.AreEqual(data.ATy, actual);
+            Assert.That(actual, Is.EqualTo(data.ATy).AsCollection);
 
             var AT = data.AT;
 
             AT.Multiply(y, actual);
 
-            CollectionAssert.AreEqual(data.ATy, actual);
+            Assert.That(actual, Is.EqualTo(data.ATy).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -203,7 +203,7 @@ namespace CSparse.Tests.Complex
 
             A.Multiply(1.0, x, 0.0, actual);
 
-            CollectionAssert.AreEqual(data.Ax, actual);
+            Assert.That(actual, Is.EqualTo(data.Ax).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -219,7 +219,7 @@ namespace CSparse.Tests.Complex
 
             A.TransposeMultiply(1.0, y, 0.0, actual);
 
-            CollectionAssert.AreEqual(data.ATy, actual);
+            Assert.That(actual, Is.EqualTo(data.ATy).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -234,8 +234,8 @@ namespace CSparse.Tests.Complex
             var actualA = A.Transpose();
             var actualB = B.Transpose();
 
-            CollectionAssert.AreEqual(data.AT.Values, actualA.Values);
-            CollectionAssert.AreEqual(data.BT.Values, actualB.Values);
+            Assert.That(actualA.Values, Is.EqualTo(data.AT.Values).AsCollection);
+            Assert.That(actualB.Values, Is.EqualTo(data.BT.Values).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -249,7 +249,7 @@ namespace CSparse.Tests.Complex
 
             var actual = A.Add(B);
 
-            CollectionAssert.AreEqual(data.ApB.Values, actual.Values);
+            Assert.That(actual.Values, Is.EqualTo(data.ApB.Values).AsCollection);
         }
 
         [TestCase(2, 2)]
@@ -266,11 +266,11 @@ namespace CSparse.Tests.Complex
 
             var actual = AT.Multiply(B);
 
-            CollectionAssert.AreEqual(data.ATmB.Values, actual.Values, ComplexNumberComparer.Default);
+            Assert.That(actual.Values, Is.EqualTo(data.ATmB.Values).Using<Complex>(ComplexNumberComparer.Default));
 
             actual = A.Multiply(BT);
 
-            CollectionAssert.AreEqual(data.AmBT.Values, actual.Values, ComplexNumberComparer.Default);
+            Assert.That(actual.Values, Is.EqualTo(data.AmBT.Values).Using<Complex>(ComplexNumberComparer.Default));
         }
 
         [Test]
@@ -298,7 +298,7 @@ namespace CSparse.Tests.Complex
 
             A.PointwiseMultiply(B, actual);
 
-            CollectionAssert.AreEqual(expected.Values, actual.Values);
+            Assert.That(actual.Values, Is.EqualTo(expected.Values).AsCollection);
 
             // Test exceptions:
 
@@ -329,7 +329,7 @@ namespace CSparse.Tests.Complex
                 }
             }
             var A = DenseMatrix.OfColumnMajor(120, 120, values);
-            CollectionAssert.AreEqual(A.Multiply(A).Values, A.ParallelMultiply(A).Values);
+            Assert.That(A.ParallelMultiply(A).Values, Is.EqualTo(A.Multiply(A).Values).AsCollection);
         }
 
         #region Matrix creation
@@ -343,7 +343,7 @@ namespace CSparse.Tests.Complex
             var denseA = denseData.A;
             var denseB = DenseMatrix.OfMatrix(denseA);
 
-            Assert.IsTrue(denseA.Equals(denseB));
+            Assert.That(denseA.Equals(denseB), Is.True);
         }
 
         [TestCase(2, 2)]
@@ -354,7 +354,7 @@ namespace CSparse.Tests.Complex
             var denseA = denseData.A;
             var denseB = DenseMatrix.OfIndexed(rows, columns, denseA.EnumerateIndexed());
 
-            Assert.IsTrue(denseA.Equals(denseB));
+            Assert.That(denseA.Equals(denseB), Is.True);
         }
 
         [TestCase(2, 2)]
@@ -365,7 +365,7 @@ namespace CSparse.Tests.Complex
             var denseA = denseData.A;
             var denseB = DenseMatrix.OfColumnMajor(rows, columns, denseA.Values);
 
-            Assert.IsTrue(denseA.Equals(denseB));
+            Assert.That(denseA.Equals(denseB), Is.True);
         }
 
         [Test]
@@ -380,7 +380,7 @@ namespace CSparse.Tests.Complex
 
             for (int i = 0; i < order; i++)
             {
-                Assert.AreEqual(A.At(i, i), a);
+                Assert.That(a, Is.EqualTo(A.At(i, i)));
             }
         }
 
@@ -393,7 +393,7 @@ namespace CSparse.Tests.Complex
 
             for (int i = 0; i < order; i++)
             {
-                Assert.AreEqual(A.At(i, i), Complex.One);
+                Assert.That(Complex.One, Is.EqualTo(A.At(i, i)));
             }
         }
 

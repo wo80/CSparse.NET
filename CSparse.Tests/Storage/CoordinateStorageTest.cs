@@ -13,17 +13,17 @@ namespace CSparse.Tests.Storage
         {
             var A = new CoordinateStorage<double>(10, 10, 1);
 
-            Assert.IsNotNull(A.RowIndices);
-            Assert.IsNotNull(A.ColumnIndices);
-            Assert.IsNotNull(A.Values);
+            Assert.That(A.RowIndices, Is.Not.Null);
+            Assert.That(A.ColumnIndices, Is.Not.Null);
+            Assert.That(A.Values, Is.Not.Null);
 
             A.At(1, 2, 3.0);
 
             var B = new CoordinateStorage<double>(10, 10, 0);
 
-            Assert.IsNotNull(B.RowIndices);
-            Assert.IsNotNull(B.ColumnIndices);
-            Assert.IsNotNull(B.Values);
+            Assert.That(B.RowIndices, Is.Not.Null);
+            Assert.That(B.ColumnIndices, Is.Not.Null);
+            Assert.That(B.Values, Is.Not.Null);
 
             B.At(1, 2, 3.0);
 
@@ -60,7 +60,7 @@ namespace CSparse.Tests.Storage
             {
                 int column = a.Item2;
 
-                Assert.IsTrue(column < 1);
+                Assert.That(column < 1, Is.True);
             }
         }
 
@@ -84,16 +84,16 @@ namespace CSparse.Tests.Storage
 
             var sparseB = SparseMatrix.OfIndexed(cooT);
 
-            Assert.IsTrue(AT.Equals(sparseB));
+            Assert.That(AT.Equals(sparseB), Is.True);
 
             cooT = coo.Transpose(false);
 
             var sparseC = SparseMatrix.OfIndexed(cooT);
 
-            Assert.IsTrue(AT.Equals(sparseC));
-            Assert.IsTrue(ReferenceEquals(coo.RowIndices, cooT.ColumnIndices));
-            Assert.IsTrue(ReferenceEquals(coo.ColumnIndices, cooT.RowIndices));
-            Assert.IsTrue(ReferenceEquals(coo.Values, cooT.Values));
+            Assert.That(AT.Equals(sparseC), Is.True);
+            Assert.That(ReferenceEquals(coo.RowIndices, cooT.ColumnIndices), Is.True);
+            Assert.That(ReferenceEquals(coo.ColumnIndices, cooT.RowIndices), Is.True);
+            Assert.That(ReferenceEquals(coo.Values, cooT.Values), Is.True);
 
         }
     }

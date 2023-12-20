@@ -17,7 +17,7 @@ namespace CSparse.Tests.Ordering
             // Randomized Dulmage-Mendelsohn analysis.
             var dm = DulmageMendelsohn.Generate(A, 1);
 
-            Assert.IsTrue(dm.StructuralRank == n);
+            Assert.That(dm.StructuralRank == n, Is.True);
         }
 
         [Test]
@@ -31,7 +31,7 @@ namespace CSparse.Tests.Ordering
             // Randomized Dulmage-Mendelsohn analysis.
             var dm = DulmageMendelsohn.Generate(A, 1);
 
-            Assert.IsTrue(dm.StructuralRank == n);
+            Assert.That(dm.StructuralRank == n, Is.True);
         }
     }
 }

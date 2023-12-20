@@ -29,7 +29,7 @@
             // Compute residual r = b - Ax.
             A.Multiply(-1.0, x, 1.0, r);
 
-            Assert.IsTrue(Vector.Norm(r.Length, r) < EPS);
+            Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
         }
 
         [Test]
@@ -51,7 +51,7 @@
             // Compute residual r = b - Ax.
             A.Multiply(-1.0, x, 1.0, r);
 
-            Assert.IsTrue(Vector.Norm(r.Length, r) < EPS);
+            Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
         }
     }
 }

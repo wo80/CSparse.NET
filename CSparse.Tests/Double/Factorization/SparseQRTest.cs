@@ -14,7 +14,7 @@ namespace CSparse.Tests.Double.Factorization
             // Load matrix from a file.
             var A = ResourceLoader.Get<double>("general-40x40.mat");
 
-            Assert.AreEqual(A.RowCount, A.ColumnCount);
+            Assert.That(A.ColumnCount, Is.EqualTo(A.RowCount));
 
             // Create test data.
             var x = Helper.CreateTestVector(A.ColumnCount);
@@ -29,7 +29,7 @@ namespace CSparse.Tests.Double.Factorization
             // Compute residual r = b - Ax.
             A.Multiply(-1.0, x, 1.0, r);
 
-            Assert.IsTrue(Vector.Norm(r.Length, r) < EPS);
+            Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace CSparse.Tests.Double.Factorization
             // Load matrix from a file.
             var A = ResourceLoader.Get<double>("general-40x40.mat");
 
-            Assert.AreEqual(A.RowCount, A.ColumnCount);
+            Assert.That(A.ColumnCount, Is.EqualTo(A.RowCount));
 
             var AT = A.Transpose();
 
@@ -56,7 +56,7 @@ namespace CSparse.Tests.Double.Factorization
             // Compute residual r = b - A'x.
             AT.Multiply(-1.0, x, 1.0, r);
 
-            Assert.IsTrue(Vector.Norm(r.Length, r) < EPS);
+            Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace CSparse.Tests.Double.Factorization
             // Load matrix from a file.
             var A = ResourceLoader.Get<double>("general-40x20.mat");
 
-            Assert.IsTrue(A.RowCount > A.ColumnCount);
+            Assert.That(A.RowCount > A.ColumnCount, Is.True);
 
             // Create test data.
             var x = Helper.CreateTestVector(A.ColumnCount);
@@ -80,7 +80,7 @@ namespace CSparse.Tests.Double.Factorization
             // Compute residual r = b - Ax.
             A.Multiply(-1.0, x, 1.0, r);
 
-            Assert.IsTrue(Vector.Norm(r.Length, r) < EPS);
+            Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace CSparse.Tests.Double.Factorization
             // Load matrix from a file.
             var A = ResourceLoader.Get<double>("general-40x20.mat");
 
-            Assert.IsTrue(A.RowCount > A.ColumnCount);
+            Assert.That(A.RowCount > A.ColumnCount, Is.True);
 
             var AT = A.Transpose();
 
@@ -106,7 +106,7 @@ namespace CSparse.Tests.Double.Factorization
             // Compute residual r = b - A'x.
             AT.Multiply(-1.0, x, 1.0, r);
 
-            Assert.IsTrue(Vector.Norm(r.Length, r) < EPS);
+            Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace CSparse.Tests.Double.Factorization
             // Load matrix from a file.
             var A = ResourceLoader.Get<double>("general-20x40.mat");
 
-            Assert.IsTrue(A.RowCount < A.ColumnCount);
+            Assert.That(A.RowCount < A.ColumnCount, Is.True);
 
             // Create test data.
             var x = Helper.CreateTestVector(A.ColumnCount);
@@ -131,7 +131,7 @@ namespace CSparse.Tests.Double.Factorization
             // Compute residuals.
             A.Multiply(-1.0, x, 1.0, r);
 
-            Assert.IsTrue(Vector.Norm(r.Length, r) < EPS);
+            Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace CSparse.Tests.Double.Factorization
             // Load matrix from a file.
             var A = ResourceLoader.Get<double>("general-20x40.mat");
 
-            Assert.IsTrue(A.RowCount < A.ColumnCount);
+            Assert.That(A.RowCount < A.ColumnCount, Is.True);
 
             var AT = A.Transpose();
 
@@ -156,7 +156,7 @@ namespace CSparse.Tests.Double.Factorization
             // Compute residuals.
             AT.Multiply(-1.0, x, 1.0, r);
 
-            Assert.IsTrue(Vector.Norm(r.Length, r) < EPS);
+            Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
         }
 
         [TestCase(0, 0)]
@@ -168,8 +168,8 @@ namespace CSparse.Tests.Double.Factorization
 
             var qr = SparseQR.Create(A, ColumnOrdering.MinimumDegreeAtA);
 
-            Assert.NotNull(qr);
-            Assert.IsTrue(qr.NonZerosCount == -rows);
+            Assert.That(qr, Is.Not.Null);
+            Assert.That(qr.NonZerosCount == -rows, Is.True);
         }
     }
 }

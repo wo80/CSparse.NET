@@ -29,7 +29,7 @@ namespace CSparse.Tests.Complex.Factorization
             // Compute residual r = b - Ax.
             A.Multiply(-1.0, x, 1.0, r);
 
-            Assert.IsTrue(Vector.Norm(r.Length, r) < EPS);
+            Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace CSparse.Tests.Complex.Factorization
             // Compute residual r = b - A'x.
             AT.Multiply(-1.0, x, 1.0, r);
 
-            Assert.IsTrue(Vector.Norm(r.Length, r) < EPS);
+            Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
         }
 
         [Test]
@@ -64,8 +64,8 @@ namespace CSparse.Tests.Complex.Factorization
 
             var lu = SparseLU.Create(A, ColumnOrdering.MinimumDegreeAtPlusA, 1.0);
 
-            Assert.NotNull(lu);
-            Assert.IsTrue(lu.NonZerosCount == 0);
+            Assert.That(lu, Is.Not.Null);
+            Assert.That(lu.NonZerosCount == 0, Is.True);
         }
     }
 }
