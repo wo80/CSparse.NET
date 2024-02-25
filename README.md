@@ -27,11 +27,19 @@ All methods are described in detail in the excellent textbook _Direct Methods fo
 * [CSparse.Interop](https://github.com/wo80/csparse-interop) - Bindings to native solvers like MKL, Suitesparse, SuperLU and ARPACK.
 * [CSparse.Extensions](https://github.com/wo80/csparse-extensions) - Extension methods, dense direct factorizations and iterative solvers.
 
+## Supporters
+
+CSparse.NET has received support/donations from the following projects:
+
+* BriefFiniteElement.NET - https://github.com/BriefFiniteElementNet
+
 ## License
 
     CSparse: a Concise Sparse Matrix package.
 
-    Copyright (c) 2006-2017, Timothy A. Davis.
+    Copyright (c) 2006-2022, Timothy A. Davis. All Rights Reserved.
+
+    SPDX-License-Identifier: LGPL-2.1+
 
     This library is free software; you can redistribute it and/or modify it under the
     terms of the GNU Lesser General Public License as published by the Free Software
