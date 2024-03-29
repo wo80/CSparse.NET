@@ -19,7 +19,7 @@
     <RootNamespace>CSparse</RootNamespace>
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/wo80/CSparse.NET</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/wo80/CSparse.NET</RepositoryUrl>
+    <RepositoryUrl>https://github.com/wo80/CSparse.NET.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>
 		The major version change is due to the removal of obsolete methods in the Converter class. Visibility of that class was changed from public to internal. In case those obsolete methods were still used, please switch to the static conversion methods provided by the SparseMatrix class.
@@ -27,6 +27,7 @@
 		Other changes in version 4.0.0:
 
 		* Addition of helper method Helper.ValidateStorage(...) to validate the structure of a sparse matrix.
+		* Update to GetHashCode() method of CompressedColumnStorage class.
 		* Improvements to documentation.
 	</PackageReleaseNotes>
   </PropertyGroup>

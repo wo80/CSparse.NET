@@ -471,7 +471,7 @@ namespace CSparse.Storage
             CompressedColumnStorage<T> result);
 
         /// <summary>
-        /// Sparse matrix multiplication, C = A*B
+        /// Sparse matrix multiplication, C = A * B, where A is the current instance.
         /// </summary>
         /// <param name="other">The sparse matrix multiplied to this instance (from the right).</param>
         /// <returns>C = A*B</returns>
@@ -896,26 +896,20 @@ namespace CSparse.Storage
         /// Serves as a hash function for a particular type.
         /// </summary>
         /// <returns>
-        /// A hash code for the current <see cref="T:System.Object"/>.
+        /// A hash code for the current <see cref="CompressedColumnStorage{T}"/>.
         /// </returns>
         public override int GetHashCode()
         {
-            var hashNum = Math.Min(this.NonZerosCount, 25);
+            var hashNum = Math.Min(NonZerosCount, 50);
             int hash = 17;
-            int i, p, k = 0;
             unchecked
             {
-                for (i = 0; i < columns; i++)
-                {
-                    for (p = ColumnPointers[i]; p < ColumnPointers[i + 1]; p++)
-                    {
-                        hash = hash * 31 + Values[p].GetHashCode();
+                hash = hash * 31 + NonZerosCount;
 
-                        if (++k > hashNum)
-                        {
-                            return hash;
-                        }
-                    }
+                for (int i = 0; i < hashNum; i++)
+                {
+                    hash = hash * 31 + RowIndices[i];
+                    hash = hash * 31 + Values[i].GetHashCode();
                 }
             }
             return hash;
