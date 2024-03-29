@@ -8,7 +8,7 @@ namespace CSparse.Storage
     /// <summary>
     /// Compressed sparse column storage.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="System.Numerics.Complex"/>.</typeparam>
     [Serializable]
     public abstract class CompressedColumnStorage<T> : Matrix<T>
         where T : struct, IEquatable<T>, IFormattable
@@ -381,7 +381,7 @@ namespace CSparse.Storage
         /// <summary>
         /// Transpose this matrix and store the result in given matrix.
         /// </summary>
-        /// <param name="result">Storage for the tranposed matrix.</param>
+        /// <param name="result">Storage for the transposed matrix.</param>
         public void Transpose(CompressedColumnStorage<T> result)
         {
             Transpose(result, false);
@@ -401,7 +401,7 @@ namespace CSparse.Storage
         /// <summary>
         /// Transpose this matrix and store the result in given matrix.
         /// </summary>
-        /// <param name="result">Storage for the tranposed matrix.</param>
+        /// <param name="result">Storage for the transposed matrix.</param>
         /// <param name="storage">A value indicating, whether the transpose should be done on storage level (without complex conjugation).</param>
         public virtual void Transpose(CompressedColumnStorage<T> result, bool storage)
         {
@@ -436,7 +436,7 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Adds two matrices in CSC format, C = A + B, where A is current instance.
+        /// Adds two matrices in CSC format, C = A + B, where A is the current instance.
         /// </summary>
         public CompressedColumnStorage<T> Add(CompressedColumnStorage<T> other)
         {
@@ -456,9 +456,9 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Adds two matrices, C = alpha*A + beta*B, where A is current instance.
+        /// Adds two matrices, C = alpha*A + beta*B, where A is the current instance.
         /// </summary>
-        /// <param name="alpha">Scalar factor for A, current instance.</param>
+        /// <param name="alpha">Scalar factor for A, the current instance.</param>
         /// <param name="beta">Scalar factor for B, other instance.</param>
         /// <param name="other">The matrix added to this instance.</param>
         /// <param name="result">Contains the sum.</param>
@@ -473,7 +473,7 @@ namespace CSparse.Storage
         /// <summary>
         /// Sparse matrix multiplication, C = A*B
         /// </summary>
-        /// <param name="other">The sparse matrix multiplied to this instance.</param>
+        /// <param name="other">The sparse matrix multiplied to this instance (from the right).</param>
         /// <returns>C = A*B</returns>
         public CompressedColumnStorage<T> Multiply(CompressedColumnStorage<T> other)
         {
@@ -485,9 +485,9 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Sparse matrix multiplication, C = A*B
+        /// Sparse matrix multiplication, C = A * B, where A is the current instance.
         /// </summary>
-        /// <param name="other">The sparse matrix multiplied to this instance.</param>
+        /// <param name="other">The sparse matrix multiplied to this instance (from the right).</param>
         /// <param name="result">Contains the matrix product.</param>
         /// <remarks>
         /// The <paramref name="result"/> matrix has to be fully initialized, but doesn't have
@@ -497,9 +497,9 @@ namespace CSparse.Storage
         public abstract void Multiply(CompressedColumnStorage<T> other, CompressedColumnStorage<T> result);
 
         /// <summary>
-        /// Sparse matrix multiplication, C = A*B
+        /// Sparse matrix multiplication, C = A * B, where A is the current instance.
         /// </summary>
-        /// <param name="other">The sparse matrix multiplied to this instance.</param>
+        /// <param name="other">The sparse matrix multiplied to this instance (from the right).</param>
         /// <param name="options">Parallel options (optional).</param>
         /// <returns>C = A*B</returns>
         public virtual CompressedColumnStorage<T> ParallelMultiply(CompressedColumnStorage<T> other, System.Threading.Tasks.ParallelOptions options = null)
@@ -757,7 +757,7 @@ namespace CSparse.Storage
         {
             int k;
 
-            // Determine pointers for output matix. 
+            // Determine pointers for output matrix. 
             for (int i = 0; i < columns; i++)
             {
                 k = perm[i];

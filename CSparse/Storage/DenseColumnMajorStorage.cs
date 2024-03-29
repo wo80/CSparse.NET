@@ -9,7 +9,7 @@ namespace CSparse.Storage
     /// <summary>
     /// Dense column-major matrix storage.
     /// </summary>
-    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="T:Complex"/>.</typeparam>
+    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="System.Numerics.Complex"/>.</typeparam>
     [Serializable]
     public abstract class DenseColumnMajorStorage<T> : Matrix<T>
         where T : struct, IEquatable<T>, IFormattable
@@ -310,7 +310,7 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Adds two dense matrices, C = A + B.
+        /// Adds two dense matrices, C = A + B, where A is the current instance.
         /// </summary>
         public DenseColumnMajorStorage<T> Add(DenseColumnMajorStorage<T> other)
         {
@@ -328,16 +328,16 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Adds two dense matrices, C = A + B.
+        /// Adds two dense matrices, C = A + B, where A is the current instance.
         /// </summary>
         /// <param name="other">The matrix added to this instance.</param>
         /// <param name="result">Contains the sum.</param>
         public abstract void Add(DenseColumnMajorStorage<T> other, DenseColumnMajorStorage<T> result);
 
         /// <summary>
-        /// Dense matrix multiplication, C = A*B
+        /// Dense matrix multiplication, C = A * B, where A is the current instance.
         /// </summary>
-        /// <param name="other">The dense matrix multiplied with this instance.</param>
+        /// <param name="other">The dense matrix multiplied to this instance (from the right).</param>
         /// <returns>C = A*B</returns>
         public DenseColumnMajorStorage<T> Multiply(DenseColumnMajorStorage<T> other)
         {

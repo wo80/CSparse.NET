@@ -4,7 +4,7 @@ namespace CSparse.Ordering
     using System;
 
     /// <summary>
-    /// Maximum matching of any matrix A (also called maximum transveral). 
+    /// Maximum matching of any matrix A (also called maximum transversal). 
     /// </summary>
     /// <remarks>
     /// See Chapter 7.2 (Fill-reducing orderings: Maximum matching) in 
@@ -13,7 +13,7 @@ namespace CSparse.Ordering
     internal static class MaximumMatching
     {
         /// <summary>
-        /// Find a maximum transveral (zero-free diagonal). Seed optionally selects a
+        /// Find a maximum transversal (zero-free diagonal). Seed optionally selects a
         /// randomized algorithm.
         /// </summary>
         /// <param name="A">column-compressed matrix</param>

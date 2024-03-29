@@ -5,7 +5,7 @@ namespace CSparse.Factorization
     /// <summary>
     /// Classes that solve a system of linear equations, <c>Ax = b</c>.
     /// </summary>
-    /// <typeparam name="T">Supported data types are double and <see cref="Complex"/>.</typeparam>
+    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="System.Numerics.Complex"/>.</typeparam>
     public interface ISolver<T> where T : struct, IEquatable<T>, IFormattable
     {
         /// <summary>

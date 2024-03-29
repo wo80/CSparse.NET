@@ -6,6 +6,7 @@ namespace CSparse.Factorization
     /// <summary>
     /// Sparse QR decomposition abstract base class.
     /// </summary>
+    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="System.Numerics.Complex"/>.</typeparam>
     public abstract class SparseQR<T> : ISparseFactorization<T>
         where T : struct, IEquatable<T>, IFormattable
     {

@@ -5,7 +5,7 @@ namespace CSparse
     /// <summary>
     /// Linear operator interface.
     /// </summary>
-    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="T:Complex"/>.</typeparam>
+    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="System.Numerics.Complex"/>.</typeparam>
     public interface ILinearOperator<T> where T : struct, IEquatable<T>, IFormattable
     {
         /// <summary>
@@ -35,9 +35,9 @@ namespace CSparse
         /// <summary>
         /// Multiplies a (m-by-n) matrix by a vector, y = alpha * A * x + beta * y.
         /// </summary>
-        /// <param name="alpha">Scaling factor fo vertor x.</param>
+        /// <param name="alpha">Scaling factor for vector x.</param>
         /// <param name="x">Vector of length n (column count).</param>
-        /// <param name="beta">Scaling factor fo vertor y.</param>
+        /// <param name="beta">Scaling factor for vector y.</param>
         /// <param name="y">Vector of length m (row count), containing the result.</param>
         /// <remarks>
         /// Input values of vector <paramref name="y"/> will be accumulated.
@@ -47,9 +47,9 @@ namespace CSparse
         /// <summary>
         /// Multiplies a (m-by-n) matrix by a vector, y = alpha * A * x + beta * y.
         /// </summary>
-        /// <param name="alpha">Scaling factor fo vertor x.</param>
+        /// <param name="alpha">Scaling factor for vector x.</param>
         /// <param name="x">Vector of length n (column count).</param>
-        /// <param name="beta">Scaling factor fo vertor y.</param>
+        /// <param name="beta">Scaling factor for vector y.</param>
         /// <param name="y">Vector of length m (row count), containing the result.</param>
         /// <remarks>
         /// Input values of vector <paramref name="y"/> will be accumulated.
@@ -73,9 +73,9 @@ namespace CSparse
         /// <summary>
         /// Multiplies the transpose of a (m-by-n) matrix by a vector, y = alpha * A^t * x + beta * y.
         /// </summary>
-        /// <param name="alpha">Scaling factor fo vertor x.</param>
+        /// <param name="alpha">Scaling factor for vector x.</param>
         /// <param name="x">Vector of length m (column count of A').</param>
-        /// <param name="beta">Scaling factor fo vertor y.</param>
+        /// <param name="beta">Scaling factor for vector y.</param>
         /// <param name="y">Vector of length n (row count of A'), containing the result.</param>
         /// <remarks>
         /// Input values of vector <paramref name="y"/> will be accumulated.
@@ -85,9 +85,9 @@ namespace CSparse
         /// <summary>
         /// Multiplies the transpose of a (m-by-n) matrix by a vector, y = alpha * A^t * x + beta * y.
         /// </summary>
-        /// <param name="alpha">Scaling factor fo vertor x.</param>
+        /// <param name="alpha">Scaling factor for vector x.</param>
         /// <param name="x">Vector of length m (column count of A').</param>
-        /// <param name="beta">Scaling factor fo vertor y.</param>
+        /// <param name="beta">Scaling factor for vector y.</param>
         /// <param name="y">Vector of length n (row count of A'), containing the result.</param>
         /// <remarks>
         /// Input values of vector <paramref name="y"/> will be accumulated.
