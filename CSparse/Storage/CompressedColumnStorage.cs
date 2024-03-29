@@ -110,9 +110,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfMatrix(Matrix<T> matrix)
         {
-            var c = Converter.FromEnumerable_<T>(matrix.EnumerateIndexed(), matrix.RowCount, matrix.ColumnCount);
+            var c = Converter.FromEnumerable<T>(matrix.EnumerateIndexed(), matrix.RowCount, matrix.ColumnCount);
 
-            return Converter.ToCompressedColumnStorage_(c);
+            return Converter.ToCompressedColumnStorage(c);
         }
 
         /// <summary>
@@ -120,9 +120,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfArray(T[,] array)
         {
-            var c = Converter.FromDenseArray_(array);
+            var c = Converter.FromDenseArray(array);
 
-            return Converter.ToCompressedColumnStorage_(c);
+            return Converter.ToCompressedColumnStorage(c);
         }
 
         /// <summary>
@@ -130,9 +130,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfJaggedArray(T[][] array)
         {
-            var c = Converter.FromJaggedArray_(array);
+            var c = Converter.FromJaggedArray(array);
 
-            return Converter.ToCompressedColumnStorage_(c);
+            return Converter.ToCompressedColumnStorage(c);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfIndexed(CoordinateStorage<T> coordinateStorage, bool inplace = false)
         {
-            return Converter.ToCompressedColumnStorage_(coordinateStorage, true, inplace);
+            return Converter.ToCompressedColumnStorage(coordinateStorage, true, inplace);
         }
 
         /// <summary>
@@ -148,9 +148,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfIndexed(int rows, int columns, IEnumerable<Tuple<int, int, T>> enumerable)
         {
-            var c = Converter.FromEnumerable_<T>(enumerable, rows, columns);
+            var c = Converter.FromEnumerable<T>(enumerable, rows, columns);
 
-            return Converter.ToCompressedColumnStorage_(c);
+            return Converter.ToCompressedColumnStorage(c);
         }
 
         /// <summary>
@@ -158,9 +158,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfRowMajor(int rows, int columns, T[] rowMajor)
         {
-            var c = Converter.FromRowMajorArray_<T>(rowMajor, rows, columns);
+            var c = Converter.FromRowMajorArray<T>(rowMajor, rows, columns);
 
-            return Converter.ToCompressedColumnStorage_(c);
+            return Converter.ToCompressedColumnStorage(c);
         }
 
         /// <summary>
@@ -168,9 +168,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfColumnMajor(int rows, int columns, T[] columnMajor)
         {
-            var c = Converter.FromColumnMajorArray_<T>(columnMajor, rows, columns);
+            var c = Converter.FromColumnMajorArray<T>(columnMajor, rows, columns);
 
-            return Converter.ToCompressedColumnStorage_(c);
+            return Converter.ToCompressedColumnStorage(c);
         }
 
         /// <summary>
