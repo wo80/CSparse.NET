@@ -9,12 +9,12 @@
     <Description>CSparse.NET provides numerical methods for sparse LU, Cholesky and QR decomposition of real and complex linear systems.</Description>
     <Product>CSparse.NET</Product>
     <Company />
-    <Copyright>Copyright Christian Woltering © 2012-2023</Copyright>
+    <Copyright>Copyright Christian Woltering © 2012-2024</Copyright>
     <Authors>Christian Woltering</Authors>
-    <AssemblyVersion>3.8.1.0</AssemblyVersion>
-    <FileVersion>3.8.1.0</FileVersion>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.0</FileVersion>
     <PackageTags>math sparse matrix lu cholesky qr decomposition factorization </PackageTags>
-    <Version>3.8.1</Version>
+    <Version>4.0.0</Version>
     <AssemblyName>CSparse</AssemblyName>
     <RootNamespace>CSparse</RootNamespace>
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
@@ -22,14 +22,13 @@
     <RepositoryUrl>https://github.com/wo80/CSparse.NET</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes>
-Changes in version 3.8.1:
+		The major version change is due to the removal of obsolete methods in the Converter class. Visibility of that class was changed from public to internal. In case those obsolete methods were still used, please switch to the static conversion methods provided by the SparseMatrix class.
 
-* Add overloads for permutation Invert() and IsValid() methods taking the permutation length as argument.
+		Other changes in version 4.0.0:
 
-Changes in version 3.8.0:
-
-* Add overloads for the factorization Solve() methods taking Span&lt;T&gt; as argument. Note that this introduces a dependency on System.Memory for the netstandard2.0 assembly.
-    </PackageReleaseNotes>
+		* Addition of helper method Helper.ValidateStorage(...) to validate the structure of a sparse matrix.
+		* Improvements to documentation.
+	</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
