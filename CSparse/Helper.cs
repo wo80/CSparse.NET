@@ -32,6 +32,52 @@ namespace CSparse
         }
 
         /// <summary>
+        /// Validate the structure of the <see cref="CompressedColumnStorage{T}"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="storage">The storage to validate.</param>
+        /// <param name="strict">If true, row indices have to be ordered and no duplicate indices are allowed (default = <c>false</c>).</param>
+        /// <returns>Returns true if the structure of the storage is valid.</returns>
+        public static bool ValidateStorage<T>(CompressedColumnStorage<T> storage, bool strict = false)
+            where T : struct, IEquatable<T>, IFormattable
+        {
+            int rows = storage.RowCount;
+            int columns = storage.ColumnCount;
+
+            var ap = storage.ColumnPointers;
+            var ai = storage.RowIndices;
+
+            for (int i = 0; i < columns; i++)
+            {
+                int j = ap[i];
+                int end = ap[i + 1];
+
+                // Check if column pointers are in ascending order.
+                if (j > end)
+                {
+                    return false;
+                }
+
+                for (; j < end; j++)
+                {
+                    // Check if row indices are within bounds.
+                    if (ai[j] < 0 || ai[j] >= rows)
+                    {
+                        return false;
+                    }
+
+                    // Check if row indices are in order.
+                    if (strict && ai[j] >= ai[j + 1])
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Trim row indices and values array of the storage to the exact size (non-zeros count).
         /// </summary>
         /// <typeparam name="T"></typeparam>
