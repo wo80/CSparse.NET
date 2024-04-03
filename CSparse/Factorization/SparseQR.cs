@@ -10,10 +10,22 @@ namespace CSparse.Factorization
     public abstract class SparseQR<T> : ISparseFactorization<T>
         where T : struct, IEquatable<T>, IFormattable
     {
-        protected readonly int m, n;
+        /// <summary>number of rows</summary>
+        protected readonly int m;
 
+        /// <summary>number of columns</summary>
+        protected readonly int n;
+
+        /// <summary>symbolic factorization</summary>
         protected SymbolicFactorization S;
-        protected CompressedColumnStorage<T> Q, R;
+
+        /// <summary>Q factor</summary>
+        protected CompressedColumnStorage<T> Q;
+
+        /// <summary>R factor</summary>
+        protected CompressedColumnStorage<T> R;
+
+        /// <summary>factors for Householder reflection</summary>
         protected double[] beta;
 
         /// <summary>
@@ -21,12 +33,12 @@ namespace CSparse.Factorization
         /// </summary>
         protected SparseQR(int rows, int columns)
         {
-            this.m = rows;
-            this.n = columns;
+            m = rows;
+            n = columns;
         }
 
         /// <summary>
-        /// Gets the number of nonzeros in both Q and R factors together.
+        /// Gets the number of non-zeros in both Q and R factors together.
         /// </summary>
         public int NonZerosCount
         {

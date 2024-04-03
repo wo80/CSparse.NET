@@ -31,17 +31,17 @@ namespace CSparse.Factorization
         public int[] leftmost;
 
         /// <summary>
-        /// # of rows for QR, after adding fictitious rows
+        /// number of rows for QR, after adding fictitious rows
         /// </summary>
         public int m2;
 
         /// <summary>
-        /// # entries in L for LU or Cholesky; in V for QR
+        /// number of entries in L for LU or Cholesky; in V for QR
         /// </summary>
         public int lnz;
 
         /// <summary>
-        /// # entries in U for LU; in R for QR
+        /// number of entries in U for LU; in R for QR
         /// </summary>
         public int unz;
     }
