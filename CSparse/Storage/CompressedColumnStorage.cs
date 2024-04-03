@@ -8,7 +8,7 @@ namespace CSparse.Storage
     /// <summary>
     /// Compressed sparse column storage.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="System.Numerics.Complex"/>.</typeparam>
     [Serializable]
     public abstract class CompressedColumnStorage<T> : Matrix<T>
         where T : struct, IEquatable<T>, IFormattable
@@ -110,9 +110,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfMatrix(Matrix<T> matrix)
         {
-            var c = Converter.FromEnumerable_<T>(matrix.EnumerateIndexed(), matrix.RowCount, matrix.ColumnCount);
+            var c = Converter.FromEnumerable<T>(matrix.EnumerateIndexed(), matrix.RowCount, matrix.ColumnCount);
 
-            return Converter.ToCompressedColumnStorage_(c);
+            return Converter.ToCompressedColumnStorage(c);
         }
 
         /// <summary>
@@ -120,9 +120,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfArray(T[,] array)
         {
-            var c = Converter.FromDenseArray_(array);
+            var c = Converter.FromDenseArray(array);
 
-            return Converter.ToCompressedColumnStorage_(c);
+            return Converter.ToCompressedColumnStorage(c);
         }
 
         /// <summary>
@@ -130,9 +130,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfJaggedArray(T[][] array)
         {
-            var c = Converter.FromJaggedArray_(array);
+            var c = Converter.FromJaggedArray(array);
 
-            return Converter.ToCompressedColumnStorage_(c);
+            return Converter.ToCompressedColumnStorage(c);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfIndexed(CoordinateStorage<T> coordinateStorage, bool inplace = false)
         {
-            return Converter.ToCompressedColumnStorage_(coordinateStorage, true, inplace);
+            return Converter.ToCompressedColumnStorage(coordinateStorage, true, inplace);
         }
 
         /// <summary>
@@ -148,9 +148,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfIndexed(int rows, int columns, IEnumerable<Tuple<int, int, T>> enumerable)
         {
-            var c = Converter.FromEnumerable_<T>(enumerable, rows, columns);
+            var c = Converter.FromEnumerable<T>(enumerable, rows, columns);
 
-            return Converter.ToCompressedColumnStorage_(c);
+            return Converter.ToCompressedColumnStorage(c);
         }
 
         /// <summary>
@@ -158,9 +158,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfRowMajor(int rows, int columns, T[] rowMajor)
         {
-            var c = Converter.FromRowMajorArray_<T>(rowMajor, rows, columns);
+            var c = Converter.FromRowMajorArray<T>(rowMajor, rows, columns);
 
-            return Converter.ToCompressedColumnStorage_(c);
+            return Converter.ToCompressedColumnStorage(c);
         }
 
         /// <summary>
@@ -168,9 +168,9 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfColumnMajor(int rows, int columns, T[] columnMajor)
         {
-            var c = Converter.FromColumnMajorArray_<T>(columnMajor, rows, columns);
+            var c = Converter.FromColumnMajorArray<T>(columnMajor, rows, columns);
 
-            return Converter.ToCompressedColumnStorage_(c);
+            return Converter.ToCompressedColumnStorage(c);
         }
 
         /// <summary>
@@ -381,7 +381,7 @@ namespace CSparse.Storage
         /// <summary>
         /// Transpose this matrix and store the result in given matrix.
         /// </summary>
-        /// <param name="result">Storage for the tranposed matrix.</param>
+        /// <param name="result">Storage for the transposed matrix.</param>
         public void Transpose(CompressedColumnStorage<T> result)
         {
             Transpose(result, false);
@@ -401,7 +401,7 @@ namespace CSparse.Storage
         /// <summary>
         /// Transpose this matrix and store the result in given matrix.
         /// </summary>
-        /// <param name="result">Storage for the tranposed matrix.</param>
+        /// <param name="result">Storage for the transposed matrix.</param>
         /// <param name="storage">A value indicating, whether the transpose should be done on storage level (without complex conjugation).</param>
         public virtual void Transpose(CompressedColumnStorage<T> result, bool storage)
         {
@@ -436,7 +436,7 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Adds two matrices in CSC format, C = A + B, where A is current instance.
+        /// Adds two matrices in CSC format, C = A + B, where A is the current instance.
         /// </summary>
         public CompressedColumnStorage<T> Add(CompressedColumnStorage<T> other)
         {
@@ -456,9 +456,9 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Adds two matrices, C = alpha*A + beta*B, where A is current instance.
+        /// Adds two matrices, C = alpha*A + beta*B, where A is the current instance.
         /// </summary>
-        /// <param name="alpha">Scalar factor for A, current instance.</param>
+        /// <param name="alpha">Scalar factor for A, the current instance.</param>
         /// <param name="beta">Scalar factor for B, other instance.</param>
         /// <param name="other">The matrix added to this instance.</param>
         /// <param name="result">Contains the sum.</param>
@@ -471,9 +471,9 @@ namespace CSparse.Storage
             CompressedColumnStorage<T> result);
 
         /// <summary>
-        /// Sparse matrix multiplication, C = A*B
+        /// Sparse matrix multiplication, C = A * B, where A is the current instance.
         /// </summary>
-        /// <param name="other">The sparse matrix multiplied to this instance.</param>
+        /// <param name="other">The sparse matrix multiplied to this instance (from the right).</param>
         /// <returns>C = A*B</returns>
         public CompressedColumnStorage<T> Multiply(CompressedColumnStorage<T> other)
         {
@@ -485,9 +485,9 @@ namespace CSparse.Storage
         }
 
         /// <summary>
-        /// Sparse matrix multiplication, C = A*B
+        /// Sparse matrix multiplication, C = A * B, where A is the current instance.
         /// </summary>
-        /// <param name="other">The sparse matrix multiplied to this instance.</param>
+        /// <param name="other">The sparse matrix multiplied to this instance (from the right).</param>
         /// <param name="result">Contains the matrix product.</param>
         /// <remarks>
         /// The <paramref name="result"/> matrix has to be fully initialized, but doesn't have
@@ -497,9 +497,9 @@ namespace CSparse.Storage
         public abstract void Multiply(CompressedColumnStorage<T> other, CompressedColumnStorage<T> result);
 
         /// <summary>
-        /// Sparse matrix multiplication, C = A*B
+        /// Sparse matrix multiplication, C = A * B, where A is the current instance.
         /// </summary>
-        /// <param name="other">The sparse matrix multiplied to this instance.</param>
+        /// <param name="other">The sparse matrix multiplied to this instance (from the right).</param>
         /// <param name="options">Parallel options (optional).</param>
         /// <returns>C = A*B</returns>
         public virtual CompressedColumnStorage<T> ParallelMultiply(CompressedColumnStorage<T> other, System.Threading.Tasks.ParallelOptions options = null)
@@ -757,7 +757,7 @@ namespace CSparse.Storage
         {
             int k;
 
-            // Determine pointers for output matix. 
+            // Determine pointers for output matrix. 
             for (int i = 0; i < columns; i++)
             {
                 k = perm[i];
@@ -896,26 +896,20 @@ namespace CSparse.Storage
         /// Serves as a hash function for a particular type.
         /// </summary>
         /// <returns>
-        /// A hash code for the current <see cref="T:System.Object"/>.
+        /// A hash code for the current <see cref="CompressedColumnStorage{T}"/>.
         /// </returns>
         public override int GetHashCode()
         {
-            var hashNum = Math.Min(this.NonZerosCount, 25);
+            var hashNum = Math.Min(NonZerosCount, 50);
             int hash = 17;
-            int i, p, k = 0;
             unchecked
             {
-                for (i = 0; i < columns; i++)
-                {
-                    for (p = ColumnPointers[i]; p < ColumnPointers[i + 1]; p++)
-                    {
-                        hash = hash * 31 + Values[p].GetHashCode();
+                hash = hash * 31 + NonZerosCount;
 
-                        if (++k > hashNum)
-                        {
-                            return hash;
-                        }
-                    }
+                for (int i = 0; i < hashNum; i++)
+                {
+                    hash = hash * 31 + RowIndices[i];
+                    hash = hash * 31 + Values[i].GetHashCode();
                 }
             }
             return hash;

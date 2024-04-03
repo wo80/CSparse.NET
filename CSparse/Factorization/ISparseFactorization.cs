@@ -5,7 +5,7 @@ namespace CSparse.Factorization
     /// <summary>
     /// Interface for factorization methods.
     /// </summary>
-    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="Complex"/>.</typeparam>
+    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="System.Numerics.Complex"/>.</typeparam>
     public interface ISparseFactorization<T> : ISolver<T>
         where T : struct, IEquatable<T>, IFormattable
     {

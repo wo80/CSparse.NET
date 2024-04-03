@@ -314,7 +314,7 @@ namespace CSparse.Double.Factorization
                 y[k] = 0.0;
                 for (; top < n; top++)
                 {
-                    i = pattern[top]; // Pattern [top:n-1] is pattern of L(:,k)
+                    i = pattern[top]; // Pattern [top:n-1] is pattern of L(k,:)
                     yi = y[i]; // get and clear Y(i)
                     y[i] = 0.0;
                     p2 = lp[i] + lnz[i];

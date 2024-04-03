@@ -6,6 +6,7 @@ namespace CSparse.Storage
     /// <summary>
     /// Coordinate storage sparse matrix format.
     /// </summary>
+    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="System.Numerics.Complex"/>.</typeparam>
     public class CoordinateStorage<T>
         where T : struct, IEquatable<T>, IFormattable
     {

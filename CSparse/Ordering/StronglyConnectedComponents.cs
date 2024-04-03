@@ -91,7 +91,7 @@ namespace CSparse.Ordering
             }
             top = n;
             nb = n;
-            for (k = 0; k < n; k++) // dfs(A') to find strongly connnected comp
+            for (k = 0; k < n; k++) // dfs(A') to find strongly connected comp
             {
                 i = xi[k]; // get i in reverse order of finish times
                 if (ATp[i] < 0)

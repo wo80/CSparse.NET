@@ -9,7 +9,7 @@ namespace CSparse
     /// <summary>
     /// Abstract base class for matrix implementations.
     /// </summary>
-    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="T:Complex"/>.</typeparam>
+    /// <typeparam name="T">Supported data types are <c>double</c> and <see cref="System.Numerics.Complex"/>.</typeparam>
     [Serializable]
     public abstract class Matrix<T> : ILinearOperator<T>
         where T : struct, IEquatable<T>, IFormattable

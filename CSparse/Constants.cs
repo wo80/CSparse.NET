@@ -18,7 +18,7 @@ namespace CSparse
         public const int SizeOfDouble = sizeof(double);
 
         /// <summary>
-        /// The default threshold used for matrix values comparision.
+        /// The default threshold used for matrix values comparison.
         /// </summary>
         public const double EqualsThreshold = 1e-12;
 
