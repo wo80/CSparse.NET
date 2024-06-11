@@ -132,9 +132,18 @@ namespace CSparse
         /// <summary>
         /// Enumerates all values of the matrix.
         /// </summary>
+        /// <remarks>
+        /// <see cref="EnumerateIndexedAsValueTuples"/> for a version that returns stack-allocated value tuples to save transient heap allocations (saves performance overhead of allocations + garbage collection) of the <see cref="Tuple"/> class.
+        /// </remarks>
         /// <returns>Enumeration of tuples (i, j, a[i, j]).</returns>
         public abstract IEnumerable<Tuple<int, int, T>> EnumerateIndexed();
 
+        /// <summary>
+        /// Enumerates all values of the matrix, but returns as stack-allocated value tuples instead of heap-allocated tuples.
+        /// </summary>
+        /// <returns>Enumeration of tuples (i, j, a[i, j]).</returns>
+        public abstract IEnumerable<(int row, int column, T value)> EnumerateIndexedAsValueTuples();
+       
         /// <summary>
         /// Enumerates all values of the matrix.
         /// </summary>

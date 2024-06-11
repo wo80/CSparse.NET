@@ -110,7 +110,7 @@ namespace CSparse.Storage
         /// </summary>
         public static CompressedColumnStorage<T> OfMatrix(Matrix<T> matrix)
         {
-            var c = Converter.FromEnumerable<T>(matrix.EnumerateIndexed(), matrix.RowCount, matrix.ColumnCount);
+            var c = Converter.FromEnumerable<T>(matrix.EnumerateIndexedAsValueTuples(), matrix.RowCount, matrix.ColumnCount);
 
             return Converter.ToCompressedColumnStorage(c);
         }
@@ -581,6 +581,15 @@ namespace CSparse.Storage
         /// <inheritdoc />
         public override IEnumerable<Tuple<int, int, T>> EnumerateIndexed()
         {
+            foreach (var valueTuple in EnumerateIndexedAsValueTuples())
+            {
+                yield return Tuple.Create(valueTuple.row, valueTuple.column, valueTuple.value);
+            }
+        }
+
+        /// <inheritdoc />
+        public override IEnumerable<(int row, int column, T value)> EnumerateIndexedAsValueTuples()
+        {
             var ax = Values;
             var ap = ColumnPointers;
             var ai = RowIndices;
@@ -590,7 +599,7 @@ namespace CSparse.Storage
                 var end = ap[i + 1];
                 for (var j = ap[i]; j < end; j++)
                 {
-                    yield return new Tuple<int, int, T>(ai[j], i, ax[j]);
+                    yield return (ai[j], i, ax[j]);
                 }
             }
         }

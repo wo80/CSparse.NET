@@ -166,7 +166,7 @@ namespace CSparse.Storage
             int order = diagonal.Length;
 
             var A = Create(order, order);
-            
+
             for (int i = 0; i < order; i++)
             {
                 A.At(i, i, diagonal[i]);
@@ -548,11 +548,20 @@ namespace CSparse.Storage
         /// <inheritdoc />
         public override IEnumerable<Tuple<int, int, T>> EnumerateIndexed()
         {
+            foreach (var valueTuple in EnumerateIndexedAsValueTuples())
+            {
+                yield return Tuple.Create(valueTuple.row, valueTuple.column, valueTuple.value);
+            }
+        }
+
+        /// <inheritdoc />
+        public override IEnumerable<(int row, int column, T value)> EnumerateIndexedAsValueTuples()
+        {
             for (int row = 0; row < rows; row++)
             {
                 for (int column = 0; column < columns; column++)
                 {
-                    yield return new Tuple<int, int, T>(row, column, Values[(column * rows) + row]);
+                    yield return (row, column, Values[(column * rows) + row]);
                 }
             }
         }
