@@ -146,6 +146,9 @@ namespace CSparse.Storage
         /// <summary>
         /// Create a new sparse matrix as a copy of the given indexed enumerable.
         /// </summary>
+        /// <param name="rows">The number of rows.</param>
+        /// <param name="columns">The number of columns.</param>
+        /// <param name="enumerable">Tuples with the three elements of row, column, and the value that belongs at that position.</param>
         public static CompressedColumnStorage<T> OfIndexed(int rows, int columns, IEnumerable<Tuple<int, int, T>> enumerable)
         {
             var c = Converter.FromEnumerable<T>(enumerable, rows, columns);
@@ -156,6 +159,9 @@ namespace CSparse.Storage
         /// <summary>
         /// Create a new sparse matrix as a copy of the given indexed enumerable using a value tuple.
         /// </summary>
+        /// <param name="rows">The number of rows.</param>
+        /// <param name="columns">The number of columns.</param>
+        /// <param name="enumerable">Value tuples with the three elements of row, column, and the value that belongs at that position.</param>
         public static CompressedColumnStorage<T> OfIndexed(int rows, int columns, IEnumerable<(int row, int column, T value)> enumerable)
         {
             var c = Converter.FromEnumerable<T>(enumerable, rows, columns);
