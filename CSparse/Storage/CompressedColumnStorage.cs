@@ -156,7 +156,7 @@ namespace CSparse.Storage
         /// <summary>
         /// Create a new sparse matrix as a copy of the given indexed enumerable using a value tuple.
         /// </summary>
-        public static CompressedColumnStorage<T> OfIndexed(int rows, int columns, IEnumerable<(int, int, T)> enumerable)
+        public static CompressedColumnStorage<T> OfIndexed(int rows, int columns, IEnumerable<(int row, int column, T value)> enumerable)
         {
             var c = Converter.FromEnumerable<T>(enumerable, rows, columns);
 
