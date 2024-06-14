@@ -172,6 +172,9 @@ namespace CSparse.Storage
         /// <summary>
         /// Create a new sparse matrix as a copy of the given array (row-major).
         /// </summary>
+        /// <param name="rows">The number of rows.</param>
+        /// <param name="columns">The number of columns.</param>
+        /// <param name="rowMajor">The dense matrix values in row-major order.</param>
         public static CompressedColumnStorage<T> OfRowMajor(int rows, int columns, T[] rowMajor)
         {
             var c = Converter.FromRowMajorArray<T>(rowMajor, rows, columns);
@@ -182,6 +185,9 @@ namespace CSparse.Storage
         /// <summary>
         /// Create a new sparse matrix as a copy of the given array (column-major).
         /// </summary>
+        /// <param name="rows">The number of rows.</param>
+        /// <param name="columns">The number of columns.</param>
+        /// <param name="columnMajor">The dense matrix values in column-major order.</param>
         public static CompressedColumnStorage<T> OfColumnMajor(int rows, int columns, T[] columnMajor)
         {
             var c = Converter.FromColumnMajorArray<T>(columnMajor, rows, columns);
@@ -192,6 +198,7 @@ namespace CSparse.Storage
         /// <summary>
         /// Create a new square sparse matrix with the diagonal as a copy of the given array.
         /// </summary>
+        /// <param name="diagonal">The matrix diagonal values.</param>
         public static CompressedColumnStorage<T> OfDiagonalArray(T[] diagonal)
         {
             int order = diagonal.Length;
@@ -586,6 +593,8 @@ namespace CSparse.Storage
                 yield return Tuple.Create(valueTuple.row, valueTuple.column, valueTuple.value);
             }
         }
+
+        // TODO: [v5] remove method below and only provide one method using value-tuples
 
         /// <inheritdoc />
         public override IEnumerable<(int row, int column, T value)> EnumerateIndexedAsValueTuples()
