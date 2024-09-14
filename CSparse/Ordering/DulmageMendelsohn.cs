@@ -106,12 +106,21 @@ namespace CSparse.Ordering
         public static DulmageMendelsohn Generate<T>(CompressedColumnStorage<T> matrix, int seed = 0)
              where T : struct, IEquatable<T>, IFormattable
         {
+            return Generate(SymbolicColumnStorage.Create(matrix), seed);
+        }
+
+        /// <summary>
+        /// Compute coarse and then fine Dulmage-Mendelsohn decomposition. seed
+        /// optionally selects a randomized algorithm.
+        /// </summary>
+        /// <param name="A">The matrix represented by <see cref="SymbolicColumnStorage"/>.</param>
+        /// <param name="seed">0: natural, -1: reverse, random order otherwise</param>
+        /// <returns>Dulmage-Mendelsohn analysis</returns>
+        public static DulmageMendelsohn Generate(SymbolicColumnStorage A, int seed = 0)
+        {
             int i, j, k, cnz, nc, nb1, nb2;
             int[] Cp, ps, rs;
             bool ok;
-
-            // We are not interested in the actual matrix values.
-            var A = SymbolicColumnStorage.Create(matrix);
 
             // Maximum matching
             int m = A.RowCount;
@@ -147,7 +156,7 @@ namespace CSparse.Ordering
             // Fine decomposition
             int[] pinv = Permutation.Invert(p); // pinv=p'
 
-            var C = SymbolicColumnStorage.Create(matrix);
+            var C = A.Clone();
             A.Permute(pinv, q, C); // C=A(p,q) (it will hold A(R2,C2))
 
             Cp = C.ColumnPointers;
