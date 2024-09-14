@@ -22,7 +22,7 @@ namespace CSparse.Ordering
         private int nb;    // number of blocks in fine dmperm decomposition
 
         /// <summary>
-        /// Create a new Decomposition instance. 
+        /// Create a new decomposition instance. 
         /// </summary>
         private DulmageMendelsohn(int m, int n)
         {
@@ -97,11 +97,10 @@ namespace CSparse.Ordering
         public int[] CoarseColumnDecomposition => cc;
 
         /// <summary>
-        /// Compute coarse and then fine Dulmage-Mendelsohn decomposition. seed
-        /// optionally selects a randomized algorithm.
+        /// Compute coarse and fine Dulmage-Mendelsohn decomposition.
         /// </summary>
         /// <param name="matrix">column-compressed matrix</param>
-        /// <param name="seed">0: natural, -1: reverse, random order otherwise</param>
+        /// <param name="seed"> The seed optionally selects a randomized algorithm (0 = default (natural), -1 = reverse, random order otherwise).</param>
         /// <returns>Dulmage-Mendelsohn analysis</returns>
         public static DulmageMendelsohn Generate<T>(CompressedColumnStorage<T> matrix, int seed = 0)
              where T : struct, IEquatable<T>, IFormattable
@@ -110,11 +109,10 @@ namespace CSparse.Ordering
         }
 
         /// <summary>
-        /// Compute coarse and then fine Dulmage-Mendelsohn decomposition. seed
-        /// optionally selects a randomized algorithm.
+        /// Compute coarse and fine Dulmage-Mendelsohn decomposition.
         /// </summary>
         /// <param name="A">The matrix represented by <see cref="SymbolicColumnStorage"/>.</param>
-        /// <param name="seed">0: natural, -1: reverse, random order otherwise</param>
+        /// <param name="seed"> The seed optionally selects a randomized algorithm (0 = default (natural), -1 = reverse, random order otherwise).</param>
         /// <returns>Dulmage-Mendelsohn analysis</returns>
         public static DulmageMendelsohn Generate(SymbolicColumnStorage A, int seed = 0)
         {

@@ -94,12 +94,12 @@ namespace CSparse.Storage
 
             if (columnPointers.Length < columnCount + 1)
             {
-                throw new ArgumentOutOfRangeException("Column pointers array size don't match given column count argument.");
+                throw new ArgumentOutOfRangeException(nameof(columnPointers), "Column pointers array size doesn't match given column count argument.");
             }
 
             if (rowIndices.Length < columnPointers[columnCount])
             {
-                throw new ArgumentOutOfRangeException("Row indices array size don't match non-zeros count.");
+                throw new ArgumentOutOfRangeException(nameof(rowIndices), "Row indices array size doesn't match non-zeros count.");
             }
 
             this.rowCount = rowCount;
@@ -187,13 +187,16 @@ namespace CSparse.Storage
             }
         }
 
+        /// <summary>
+        /// Returns a copy of the <see cref="SymbolicColumnStorage"/>.
+        /// </summary>
+        /// <returns></returns>
         public SymbolicColumnStorage Clone()
         {
-            int m = RowCount;
             int n = ColumnCount;
             int nnz = NonZerosCount;
 
-            var result = new SymbolicColumnStorage(m, n, nnz, true);
+            var result = new SymbolicColumnStorage(RowCount, n, nnz, true);
 
             Buffer.BlockCopy(ColumnPointers, 0, result.ColumnPointers, 0, (n + 1) * Constants.SizeOfInt);
             Buffer.BlockCopy(RowIndices, 0, result.RowIndices, 0, nnz * Constants.SizeOfInt);
