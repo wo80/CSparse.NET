@@ -9,7 +9,7 @@ namespace CSparse.Storage
     /// <remarks>
     /// Used for ordering and symbolic factorization.
     /// </remarks>
-    internal class SymbolicColumnStorage
+    public class SymbolicColumnStorage
     {
         private int rowCount;
         private int columnCount;
@@ -27,27 +27,26 @@ namespace CSparse.Storage
         /// <summary>
         /// Gets the number of rows.
         /// </summary>
-        public int RowCount
-        {
-            get { return rowCount; }
-        }
+        public int RowCount => rowCount;
 
         /// <summary>
         /// Gets the number of columns.
         /// </summary>
-        public int ColumnCount
-        {
-            get { return columnCount; }
-        }
+        public int ColumnCount => columnCount;
 
         /// <summary>
         /// Gets the number of non-zero entries.
         /// </summary>
-        public int NonZerosCount
-        {
-            get { return ColumnPointers[columnCount]; }
-        }
+        public int NonZerosCount => ColumnPointers[columnCount];
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SymbolicColumnStorage"/> class.
+        /// </summary>
+        /// <param name="rowCount">The number of rows.</param>
+        /// <param name="columnCount">The number of columns.</param>
+        /// <param name="valueCount">The number of non-zero values.</param>
+        /// <param name="allocate">If true, both <see cref="ColumnPointers"/> and <see cref="RowIndices"/> arrays will be allocated.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
         public SymbolicColumnStorage(int rowCount, int columnCount, int valueCount, bool allocate)
         {
             // Explicitly allow m or n = 0 (may occur in Dulmage-Mendelsohn decomposition).
@@ -61,27 +60,77 @@ namespace CSparse.Storage
 
             if (allocate)
             {
-                this.ColumnPointers = new int[columnCount + 1];
-                this.RowIndices = new int[valueCount];
+                ColumnPointers = new int[columnCount + 1];
+                RowIndices = new int[valueCount];
             }
         }
 
         /// <summary>
-        /// Change the shape of the matrix (only used by Dulmage-Mendelsohn decomposition).
+        /// Initializes a new instance of the <see cref="SymbolicColumnStorage"/> class.
         /// </summary>
-        /// <param name="rowCount"></param>
-        /// <param name="columnCount"></param>
-        internal void Reshape(int rowCount, int columnCount)
+        /// <param name="rowCount">The number of rows.</param>
+        /// <param name="columnCount">The number of columns.</param>
+        /// <param name="columnPointers">The number of non-zero values.</param>
+        /// <param name="rowIndices">The number of non-zero values.</param>
+        /// <param name="copy">If true, both <paramref name="columnPointers"/> and <paramref name="rowIndices"/> arrays will be copied to new arrays.</param>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public SymbolicColumnStorage(int rowCount, int columnCount, int[] columnPointers, int[] rowIndices, bool copy)
         {
-            if (rowCount >= 0)
+            // Explicitly allow m or n = 0 (may occur in Dulmage-Mendelsohn decomposition).
+            if (rowCount < 0 || columnCount < 0)
             {
-                this.rowCount = rowCount;
+                throw new ArgumentOutOfRangeException(Resources.MatrixDimensionNonNegative);
             }
-            if (columnCount >= 0)
+
+            if (columnPointers is null)
             {
-                this.columnCount = columnCount;
-                //Array.Resize(ref this.ColumnPointers, columnCount + 1);
+                throw new ArgumentNullException(nameof(columnPointers));
             }
+
+            if (rowIndices is null)
+            {
+                throw new ArgumentNullException(nameof(rowIndices));
+            }
+
+            if (columnPointers.Length < columnCount + 1)
+            {
+                throw new ArgumentOutOfRangeException("Column pointers array size don't match given column count argument.");
+            }
+
+            if (rowIndices.Length < columnPointers[columnCount])
+            {
+                throw new ArgumentOutOfRangeException("Row indices array size don't match non-zeros count.");
+            }
+
+            this.rowCount = rowCount;
+            this.columnCount = columnCount;
+
+            if (copy)
+            {
+                int valueCount = rowIndices.Length;
+
+                ColumnPointers = new int[columnCount + 1];
+                RowIndices = new int[valueCount];
+
+                Buffer.BlockCopy(columnPointers, 0, ColumnPointers, 0, (columnCount + 1) * Constants.SizeOfInt);
+                Buffer.BlockCopy(rowIndices, 0, RowIndices, 0, valueCount * Constants.SizeOfInt);
+            }
+            else
+            {
+                ColumnPointers = columnPointers;
+                RowIndices = rowIndices;
+            }
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SymbolicColumnStorage"/> class.
+        /// </summary>
+        /// <param name="A">The sparse matrix to create the <see cref="SymbolicColumnStorage"/> from.</param>
+        /// <param name="copy">If true, both column pointers and row indices arrays of <paramref name="A"/> will be copied to new arrays.</param>
+        public static SymbolicColumnStorage Create<T>(CompressedColumnStorage<T> A, bool copy = true)
+             where T : struct, IEquatable<T>, IFormattable
+        {
+            return new SymbolicColumnStorage(A.RowCount, A.ColumnCount, A.ColumnPointers, A.RowIndices, copy);
         }
 
         /// <summary>
@@ -93,16 +142,16 @@ namespace CSparse.Storage
         {
             if (size <= 0)
             {
-                size = this.ColumnPointers[columnCount];
+                size = ColumnPointers[columnCount];
             }
 
-            Array.Resize(ref this.RowIndices, size);
+            Array.Resize(ref RowIndices, size);
 
             return true;
         }
 
         /// <summary>
-        /// Sort column indices using insertion sort.
+        /// Sort column indices.
         /// </summary>
         public void Sort()
         {
@@ -140,14 +189,14 @@ namespace CSparse.Storage
 
         public SymbolicColumnStorage Clone()
         {
-            int m = this.RowCount;
-            int n = this.ColumnCount;
-            int nnz = this.NonZerosCount;
+            int m = RowCount;
+            int n = ColumnCount;
+            int nnz = NonZerosCount;
 
             var result = new SymbolicColumnStorage(m, n, nnz, true);
 
-            Buffer.BlockCopy(this.ColumnPointers, 0, result.ColumnPointers, 0, (n + 1) * Constants.SizeOfInt);
-            Buffer.BlockCopy(this.RowIndices, 0, result.RowIndices, 0, nnz * Constants.SizeOfInt);
+            Buffer.BlockCopy(ColumnPointers, 0, result.ColumnPointers, 0, (n + 1) * Constants.SizeOfInt);
+            Buffer.BlockCopy(RowIndices, 0, result.RowIndices, 0, nnz * Constants.SizeOfInt);
 
             return result;
         }
@@ -162,8 +211,8 @@ namespace CSparse.Storage
         {
             int j, k, p;
 
-            int m = this.RowCount;
-            int n = this.ColumnCount;
+            int m = RowCount;
+            int n = ColumnCount;
 
             var result = new SymbolicColumnStorage(n, m, 0, false);
 
@@ -232,7 +281,7 @@ namespace CSparse.Storage
             {
                 // Column j of result starts here
                 cp[j] = nz;
-                nz = this.Scatter(j, w, j + 1, ci, nz); // A(:,j)
+                nz = Scatter(j, w, j + 1, ci, nz); // A(:,j)
                 nz = other.Scatter(j, w, j + 1, ci, nz); // B(:,j)
             }
 
@@ -259,15 +308,15 @@ namespace CSparse.Storage
         {
             int p, j, nz = 0;
 
-            if (this.columnCount != other.rowCount)
+            if (columnCount != other.rowCount)
             {
                 throw new ArgumentException();
             }
 
-            int m = this.rowCount;
+            int m = rowCount;
             int n = other.columnCount;
 
-            int anz = this.NonZerosCount;
+            int anz = NonZerosCount;
             int bnz = other.NonZerosCount;
 
             var bp = other.ColumnPointers;
@@ -292,7 +341,7 @@ namespace CSparse.Storage
 
                 for (p = bp[j]; p < bp[j + 1]; p++)
                 {
-                    nz = this.Scatter(bi[p], work, j + 1, ci, nz);
+                    nz = Scatter(bi[p], work, j + 1, ci, nz);
                 }
             }
 
@@ -319,10 +368,10 @@ namespace CSparse.Storage
         {
             int i, j, k, nz = 0;
 
-            int n = this.columnCount;
+            int n = columnCount;
 
-            int[] ap = this.ColumnPointers;
-            int[] ai = this.RowIndices;
+            int[] ap = ColumnPointers;
+            int[] ai = RowIndices;
 
             // Allocate memory if needed.
             if (result.ColumnPointers == null)
@@ -349,6 +398,24 @@ namespace CSparse.Storage
         }
 
         #endregion
+
+        /// <summary>
+        /// Change the shape of the matrix (only used by Dulmage-Mendelsohn decomposition).
+        /// </summary>
+        /// <param name="rowCount"></param>
+        /// <param name="columnCount"></param>
+        internal void Reshape(int rowCount, int columnCount)
+        {
+            if (rowCount >= 0)
+            {
+                this.rowCount = rowCount;
+            }
+            if (columnCount >= 0)
+            {
+                this.columnCount = columnCount;
+                //Array.Resize(ref this.ColumnPointers, columnCount + 1);
+            }
+        }
 
         /// <summary>
         /// Drops entries from a sparse matrix
@@ -381,7 +448,7 @@ namespace CSparse.Storage
             ColumnPointers[columnCount] = nz;
 
             // Remove extra space.
-            Array.Resize<int>(ref this.RowIndices, nz);
+            Array.Resize(ref RowIndices, nz);
 
             return nz;
         }
@@ -410,29 +477,6 @@ namespace CSparse.Storage
             }
 
             return nz;
-        }
-
-        internal static SymbolicColumnStorage Create<T>(CompressedColumnStorage<T> mat, bool allocate = true)
-             where T : struct, IEquatable<T>, IFormattable
-        {
-            int m = mat.RowCount;
-            int n = mat.ColumnCount;
-            int nnz = mat.NonZerosCount;
-
-            var result = new SymbolicColumnStorage(m, n, nnz, allocate);
-
-            if (allocate)
-            {
-                Buffer.BlockCopy(mat.ColumnPointers, 0, result.ColumnPointers, 0, (n + 1) * Constants.SizeOfInt);
-                Buffer.BlockCopy(mat.RowIndices, 0, result.RowIndices, 0, nnz * Constants.SizeOfInt);
-            }
-            else
-            {
-                result.ColumnPointers = mat.ColumnPointers;
-                result.RowIndices = mat.RowIndices;
-            }
-
-            return result;
         }
     }
 }

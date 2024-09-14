@@ -40,10 +40,7 @@ namespace CSparse.Storage
         /// <summary>
         /// Gets the number of non-zero entries.
         /// </summary>
-        public int NonZerosCount
-        {
-            get { return ColumnPointers[columns]; }
-        }
+        public int NonZerosCount => ColumnPointers[columns];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompressedColumnStorage{T}"/> class.
