@@ -26,6 +26,22 @@ namespace CSparse.Ordering
         public static int[] Generate<T>(CompressedColumnStorage<T> A, ColumnOrdering order)
             where T : struct, IEquatable<T>, IFormattable
         {
+            return Generate(SymbolicColumnStorage.Create(A), order);
+        }
+
+        /// <summary>
+        /// Generate minimum degree ordering of A+A' (if A is symmetric) or A'A.
+        /// </summary>
+        /// <param name="A">Column-compressed matrix</param>
+        /// <param name="order">Column ordering method</param>
+        /// <returns>amd(A+A') if A is symmetric, or amd(A'A) otherwise, null on 
+        /// error or for natural ordering</returns>
+        /// <remarks>
+        /// See Chapter 7.1 (Fill-reducing orderings: Minimum degree ordering) in 
+        /// "Direct Methods for Sparse Linear Systems" by Tim Davis.
+        /// </remarks>
+        public static int[] Generate(SymbolicColumnStorage A, ColumnOrdering order)
+        {
             int[] Cp, Ci, P, W, nv, next, head, elen, degree, w, hhead;
 
             int d, dk, dext, lemax = 0, e, elenk, eln, i, j, k, k1,
@@ -42,7 +58,7 @@ namespace CSparse.Ordering
                 return Permutation.Create(n);
             }
 
-            var C = ConstructMatrix(SymbolicColumnStorage.Create(A), order);
+            var C = ConstructMatrix(A, order);
 
             Cp = C.ColumnPointers;
             cnz = Cp[n];
@@ -139,7 +155,7 @@ namespace CSparse.Ordering
                             Ci[p] = -(j + 2); // first entry is now CS_FLIP(j)
                         }
                     }
-                    for (q = 0, p = 0; p < cnz; ) // scan all of memory
+                    for (q = 0, p = 0; p < cnz;) // scan all of memory
                     {
                         if ((j = FLIP(Ci[p++])) >= 0) // found object j
                         {
@@ -303,7 +319,7 @@ namespace CSparse.Ordering
                         eln = elen[i];
                         for (p = Cp[i] + 1; p <= Cp[i] + ln - 1; p++) w[Ci[p]] = mark;
                         jlast = i;
-                        for (j = next[i]; j != -1; ) // compare i with all j
+                        for (j = next[i]; j != -1;) // compare i with all j
                         {
                             ok = (W[j] == ln) && (elen[j] == eln);
                             for (p = Cp[j] + 1; ok && p <= Cp[j] + ln - 1; p++)
@@ -411,13 +427,13 @@ namespace CSparse.Ordering
         private static SymbolicColumnStorage ConstructMatrix(SymbolicColumnStorage A, ColumnOrdering order)
         {
             SymbolicColumnStorage result = null;
-            
+
             // Compute A'
             var AT = A.Transpose();
 
             int m = A.RowCount;
             int n = A.ColumnCount;
-            
+
             if (order == ColumnOrdering.MinimumDegreeAtPlusA)
             {
                 if (n != m)
@@ -444,7 +460,7 @@ namespace CSparse.Ordering
                 {
                     // Column j of AT starts here.
                     p = colptr[j];
-                    
+
                     // New column j starts here.
                     colptr[j] = p2;
 

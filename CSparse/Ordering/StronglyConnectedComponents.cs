@@ -48,18 +48,30 @@ namespace CSparse.Ordering
         public static StronglyConnectedComponents Generate<T>(CompressedColumnStorage<T> matrix)
              where T : struct, IEquatable<T>, IFormattable
         {
-            return Generate(SymbolicColumnStorage.Create(matrix, false), matrix.ColumnCount);
+            return Generate(SymbolicColumnStorage.Create(matrix, false));
         }
-        
+
         /// <summary>
-        /// Find strongly connected components of A.
+        /// Compute strongly connected components of A.
         /// </summary>
-        /// <param name="A"></param>
-        /// <param name="n"></param>
-        /// <returns></returns>
-        internal static StronglyConnectedComponents Generate(SymbolicColumnStorage A, int n)
+        /// <param name="A">The matrix represented by <see cref="SymbolicColumnStorage"/>.</param>
+        /// <returns>Strongly connected components</returns>
+        public static StronglyConnectedComponents Generate(SymbolicColumnStorage A)
+        {
+            return Generate(A, A.ColumnCount);
+        }
+
+        /// <summary>
+        /// Compute strongly connected components of A.
+        /// </summary>
+        /// <param name="A">The matrix represented by <see cref="SymbolicColumnStorage"/>.</param>
+        /// <param name="size">The size of the matrix.</param>
+        /// <returns>Strongly connected components</returns>
+        public static StronglyConnectedComponents Generate(SymbolicColumnStorage A, int size)
         {
             // matrix A temporarily modified, then restored
+
+            int n = size;
 
             int i, k, b, nb = 0, top;
             int[] xi, p, r, Ap, ATp;
