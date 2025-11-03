@@ -171,15 +171,18 @@ namespace CSparse.Double
             }
 
             int end;
+            double xj;
 
             for (int j = 0; j < columns; j++)
             {
                 end = ap[j + 1];
 
+                xj = x[j];
+
                 // Loop over the rows.
                 for (int k = ap[j]; k < end; k++)
                 {
-                    y[ai[k]] += x[j] * ax[k];
+                    y[ai[k]] += xj * ax[k];
                 }
             }
         }
