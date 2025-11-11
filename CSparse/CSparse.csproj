@@ -9,38 +9,43 @@
     <Description>CSparse.NET provides numerical methods for sparse LU, Cholesky and QR decomposition of real and complex linear systems.</Description>
     <Product>CSparse.NET</Product>
     <Company />
-    <Copyright>Copyright Christian Woltering © 2012-2024</Copyright>
+    <Copyright>Copyright Christian Woltering © 2012-2025</Copyright>
     <Authors>Christian Woltering</Authors>
-    <AssemblyVersion>4.2.0.0</AssemblyVersion>
-    <FileVersion>4.2.0.0</FileVersion>
+    <AssemblyVersion>4.3.0.0</AssemblyVersion>
+    <FileVersion>4.3.0.0</FileVersion>
     <PackageTags>math sparse matrix lu cholesky qr decomposition factorization </PackageTags>
-    <Version>4.2.0</Version>
+    <Version>4.3.0</Version>
     <AssemblyName>CSparse</AssemblyName>
     <RootNamespace>CSparse</RootNamespace>
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/wo80/CSparse.NET</PackageProjectUrl>
     <RepositoryUrl>https://github.com/wo80/CSparse.NET.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>
-		Version 4.2.0
+    <PackageReleaseNotes>Version 4.3.0
 
-		* Make SymbolicColumnStorage class public and update StronglyConnectedComponents and DulmageMendelsohn decomposition accordingly.
+* Add net10.0 and remove net6.0 target framework.
+* Minor optimizations for matrix-vector multiplication.
+* Minor optimizations checking empty Span.
 
-		Version 4.1.0
+Version 4.2.0
 
-		* Add overload for creating a sparse matrix from an enumerable of ValueTuple.
-		* Add matrix EnumerateIndexedAsValueTuples() to enumerate entries as ValueTuple.
+* Make SymbolicColumnStorage class public and update StronglyConnectedComponents and DulmageMendelsohn decomposition accordingly.
 
-		Version 4.0.0
+Version 4.1.0
 
-		The major version change is due to the removal of obsolete methods in the Converter class. Visibility of that class was changed from public to internal. In case those obsolete methods were still used, please switch to the static conversion methods provided by the SparseMatrix class.
+* Add overload for creating a sparse matrix from an enumerable of ValueTuple.
+* Add matrix EnumerateIndexedAsValueTuples() to enumerate entries as ValueTuple.
 
-		Other changes in this version:
+Version 4.0.0
 
-		* Addition of helper method Helper.ValidateStorage(...) to validate the structure of a sparse matrix.
-		* Update to GetHashCode() method of CompressedColumnStorage class.
-		* Improvements to documentation.
-	</PackageReleaseNotes>
+The major version change is due to the removal of obsolete methods in the Converter class. Visibility of that class was changed from public to internal. In case those obsolete methods were still used, please switch to the static conversion methods provided by the SparseMatrix class.
+
+Other changes in this version:
+
+* Addition of helper method Helper.ValidateStorage(...) to validate the structure of a sparse matrix.
+* Update to GetHashCode() method of CompressedColumnStorage class.
+* Improvements to documentation.
+</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>

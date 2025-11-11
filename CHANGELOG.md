@@ -1,3 +1,9 @@
+### Version 4.3.0 - 2025-11-11
+
+* Add net10.0 and remove net6.0 target framework.
+* Minor optimizations for matrix-vector multiplication.
+* Minor optimizations checking empty Span.
+
 ### Version 4.2.0 - 2024-09-15
 
 * Make `SymbolicColumnStorage` class public and update `StronglyConnectedComponents` and `DulmageMendelsohn` decomposition accordingly.
