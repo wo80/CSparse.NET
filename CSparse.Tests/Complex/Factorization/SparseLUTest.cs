@@ -3,6 +3,7 @@ namespace CSparse.Tests.Complex.Factorization
     using CSparse.Complex;
     using CSparse.Complex.Factorization;
     using NUnit.Framework;
+    using System;
     using Complex = System.Numerics.Complex;
 
     public class SparseLUTest
@@ -30,6 +31,14 @@ namespace CSparse.Tests.Complex.Factorization
             A.Multiply(-1.0, x, 1.0, r);
 
             Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
+
+            // Test exceptions:
+
+            var e1 = Assert.Throws<ArgumentNullException>(() => lu.Solve(b, null));
+            var e2 = Assert.Throws<ArgumentNullException>(() => lu.Solve(null, x));
+
+            Assert.That(e1.ParamName, Is.EqualTo("result"));
+            Assert.That(e2.ParamName, Is.EqualTo("input"));
         }
 
         [Test]
