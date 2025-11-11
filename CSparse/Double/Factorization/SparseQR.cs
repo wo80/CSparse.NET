@@ -98,9 +98,9 @@ namespace CSparse.Double.Factorization
         /// </remarks>
         public override void Solve(ReadOnlySpan<double> input, Span<double> result)
         {
-            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (input.IsEmpty) throw new ArgumentNullException(nameof(input));
 
-            if (result == null) throw new ArgumentNullException(nameof(result));
+            if (result.IsEmpty) throw new ArgumentNullException(nameof(result));
 
             var x = new double[S.m2];
 
@@ -152,9 +152,9 @@ namespace CSparse.Double.Factorization
         /// <param name="result">The left hand side vector, <c>x</c>.</param>
         public void SolveTranspose(ReadOnlySpan<double> input, Span<double> result)
         {
-            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (input.IsEmpty) throw new ArgumentNullException(nameof(input));
 
-            if (result == null) throw new ArgumentNullException(nameof(result));
+            if (result.IsEmpty) throw new ArgumentNullException(nameof(result));
 
             int m2 = S.m2;
 

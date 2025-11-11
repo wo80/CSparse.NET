@@ -126,9 +126,9 @@ namespace CSparse.Complex.Factorization
         /// <param name="result">Solution vector x.</param>
         public void Solve(ReadOnlySpan<Complex> input, Span<Complex> result)
         {
-            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (input.IsEmpty) throw new ArgumentNullException(nameof(input));
 
-            if (result == null) throw new ArgumentNullException(nameof(result));
+            if (result.IsEmpty) throw new ArgumentNullException(nameof(result));
 
             var x = temp;
 

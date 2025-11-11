@@ -99,9 +99,9 @@ namespace CSparse.Complex.Factorization
         /// </remarks>
         public override void Solve(ReadOnlySpan<Complex> input, Span<Complex> result)
         {
-            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (input.IsEmpty) throw new ArgumentNullException(nameof(input));
 
-            if (result == null) throw new ArgumentNullException(nameof(result));
+            if (result.IsEmpty) throw new ArgumentNullException(nameof(result));
 
             var x = new Complex[S.m2];
 
@@ -154,9 +154,9 @@ namespace CSparse.Complex.Factorization
         /// <param name="result">The left hand side vector, <c>x</c>.</param>
         public void SolveTranspose(ReadOnlySpan<Complex> input, Span<Complex> result)
         {
-            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (input.IsEmpty) throw new ArgumentNullException(nameof(input));
 
-            if (result == null) throw new ArgumentNullException(nameof(result));
+            if (result.IsEmpty) throw new ArgumentNullException(nameof(result));
 
             int m2 = S.m2;
 
