@@ -112,6 +112,31 @@ namespace CSparse.Double.Factorization
         }
 
         /// <summary>
+        /// Numerically re-factorizes a matrix that has the <b>same sparsity pattern</b>
+        /// as the one passed to <c>Create</c>, reusing the cached symbolic analysis
+        /// (ordering and elimination tree).
+        /// </summary>
+        /// <param name="A">Column-compressed matrix, same size and pattern as in <c>Create</c>.</param>
+        /// <remarks>
+        /// Intended for Newton iterations and time-stepping loops where the matrix
+        /// values change but its pattern does not: the fill-reducing ordering and the
+        /// symbolic analysis are skipped, keeping only the numeric work. The matrix
+        /// must keep the pattern used in <c>Create</c> (the symbolic structure is reused).
+        /// </remarks>
+        public void Refactorize(CompressedColumnStorage<double> A)
+        {
+            Check.NotNull(A, "A");
+            Check.SquareMatrix(A, "A");
+
+            if (A.ColumnCount != n)
+            {
+                throw new ArgumentException("Matrix dimensions don't match the factorization.", "A");
+            }
+
+            Factorize(A, null);
+        }
+
+        /// <summary>
         /// Solves a linear system Ax=b, where A is symmetric positive definite.
         /// </summary>
         /// <param name="input">Right hand side b.</param>

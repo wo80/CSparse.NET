@@ -110,6 +110,37 @@ namespace CSparse.Double.Factorization
         }
 
         /// <summary>
+        /// Numerically re-factorizes a matrix that has the <b>same sparsity pattern</b>
+        /// as the one passed to <c>Create</c>, reusing the cached symbolic ordering.
+        /// </summary>
+        /// <param name="A">Column-compressed matrix, same size as the one used in <c>Create</c>.</param>
+        /// <param name="tol">Partial pivoting tolerance (from 0.0 to 1.0).</param>
+        /// <remarks>
+        /// Intended for Newton iterations and time-stepping loops where the matrix
+        /// values change but its pattern does not: the fill-reducing column ordering
+        /// and symbolic analysis are skipped, keeping only the (dominant) numeric work.
+        /// The column ordering is a permutation, so a different pattern still factorizes
+        /// correctly, but the fill may then be sub-optimal.
+        /// </remarks>
+        public void Refactorize(CompressedColumnStorage<double> A, double tol = 1.0)
+        {
+            Check.NotNull(A, "A");
+            Check.SquareMatrix(A, "A");
+            Check.NotNaN(tol, "tol");
+
+            if (A.ColumnCount != n)
+            {
+                throw new ArgumentException("Matrix dimensions don't match the factorization.", "A");
+            }
+
+            // Ensure tol is in range.
+            tol = Math.Min(Math.Max(tol, 0.0), 1.0);
+
+            // Reuse the cached symbolic ordering (S); recompute L, U and the pivoting.
+            Factorize(A, tol, null);
+        }
+
+        /// <summary>
         /// Solves a system of linear equations, <c>Ax = b</c>.
         /// </summary>
         /// <param name="input">The right hand side vector, <c>b</c>.</param>

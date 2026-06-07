@@ -76,5 +76,34 @@ namespace CSparse.Tests.Complex.Factorization
             Assert.That(lu, Is.Not.Null);
             Assert.That(lu.NonZerosCount == 0, Is.True);
         }
+
+        [Test]
+        public void TestRefactorize()
+        {
+            var A = ResourceLoader.Get<Complex>("general-40x40.mat");
+
+            var lu = SparseLU.Create(A, ColumnOrdering.MinimumDegreeAtPlusA, 1.0);
+
+            // Same sparsity pattern, different values (B = 2*A) : numeric refactorization
+            // must reuse the cached symbolic ordering and still solve correctly.
+            var B = A.Clone();
+            var bv = B.Values;
+            for (int i = 0; i < bv.Length; i++) bv[i] *= 2.0;
+
+            lu.Refactorize(B, 1.0);
+
+            var x = Helper.CreateTestVector(B.ColumnCount);
+            var b = Helper.Multiply(B, x);
+            var r = Vector.Clone(b);
+
+            lu.Solve(b, x);
+            B.Multiply(-1.0, x, 1.0, r);
+
+            Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
+
+            // Dimension guard.
+            var small = new SparseMatrix(3, 3, 0);
+            Assert.Throws<ArgumentException>(() => lu.Refactorize(small, 1.0));
+        }
     }
 }
