@@ -275,8 +275,16 @@ namespace CSparse.Double.Factorization
             int[] P = S.q;
             int[] Pinv = S.pinv;
 
-            this.D = new double[n];
-            this.L = CompressedColumnStorage<double>.Create(n, n, S.cp[n]);
+            if (this.L is null)
+            {
+                this.D = new double[n];
+                this.L = CompressedColumnStorage<double>.Create(n, n, S.cp[n]);
+            }
+            else
+            {
+                // Re-factorization (same pattern) : reuse the existing buffers.
+                this.L.Clear();
+            }
 
             Array.Copy(S.cp, L.ColumnPointers, n + 1);
 

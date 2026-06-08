@@ -2,6 +2,7 @@ namespace CSparse.Tests.Double.Factorization
 {
     using CSparse.Double;
     using CSparse.Double.Factorization;
+    using CSparse.Storage;
     using NUnit.Framework;
     using System;
 
@@ -108,6 +109,40 @@ namespace CSparse.Tests.Double.Factorization
             // Dimension guard.
             var small = new SparseMatrix(3, 3, 0);
             Assert.Throws<ArgumentException>(() => lu.Refactorize(small, 1.0));
+        }
+
+        [Test]
+        public void TestRefactorizeNoTrim()
+        {
+            // With AutoTrimStorage disabled, the L/U buffers are kept across
+            // re-factorizations (no Resize(0) trim) — the result must stay correct.
+            var trim = CompressedColumnStorage<double>.AutoTrimStorage;
+            try
+            {
+                CompressedColumnStorage<double>.AutoTrimStorage = false;
+
+                var A = ResourceLoader.Get<double>("general-40x40.mat");
+                var lu = SparseLU.Create(A, ColumnOrdering.MinimumDegreeAtPlusA, 1.0);
+
+                var B = A.Clone();
+                var bv = B.Values;
+                for (int i = 0; i < bv.Length; i++) bv[i] *= 2.0;
+
+                lu.Refactorize(B, 1.0);
+
+                var x = Helper.CreateTestVector(B.ColumnCount);
+                var b = Helper.Multiply(B, x);
+                var r = Vector.Clone(b);
+
+                lu.Solve(b, x);
+                B.Multiply(-1.0, x, 1.0, r);
+
+                Assert.That(Vector.Norm(r.Length, r) < EPS, Is.True);
+            }
+            finally
+            {
+                CompressedColumnStorage<double>.AutoTrimStorage = trim;
+            }
         }
     }
 }

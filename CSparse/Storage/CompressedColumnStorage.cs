@@ -18,7 +18,10 @@ namespace CSparse.Storage
         /// automatically resized to non-zeros count. Defaults to true.
         /// </summary>
         /// <remarks>
-        /// Affects only sparse matrix addition and multiplication.
+        /// Affects sparse matrix addition and multiplication, and the trimming of
+        /// the L/U factors at the end of <c>SparseLU.Factorize</c>. Set to
+        /// <c>false</c> to keep the factor buffers allocated across repeated
+        /// <c>Refactorize</c> calls (iterative solvers, time-stepping).
         /// </remarks>
         public static bool AutoTrimStorage { get; set; } = true;
 
