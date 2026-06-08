@@ -281,7 +281,15 @@ namespace CSparse.Double.Factorization
             var ci = C.RowIndices;
             var cx = C.Values;
 
-            this.L = CompressedColumnStorage<double>.Create(n, n, colp[n]);
+            if (this.L is null)
+            {
+                this.L = CompressedColumnStorage<double>.Create(n, n, colp[n]);
+            }
+            else
+            {
+                // Re-factorization (same pattern) : reuse the existing buffer.
+                this.L.Clear();
+            }
 
             var lp = L.ColumnPointers;
             var li = L.RowIndices;

@@ -209,9 +209,18 @@ namespace CSparse.Double.Factorization
             int lnz = S.lnz;
             int unz = S.unz;
 
-            this.L = CompressedColumnStorage<double>.Create(n, n, lnz);
-            this.U = CompressedColumnStorage<double>.Create(n, n, unz);
-            this.pinv = new int[n];
+            if (this.L is null)
+            {
+                this.L = CompressedColumnStorage<double>.Create(n, n, lnz);
+                this.U = CompressedColumnStorage<double>.Create(n, n, unz);
+                this.pinv = new int[n];
+            }
+            else
+            {
+                // Re-factorization (same pattern) : reuse the existing buffers.
+                this.L.Clear();
+                this.U.Clear();
+            }
 
             // Workspace
             var x = this.temp;
@@ -324,9 +333,13 @@ namespace CSparse.Double.Factorization
                 li[p] = pinv[li[p]];
             }
 
-            // Remove extra space from L and U
-            L.Resize(0);
-            U.Resize(0);
+            // Remove extra space from L and U (skipped when trimming is disabled,
+            // e.g. to reuse the buffers across re-factorizations in an iterative solver).
+            if (CompressedColumnStorage<double>.AutoTrimStorage)
+            {
+                L.Resize(0);
+                U.Resize(0);
+            }
         }
 
         /// <summary>
