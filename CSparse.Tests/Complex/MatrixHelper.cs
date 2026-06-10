@@ -4,22 +4,18 @@ namespace CSparse.Tests.Complex
     using CSparse.Storage;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Numerics;
 
     class MatrixHelper
     {
-        private static Dictionary<string, DenseTestData<Complex>> dense = new Dictionary<string, DenseTestData<Complex>>();
-
-        private static Dictionary<string, SparseTestData<Complex>> sparse = new Dictionary<string, SparseTestData<Complex>>();
+        private static readonly Dictionary<string, DenseTestData<Complex>> dense = [];
+        private static readonly Dictionary<string, SparseTestData<Complex>> sparse = [];
 
         public static SparseTestData<Complex> LoadSparse(int rows, int columns)
         {
             string resource = string.Format("test-data-dense-{0}x{1}.txt", rows, columns);
 
-            SparseTestData<Complex> data;
-
-            if (!sparse.TryGetValue(resource, out data))
+            if (!sparse.TryGetValue(resource, out SparseTestData<Complex> data))
             {
                 var dense = LoadDense(rows, columns);
 
@@ -35,9 +31,7 @@ namespace CSparse.Tests.Complex
         {
             string resource = string.Format("test-data-dense-{0}x{1}.txt", rows, columns);
 
-            DenseTestData<Complex> data;
-
-            if (!dense.TryGetValue(resource, out data))
+            if (!dense.TryGetValue(resource, out DenseTestData<Complex> data))
             {
                 var stream = ResourceLoader.GetStream(resource, "Double");
 
@@ -53,22 +47,21 @@ namespace CSparse.Tests.Complex
         {
             var data = Tests.Double.DenseTestDataReader.Read(stream);
 
-            var result = new DenseTestData<Complex>();
-
-            result.A = ToComplex(data.A);
-            result.B = ToComplex(data.B);
-            result.x = ToComplex(data.x);
-            result.y = ToComplex(data.y);
-            result.AT = ToComplex(data.AT);
-            result.BT = ToComplex(data.BT);
-            result.ApB = ToComplex(data.ApB);
-            result.AmBT = ToComplex(data.AmBT);
-            result.ATmB = ToComplex(data.ATmB);
-            result.Ax = ToComplex(data.Ax);
-            result.ATy = ToComplex(data.ATy);
-            result.xTBT = ToComplex(data.xTBT);
-
-            return result;
+            return new DenseTestData<Complex>
+            {
+                A = ToComplex(data.A),
+                B = ToComplex(data.B),
+                x = ToComplex(data.x),
+                y = ToComplex(data.y),
+                AT = ToComplex(data.AT),
+                BT = ToComplex(data.BT),
+                ApB = ToComplex(data.ApB),
+                AmBT = ToComplex(data.AmBT),
+                ATmB = ToComplex(data.ATmB),
+                Ax = ToComplex(data.Ax),
+                ATy = ToComplex(data.ATy),
+                xTBT = ToComplex(data.xTBT)
+            };
         }
 
         private static Complex[] ToComplex(double[] vec)
@@ -101,26 +94,23 @@ namespace CSparse.Tests.Complex
 
         private static SparseTestData<Complex> DenseToSparse(DenseTestData<Complex> dense)
         {
-            var data = new SparseTestData<Complex>()
+            return new SparseTestData<Complex>
             {
                 RowCount = dense.RowCount,
-                ColumnCount = dense.ColumnCount
+                ColumnCount = dense.ColumnCount,
+                A = DenseToSparse(dense.A),
+                B = DenseToSparse(dense.B),
+                x = dense.x,
+                y = dense.y,
+                AT = DenseToSparse(dense.AT),
+                BT = DenseToSparse(dense.BT),
+                ApB = DenseToSparse(dense.ApB),
+                AmBT = DenseToSparse(dense.AmBT),
+                ATmB = DenseToSparse(dense.ATmB),
+                Ax = dense.Ax,
+                ATy = dense.ATy,
+                xTBT = dense.xTBT
             };
-
-            data.A = DenseToSparse(dense.A);
-            data.B = DenseToSparse(dense.B);
-            data.x = dense.x;
-            data.y = dense.y;
-            data.AT = DenseToSparse(dense.AT);
-            data.BT = DenseToSparse(dense.BT);
-            data.ApB = DenseToSparse(dense.ApB);
-            data.AmBT = DenseToSparse(dense.AmBT);
-            data.ATmB = DenseToSparse(dense.ATmB);
-            data.Ax = dense.Ax;
-            data.ATy = dense.ATy;
-            data.xTBT = dense.xTBT;
-
-            return data;
         }
 
         private static CompressedColumnStorage<Complex> DenseToSparse(DenseColumnMajorStorage<Complex> dense)

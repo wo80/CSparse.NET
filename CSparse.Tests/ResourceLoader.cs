@@ -11,7 +11,7 @@ namespace CSparse.Tests
     {
         private const string NS = "CSparse.Tests.{Type}.Data";
 
-        private static Dictionary<string, object> cache = new Dictionary<string, object>();
+        private static readonly Dictionary<string, object> cache = [];
 
         public static Stream GetStream(string resource, string type)
         {
@@ -29,14 +29,13 @@ namespace CSparse.Tests
 
                 string path = NS.Replace("{Type}", type) + "." + resource;
 
-                object obj;
 
-                if (cache.TryGetValue(path, out obj))
+                if (cache.TryGetValue(path, out object obj))
                 {
                     return (CompressedColumnStorage<T>)obj;
                 }
 
-                var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(path);
+                using var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(path);
 
                 var matrix = MatrixMarketReader.ReadMatrix<T>(stream);
 

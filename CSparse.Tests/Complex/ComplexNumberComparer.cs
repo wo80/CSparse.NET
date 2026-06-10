@@ -11,7 +11,7 @@ namespace CSparse.Tests.Complex
 
     public class ComplexNumberComparer : IComparer, IComparer<Complex>
     {
-        public static ComplexNumberComparer Default = new ComplexNumberComparer();
+        public static ComplexNumberComparer Default = new();
 
         // Floating point tolerance
         const double TOL = 1e-8;
