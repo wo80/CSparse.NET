@@ -8,12 +8,12 @@ namespace CSparse.Tests.IO
 
     public class TestMatrixMarketWriter
     {
-        private static readonly double[] DenseA = new[]
-        {
+        private static readonly double[] DenseA =
+        [
             1.0, 0.0, 0.5,
             0.0, 2.0, 0.1,
             0.5, 0.1, 3.0,
-        };
+        ];
 
         [Test]
         public void TestWriteSparse()

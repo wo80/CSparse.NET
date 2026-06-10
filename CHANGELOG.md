@@ -1,3 +1,7 @@
+### Version 4.4.0 - 2026-06-10
+
+* Add Refactorize methods to SparseCholesky, SparseLDL and SparseLU
+
 ### Version 4.3.0 - 2025-11-11
 
 * Add net10.0 and remove net6.0 target framework.

@@ -25,8 +25,8 @@ namespace CSparse.Tests.Ordering
             //
             // Adjacency matrix:
             
-            var A = SparseMatrix.OfRowMajor(8, 8, new double[8 * 8]
-            {
+            var A = SparseMatrix.OfRowMajor(8, 8,
+            [
                 1, 1, 0, 0, 0, 0, 0, 0,
                 0, 1, 1, 0, 1, 1, 0, 0,
                 0, 0, 1, 1, 0, 0, 1, 0,
@@ -35,7 +35,7 @@ namespace CSparse.Tests.Ordering
                 0, 0, 0, 0, 0, 1, 1, 0,
                 0, 0, 0, 0, 0, 1, 1, 0,
                 0, 0, 0, 1, 0, 0, 1, 1
-            });
+            ]);
 
             int n = A.ColumnCount;
             

@@ -9,80 +9,77 @@ namespace CSparse.Tests.Double
     {
         public static DenseTestData<double> Read(Stream stream)
         {
-            using (var reader = new StreamReader(stream))
+            using var reader = new StreamReader(stream);
+
+            string line = reader.ReadLine();
+
+            GetItem(line, out string name, out string value);
+
+            if (name != "size")
             {
-                string line, name, value;
+                throw new FormatException("Expected first line = size.");
+            }
 
-                line = reader.ReadLine();
+            var data = ReadSize(value);
 
+            int m = data.RowCount;
+            int n = data.ColumnCount;
+
+            while ((line = reader.ReadLine()) != null)
+            {
                 GetItem(line, out name, out value);
 
-                if (name != "size")
+                if (name == "A")
                 {
-                    throw new FormatException("Expected first line = size.");
+                    data.A = ReadMatrix(value, m, n);
                 }
-
-                var data = ReadSize(value);
-
-                int m = data.RowCount;
-                int n = data.ColumnCount;
-
-                while ((line = reader.ReadLine()) != null)
+                else if (name == "B")
                 {
-                    GetItem(line, out name, out value);
-
-                    if (name == "A")
-                    {
-                        data.A = ReadMatrix(value, m, n);
-                    }
-                    else if (name == "B")
-                    {
-                        data.B = ReadMatrix(value, m, n);
-                    }
-                    else if (name == "x")
-                    {
-                        data.x = ReadVector(value, n);
-                    }
-                    else if (name == "y")
-                    {
-                        data.y = ReadVector(value, m);
-                    }
-                    else if (name == "A'")
-                    {
-                        data.AT = ReadMatrix(value, n, m);
-                    }
-                    else if (name == "B'")
-                    {
-                        data.BT = ReadMatrix(value, n, m);
-                    }
-                    else if (name == "A+B")
-                    {
-                        data.ApB = ReadMatrix(value, m, n);
-                    }
-                    else if (name == "A*B'")
-                    {
-                        data.AmBT = ReadMatrix(value, m, m);
-                    }
-                    else if (name == "A'*B")
-                    {
-                        data.ATmB = ReadMatrix(value, n, n);
-                    }
-                    else if (name == "A*x")
-                    {
-                        data.Ax = ReadVector(value, m);
-                    }
-                    else if (name == "A'*y")
-                    {
-                        data.ATy = ReadVector(value, n);
-                    }
-                    else if (name == "x'*B'")
-                    {
-                        data.xTBT = ReadVector(value, m);
-                    }
+                    data.B = ReadMatrix(value, m, n);
                 }
-
-                return data;
+                else if (name == "x")
+                {
+                    data.x = ReadVector(value, n);
+                }
+                else if (name == "y")
+                {
+                    data.y = ReadVector(value, m);
+                }
+                else if (name == "A'")
+                {
+                    data.AT = ReadMatrix(value, n, m);
+                }
+                else if (name == "B'")
+                {
+                    data.BT = ReadMatrix(value, n, m);
+                }
+                else if (name == "A+B")
+                {
+                    data.ApB = ReadMatrix(value, m, n);
+                }
+                else if (name == "A*B'")
+                {
+                    data.AmBT = ReadMatrix(value, m, m);
+                }
+                else if (name == "A'*B")
+                {
+                    data.ATmB = ReadMatrix(value, n, n);
+                }
+                else if (name == "A*x")
+                {
+                    data.Ax = ReadVector(value, m);
+                }
+                else if (name == "A'*y")
+                {
+                    data.ATy = ReadVector(value, n);
+                }
+                else if (name == "x'*B'")
+                {
+                    data.xTBT = ReadVector(value, m);
+                }
             }
+
+            return data;
         }
 
         private static void GetItem(string line, out string name, out string value)
