@@ -21,7 +21,8 @@ namespace CSparse.Complex.Factorization
         CompressedColumnStorage<Complex> L, U;
         int[] pinv; // partial pivoting
 
-        Complex[] temp; // workspace
+        readonly Complex[] temp; // workspace (used for factorization and solve)
+        readonly int[] temp2; // workspace (used for factorization)
 
         #region Static methods
 
@@ -99,7 +100,9 @@ namespace CSparse.Complex.Factorization
         private SparseLU(int n)
         {
             this.n = n;
-            this.temp = new Complex[n];
+
+            temp = new Complex[n];
+            temp2 = new int[2 * n];
         }
 
         /// <summary>
@@ -139,6 +142,7 @@ namespace CSparse.Complex.Factorization
 
             // Reset workspace
             Array.Clear(temp, 0, n);
+            Array.Clear(temp2, 0, 2 * n);
 
             // Reuse the cached symbolic ordering (S); recompute L, U and the pivoting.
             Factorize(A, tol, null);
@@ -227,8 +231,8 @@ namespace CSparse.Complex.Factorization
             }
 
             // Workspace
-            var x = this.temp;
-            var xi = new int[2 * n];
+            var x = temp;
+            var xi = temp2;
 
             for (i = 0; i < n; i++)
             {
