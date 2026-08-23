@@ -136,6 +136,9 @@ namespace CSparse.Double.Factorization
             // Ensure tol is in range.
             tol = Math.Min(Math.Max(tol, 0.0), 1.0);
 
+            // Reset workspace
+            Array.Clear(temp, 0, n);
+
             // Reuse the cached symbolic ordering (S); recompute L, U and the pivoting.
             Factorize(A, tol, null);
         }
