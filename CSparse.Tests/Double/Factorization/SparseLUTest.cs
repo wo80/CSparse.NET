@@ -112,6 +112,27 @@ namespace CSparse.Tests.Double.Factorization
         }
 
         [Test]
+        public void TestRefactorize2()
+        {
+            const int N = 3;
+
+            var A = CompressedColumnStorage<double>.OfRowMajor(N, N, [0.001, -0.001, 1, -0.001, 10.001, 0, 1, 0, 0]);
+
+            double[] b = { 0.0, 0.0049995, 5.0 };
+
+            double[] x1 = new double[N];
+            double[] x2 = new double[N];
+
+            var lu = SparseLU.Create(A, ColumnOrdering.MinimumDegreeAtPlusA, 1e-8);
+
+            lu.Solve(b, x1);
+            lu.Refactorize(A, 1e-8);
+            lu.Solve(b, x2);
+
+            Assert.AreEqual(x1[0], x2[0]);
+        }
+
+        [Test]
         public void TestRefactorizeNoTrim()
         {
             // With AutoTrimStorage disabled, the L/U buffers are kept across

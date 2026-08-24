@@ -20,8 +20,9 @@ namespace CSparse.Double.Factorization
         CompressedColumnStorage<double> L, U;
         int[] pinv; // partial pivoting
 
-        double[] temp; // workspace
-        
+        readonly double[] temp; // workspace (used for factorization and solve)
+        readonly int[] temp2; // workspace (used for factorization)
+
         #region Static methods
 
         /// <summary>
@@ -98,7 +99,9 @@ namespace CSparse.Double.Factorization
         private SparseLU(int n)
         {
             this.n = n;
-            this.temp = new double[n];
+
+            temp = new double[n];
+            temp2 = new int[2 * n];
         }
 
         /// <summary>
@@ -135,6 +138,10 @@ namespace CSparse.Double.Factorization
 
             // Ensure tol is in range.
             tol = Math.Min(Math.Max(tol, 0.0), 1.0);
+
+            // Reset workspace
+            Array.Clear(temp, 0, n);
+            Array.Clear(temp2, 0, 2 * n);
 
             // Reuse the cached symbolic ordering (S); recompute L, U and the pivoting.
             Factorize(A, tol, null);
@@ -223,8 +230,8 @@ namespace CSparse.Double.Factorization
             }
 
             // Workspace
-            var x = this.temp;
-            var xi = new int[2 * n];
+            var x = temp;
+            var xi = temp2;
 
             for (i = 0; i < n; i++)
             {
