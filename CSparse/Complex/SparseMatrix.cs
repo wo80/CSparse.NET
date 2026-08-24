@@ -321,12 +321,12 @@ namespace CSparse.Complex
         public override void Add(Complex alpha, Complex beta, CompressedColumnStorage<Complex> other,
             CompressedColumnStorage<Complex> result)
         {
-            if (other == null)
+            if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
 
-            if (result == null)
+            if (result is null)
             {
                 throw new ArgumentNullException(nameof(result));
             }
@@ -379,12 +379,12 @@ namespace CSparse.Complex
         /// <inheritdoc />
         public override void Multiply(CompressedColumnStorage<Complex> other, CompressedColumnStorage<Complex> result)
         {
-            if (other == null)
+            if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
 
-            if (result == null)
+            if (result is null)
             {
                 throw new ArgumentNullException(nameof(result));
             }
@@ -494,7 +494,7 @@ namespace CSparse.Complex
         {
             var o = other as SparseMatrix;
 
-            if (o == null)
+            if (o is null)
             {
                 return false;
             }
@@ -590,9 +590,9 @@ namespace CSparse.Complex
         {
             int i, p;
 
-            if (w == null || mat == null) return -1; // check inputs
+            if (w is null || mat is null) return -1; // check inputs
 
-            if (x == null)
+            if (x is null)
             {
                 throw new ArgumentNullException(nameof(x));
             }

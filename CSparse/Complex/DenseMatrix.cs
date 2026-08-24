@@ -282,7 +282,7 @@ namespace CSparse.Complex
 
             var dense = other as DenseColumnMajorStorage<Complex>;
 
-            if (dense == null)
+            if (dense is null)
             {
                 return false;
             }

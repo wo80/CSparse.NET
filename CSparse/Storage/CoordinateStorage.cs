@@ -92,17 +92,17 @@ namespace CSparse.Storage
         public CoordinateStorage(int rowCount, int columnCount, int nonZerosCount, int[] rowind, int[] colind, T[] values)
             : this(rowCount, columnCount, 0, false)
         {
-            if (rowind == null)
+            if (rowind is null)
             {
                 throw new ArgumentNullException(nameof(rowind));
             }
 
-            if (colind == null)
+            if (colind is null)
             {
                 throw new ArgumentNullException(nameof(colind));
             }
 
-            if (values == null)
+            if (values is null)
             {
                 throw new ArgumentNullException(nameof(values));
             }

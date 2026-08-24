@@ -261,10 +261,7 @@ namespace CSparse.Double.Factorization
                 {
                     current += step;
 
-                    if (progress != null)
-                    {
-                        progress.Report(k / (double)n);
-                    }
+                    progress?.Report(k / (double)n);
                 }
 
                 // Triangular solve
@@ -380,7 +377,7 @@ namespace CSparse.Double.Factorization
         private int SolveSp(CompressedColumnStorage<double> G, CompressedColumnStorage<double> B,
             int k, int[] xi, double[] x, int[] pinv, bool lo)
         {
-            if (xi == null || x == null) return -1;
+            if (xi is null || x is null) return -1;
 
             var gp = G.ColumnPointers;
             var gi = G.RowIndices;

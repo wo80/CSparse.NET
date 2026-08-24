@@ -271,7 +271,7 @@ namespace CSparse.Double
                 return;
             }
 
-            if (options == null)
+            if (options is null)
             {
                 options = new ParallelOptions() { MaxDegreeOfParallelism = processorCount };
             }
@@ -342,7 +342,7 @@ namespace CSparse.Double
 
             var dense = other as DenseColumnMajorStorage<double>;
 
-            if (dense == null)
+            if (dense is null)
             {
                 return false;
             }

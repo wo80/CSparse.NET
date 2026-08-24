@@ -134,7 +134,7 @@ namespace CSparse.Complex.Factorization
 
             if (A.ColumnCount != n)
             {
-                throw new ArgumentException("Matrix dimensions don't match the factorization.", "A");
+                throw new ArgumentException("Matrix dimensions don't match the factorization.", nameof(A));
             }
 
             // Ensure tol is in range.
@@ -262,10 +262,7 @@ namespace CSparse.Complex.Factorization
                 {
                     current += step;
 
-                    if (progress != null)
-                    {
-                        progress.Report(k / (double)n);
-                    }
+                    progress?.Report(k / (double)n);
                 }
 
                 // Triangular solve
@@ -381,7 +378,7 @@ namespace CSparse.Complex.Factorization
         private int SolveSp(CompressedColumnStorage<Complex> G, CompressedColumnStorage<Complex> B,
             int k, int[] xi, Complex[] x, int[] pinv, bool lo)
         {
-            if (xi == null || x == null) return -1;
+            if (xi is null || x is null) return -1;
 
             var gp = G.ColumnPointers;
             var gi = G.RowIndices;

@@ -134,7 +134,7 @@ namespace CSparse.Ordering
 
             int[] jimatch = MaximumMatching.Generate(A, seed); // max transversal
 
-            if (jimatch == null) return null;
+            if (jimatch is null) return null;
 
             // Coarse decomposition
             for (j = 0; j < n; j++) s[j] = -1; // unmark all cols for bfs
@@ -238,7 +238,7 @@ namespace CSparse.Ordering
             // Transpose if requested
             SymbolicColumnStorage C = (mark == 1) ? A.Clone() : A.Transpose();
 
-            if (C == null) return false; // bfs of C=A' to find R3,C3 from R0
+            if (C is null) return false; // bfs of C=A' to find R3,C3 from R0
             Ap = C.ColumnPointers;
             Ai = C.RowIndices;
             while (head < tail) // while queue is not empty

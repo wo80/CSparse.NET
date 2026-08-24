@@ -453,7 +453,7 @@ namespace CSparse.Storage
         /// <exception cref="ArgumentException">If the result matrix's dimensions are not the same as this matrix.</exception>
         public virtual void LowerTriangle(DenseColumnMajorStorage<T> result)
         {
-            if (result == null)
+            if (result is null)
             {
                 throw new ArgumentNullException(nameof(result));
             }
@@ -480,7 +480,7 @@ namespace CSparse.Storage
         /// <exception cref="ArgumentException">If the result matrix's dimensions are not the same as this matrix.</exception>
         public virtual void UpperTriangle(DenseColumnMajorStorage<T> result)
         {
-            if (result == null)
+            if (result is null)
             {
                 throw new ArgumentNullException(nameof(result));
             }
@@ -548,9 +548,9 @@ namespace CSparse.Storage
         /// <inheritdoc />
         public override IEnumerable<Tuple<int, int, T>> EnumerateIndexed()
         {
-            foreach (var valueTuple in EnumerateIndexedAsValueTuples())
+            foreach (var (row, column, value) in EnumerateIndexedAsValueTuples())
             {
-                yield return Tuple.Create(valueTuple.row, valueTuple.column, valueTuple.value);
+                yield return Tuple.Create(row, column, value);
             }
         }
 
@@ -582,7 +582,7 @@ namespace CSparse.Storage
             int sourceRowIndex, int targetRowIndex, int rowCount,
             int sourceColumnIndex, int targetColumnIndex, int columnCount)
         {
-            if (target == null)
+            if (target is null)
             {
                 throw new ArgumentNullException(nameof(target));
             }

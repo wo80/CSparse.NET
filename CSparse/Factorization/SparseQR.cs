@@ -130,10 +130,7 @@ namespace CSparse.Factorization
                 {
                     current += step;
 
-                    if (progress != null)
-                    {
-                        progress.Report(k / (double)n);
-                    }
+                    progress?.Report(k / (double)n);
                 }
 
                 rp[k] = rnz;      // R(:,k) starts here

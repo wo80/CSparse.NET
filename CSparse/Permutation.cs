@@ -34,7 +34,7 @@ namespace CSparse
         /// </remarks>
         public static void Apply<T>(int[] p, ReadOnlySpan<T> b, Span<T> x, int n)
         {
-            if (p == null)
+            if (p is null)
             {
                 b.Slice(0, n).CopyTo(x);
             }
@@ -74,7 +74,7 @@ namespace CSparse
         /// </remarks>
         public static void ApplyInverse<T>(int[] p, ReadOnlySpan<T> b, Span<T> x, int n)
         {
-            if (p == null)
+            if (p is null)
             {
                 b.Slice(0, n).CopyTo(x);
             }
