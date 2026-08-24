@@ -208,7 +208,7 @@ namespace CSparse.Complex.Factorization
         {
             Complex s = Complex.Zero;
             int i;
-            if (x == null) return -1; // check inputs
+            if (x is null) return -1; // check inputs
 
             // s = norm(x)
             for (i = 0; i < n; i++)
@@ -243,7 +243,7 @@ namespace CSparse.Complex.Factorization
             int p = 0;
             Complex tau = Complex.Zero;
 
-            if (x == null) return false; // check inputs
+            if (x is null) return false; // check inputs
 
             var vp = V.ColumnPointers;
             var vi = V.RowIndices;

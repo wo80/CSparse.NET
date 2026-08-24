@@ -311,10 +311,7 @@ namespace CSparse.Double.Factorization
                 {
                     current += step;
 
-                    if (progress != null)
-                    {
-                        progress.Report(k / (double)n);
-                    }
+                    progress?.Report(k / (double)n);
                 }
 
                 // compute nonzero Pattern of kth row of L, in topological order

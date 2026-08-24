@@ -8,7 +8,7 @@ namespace CSparse
     {
         public static void NotNull(object obj, string name)
         {
-            if (obj == null)
+            if (obj is null)
             {
                 throw new ArgumentNullException(name);
             }

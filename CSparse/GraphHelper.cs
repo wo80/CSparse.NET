@@ -26,7 +26,7 @@ namespace CSparse
             int i, p, p2, jnew, head = 0;
             bool done;
 
-            if (xi == null || pstack == null) return -1;
+            if (xi is null || pstack is null) return -1;
 
             xi[0] = j; // initialize the recursion stack
             while (head >= 0)
@@ -115,7 +115,7 @@ namespace CSparse
         {
             int j, k = 0;
 
-            if (parent == null) return null; // check inputs
+            if (parent is null) return null; // check inputs
 
             int[] post = new int[n]; // allocate result
             int[] w = new int[n]; // get workspace
@@ -145,7 +145,7 @@ namespace CSparse
             int i, j, k, J, p, q, jleaf = 0;
             int[] ATp, ATi, colcount, delta, head = null, next = null;
 
-            if (parent == null || post == null) return (null); // check inputs
+            if (parent is null || post is null) return (null); // check inputs
 
             int m = A.RowCount;
             int n = A.ColumnCount;
@@ -240,7 +240,7 @@ namespace CSparse
             int[] ancestor, ref int jleaf)
         {
             int q, s, sparent, jprev;
-            if (first == null || maxfirst == null || prevleaf == null || ancestor == null)
+            if (first is null || maxfirst is null || prevleaf is null || ancestor is null)
             {
                 return (-1);
             }
@@ -277,7 +277,7 @@ namespace CSparse
         {
             int i, p, top = 0;
 
-            if (head == null || next == null || post == null || stack == null)
+            if (head is null || next is null || post is null || stack is null)
                 return (-1); // check inputs
 
             stack[0] = j; // place j on the stack
@@ -304,7 +304,7 @@ namespace CSparse
         // xi [n...2n-1] used as workspace
         public static int Reach(int[] Gp, int[] Gi, int[] Bp, int[] Bi, int n, int k, int[] xi, int[] pinv)
         {
-            if (xi == null) return (-1); // check inputs
+            if (xi is null) return (-1); // check inputs
 
             int p, top = n;
 
@@ -333,7 +333,7 @@ namespace CSparse
         {
             int i, p, n, len;
 
-            if (parent == null || s == null || w == null) return -1;   // check inputs
+            if (parent is null || s is null || w is null) return -1;   // check inputs
 
             int top = n = A.ColumnCount;
             int[] Ap = A.ColumnPointers;

@@ -302,9 +302,9 @@ namespace CSparse
         {
             var storage = new CoordinateStorage<T>(rowCount, columnCount, Math.Max(rowCount, columnCount));
 
-            foreach (var item in enumerable)
+            foreach (var (row, column, value) in enumerable)
             {
-                storage.At(item.row, item.column, item.value);
+                storage.At(row, column, value);
             }
 
             return storage;

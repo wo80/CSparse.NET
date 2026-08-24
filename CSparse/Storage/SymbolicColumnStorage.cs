@@ -294,10 +294,11 @@ namespace CSparse.Storage
             // Remove extra space
             Array.Resize(ref ci, nz);
 
-            var result = new SymbolicColumnStorage(m, n, 0, false);
-
-            result.ColumnPointers = cp;
-            result.RowIndices = ci;
+            var result = new SymbolicColumnStorage(m, n, 0, false)
+            {
+                ColumnPointers = cp,
+                RowIndices = ci
+            };
 
             return result;
         }
@@ -377,7 +378,7 @@ namespace CSparse.Storage
             int[] ai = RowIndices;
 
             // Allocate memory if needed.
-            if (result.ColumnPointers == null)
+            if (result.ColumnPointers is null)
             {
                 result.ColumnPointers = new int[ap.Length];
                 result.RowIndices = new int[ai.Length];

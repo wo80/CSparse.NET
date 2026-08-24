@@ -274,12 +274,12 @@ namespace CSparse.Double
         public override void Add(double alpha, double beta, CompressedColumnStorage<double> other,
             CompressedColumnStorage<double> result)
         {
-            if (other == null)
+            if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
 
-            if (result == null)
+            if (result is null)
             {
                 throw new ArgumentNullException(nameof(result));
             }
@@ -332,12 +332,12 @@ namespace CSparse.Double
         /// <inheritdoc />
         public override void Multiply(CompressedColumnStorage<double> other, CompressedColumnStorage<double> result)
         {
-            if (other == null)
+            if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
 
-            if (result == null)
+            if (result is null)
             {
                 throw new ArgumentNullException(nameof(result));
             }
@@ -411,7 +411,7 @@ namespace CSparse.Double
         public override CompressedColumnStorage<double> ParallelMultiply(CompressedColumnStorage<double> other, ParallelOptions options = null)
         {
             // Check inputs
-            if (other == null)
+            if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
@@ -451,7 +451,7 @@ namespace CSparse.Double
                 return Multiply(other);
             }
 
-            if (options == null)
+            if (options is null)
             {
                 options = new ParallelOptions() { MaxDegreeOfParallelism = processorCount };
             }
@@ -563,7 +563,7 @@ namespace CSparse.Double
         {
             var o = other as SparseMatrix;
 
-            if (o == null)
+            if (o is null)
             {
                 return false;
             }
@@ -659,9 +659,9 @@ namespace CSparse.Double
         {
             int i, p;
 
-            if (w == null || mat == null) return -1; // check inputs
+            if (w is null || mat is null) return -1; // check inputs
 
-            if (x == null)
+            if (x is null)
             {
                 throw new ArgumentNullException(nameof(x));
             }

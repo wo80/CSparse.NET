@@ -186,7 +186,7 @@ namespace CSparse
         public virtual bool Equals(Matrix<T> other)
         {
             // Reject equality when the argument is null or has a different shape.
-            if (other == null)
+            if (other is null)
             {
                 return false;
             }

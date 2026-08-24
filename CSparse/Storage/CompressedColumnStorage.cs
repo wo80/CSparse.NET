@@ -588,9 +588,9 @@ namespace CSparse.Storage
         /// <inheritdoc />
         public override IEnumerable<Tuple<int, int, T>> EnumerateIndexed()
         {
-            foreach (var valueTuple in EnumerateIndexedAsValueTuples())
+            foreach (var (row, column, value) in EnumerateIndexedAsValueTuples())
             {
-                yield return Tuple.Create(valueTuple.row, valueTuple.column, valueTuple.value);
+                yield return Tuple.Create(row, column, value);
             }
         }
 

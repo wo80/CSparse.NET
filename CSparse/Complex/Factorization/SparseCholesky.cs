@@ -195,7 +195,7 @@ namespace CSparse.Complex.Factorization
 
             var parent = S.parent;
 
-            if (parent == null)
+            if (parent is null)
             {
                 return false;
             }
@@ -315,10 +315,7 @@ namespace CSparse.Complex.Factorization
                 {
                     current += step;
 
-                    if (progress != null)
-                    {
-                        progress.Report(k / (double)n);
-                    }
+                    progress?.Report(k / (double)n);
                 }
 
                 // Find nonzero pattern of L(k,:)

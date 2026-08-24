@@ -58,7 +58,7 @@ namespace CSparse.Ordering
             // Transpose if needed
             SymbolicColumnStorage C = (m2 < n2) ? A.Transpose() : A.Clone();
 
-            if (C == null) return jimatch;
+            if (C is null) return jimatch;
 
             n = C.ColumnCount;
             m = C.RowCount;
