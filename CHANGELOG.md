@@ -1,3 +1,7 @@
+### Version 4.4.1 - 2026-08-24
+
+* Fix issue with SparseLU refactorization
+
 ### Version 4.4.0 - 2026-06-10
 
 * Add Refactorize methods to SparseCholesky, SparseLDL and SparseLU
